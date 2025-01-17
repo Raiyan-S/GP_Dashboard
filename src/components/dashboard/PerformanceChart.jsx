@@ -17,7 +17,7 @@ export default function PerformanceChart({ data }) {
           onMetricChange={setSelectedMetric}
         />
       </div>
-      <div className="flex gap-6">
+      <div className="flex flex-col lg:flex-row gap-6">
         <div className="flex-1">
           <ResponsiveContainer width="100%" height={300}>
             <LineChart
@@ -58,7 +58,7 @@ export default function PerformanceChart({ data }) {
             </LineChart>
           </ResponsiveContainer>
         </div>
-        <div className="w-64">
+        <div className="w-full lg:w-64">
           <ClientSummary data={data} />
         </div>
       </div>
