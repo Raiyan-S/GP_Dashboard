@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 export function useTheme() {
   const [theme, setTheme] = useState(() => {
     const saved = localStorage.getItem('theme');
-    return saved || 'system';
+    return saved || 'light';
   });
 
   useEffect(() => {
