@@ -1,3 +1,4 @@
+// chatgpt generated (Need to rewrite for MongoDB integration)
 import { useState, useMemo } from 'react';
 import { clients } from '../data/clients';
 
