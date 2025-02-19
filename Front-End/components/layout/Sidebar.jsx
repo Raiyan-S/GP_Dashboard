@@ -10,6 +10,7 @@ const navigation = [
 ];
 
 // Sidebar component
+// Used in App.jsx
 export default function Sidebar({ activeTab, setActiveTab, isSidebarOpen, onClose }) {
   // 
   const handleTabChange = (id) => {

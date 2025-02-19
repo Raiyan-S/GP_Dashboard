@@ -1,7 +1,6 @@
 import React from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { formatPercentage, formatDecimal, formatTimestamp } from '../../utils/formatters';
-import LoadingSkeleton from '../common/LoadingSkeleton';
 
 export default function ClientsTable({ data, loading, pagination }) {
   const { currentPage, totalPages, onPageChange } = pagination;
@@ -11,7 +10,7 @@ export default function ClientsTable({ data, loading, pagination }) {
       <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md">
         <div className="p-6 space-y-4">
           {[...Array(10)].map((_, i) => (
-            <LoadingSkeleton key={i} className="h-12 w-full" />
+            <div key={i} className="animate-pulse bg-gray-200 dark:bg-gray-700 rounded h-12 w-full" />
           ))}
         </div>
       </div>

@@ -1,10 +1,12 @@
 import React from 'react';
-import { Users, Target, TrendingDown, Award } from 'lucide-react';
+import { Users, Target, TrendingDown, Award } from 'lucide-react'; // Icons from Lucide 
 import StatsCard from './dashboard/StatsCard';
 import StatsCardSkeleton from './dashboard/StatsCardSkeleton';
 import ErrorState from './common/ErrorState';
 import { usePerformanceData } from '../hooks/usePerformanceData';
 
+// DashboardStats component (Have to implement mongoDB to get the data)
+// Used in App.jsx
 export default function DashboardStats() {
   const { data, loading, error, refetch } = usePerformanceData();
 
@@ -49,6 +51,7 @@ export default function DashboardStats() {
 
   const stats = calculateStats();
 
+  // Render the component there's an error (Placeholder)
   if (error) {
     return (
       <div className="space-y-6">
@@ -58,17 +61,19 @@ export default function DashboardStats() {
     );
   }
 
+  // Render the component while loading the data (If there's loading)
   return (
     <div className="space-y-6">
       <h2 className="text-xl font-semibold dark:text-white">Summary</h2>
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+        {/* If it is loading */}
         {loading ? (
-          <>
+          <div>
             <StatsCardSkeleton />
             <StatsCardSkeleton />
             <StatsCardSkeleton />
             <StatsCardSkeleton />
-          </>
+          </div>
         ) : (
           <>
             <StatsCard

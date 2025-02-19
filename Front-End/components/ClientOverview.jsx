@@ -4,6 +4,8 @@ import PerformanceTable from './dashboard/PerformanceTable';
 import ClientSelector from './common/ClientSelector';
 import { usePerformanceData } from '../hooks/usePerformanceData';
 
+
+// Used in App.jsx
 export default function ClientOverview({ onSeeAll }) {
   const [selectedClient, setSelectedClient] = useState('all');
   const { data } = usePerformanceData(selectedClient);

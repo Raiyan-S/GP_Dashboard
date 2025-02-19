@@ -3,6 +3,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { Menu, LogOut, Settings } from 'lucide-react'; // Icons from Lucide 
 
 // Header component
+// Used in App.jsx
 export default function Header({ title, setActiveTab, menuClick }) {
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const profileRef = useRef(null);

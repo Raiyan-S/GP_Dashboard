@@ -1,3 +1,6 @@
+// ClientsTable.jsx
+// ClientSummary.jsx
+// PerformanceTable.jsx
 export const formatPercentage = (value) => {
   return value.toFixed(2) + '%';
 };

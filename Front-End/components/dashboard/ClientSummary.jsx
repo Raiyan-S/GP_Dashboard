@@ -1,6 +1,7 @@
 import React from 'react';
 import { formatPercentage, formatDecimal } from '../../utils/formatters';
 
+// Used in ClientOverview.jsx
 export default function ClientSummary({ data }) {
   const latestRound = data[data.length - 1];
 

@@ -1,6 +1,6 @@
 import React from 'react';
 import { formatPercentage, formatDecimal, formatTimestamp } from '../../utils/formatters';
-import { ChevronRight, Download } from 'lucide-react';
+import { ChevronRight, Download } from 'lucide-react'; // Icons from lucide-react
 import { exportToCSV } from '../../utils/export';
 import { usePerformanceData } from '../../hooks/usePerformanceData';
 

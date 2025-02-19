@@ -8,6 +8,8 @@ import ModelTrial from './components/ModelTrial';
 import ClientsPage from './components/clients/ClientsPage';
 import SettingsPage from './components/settings/SettingsPage';
 
+// Main Component
+// Used in main.jsx
 function App() {
   // State to manage the active tab
   const [activeTab, setActiveTab] = useState('dashboard');
@@ -20,7 +22,6 @@ function App() {
       case 'clients': return 'Clients';
       case 'model-trial': return 'Model Trial';
       case 'settings': return 'Settings';
-      default: return '';
     }
   };
 
