@@ -9,10 +9,10 @@ export default defineConfig({
   },
   resolve: {
     alias: {
-      '@': path.resolve(__dirname, './src'),
-      '@assets': path.resolve(__dirname, './src/assets'),
-      '@components': path.resolve(__dirname, './src/components'),
-      '@types': path.resolve(__dirname, './src/types'),
+      '@': path.resolve(__dirname, './Front-End'),
+      '@assets': path.resolve(__dirname, './Front-End/assets'),
+      '@components': path.resolve(__dirname, './Front-End/components'),
+      '@types': path.resolve(__dirname, './Front-End/types'),
     },
   },
 });
