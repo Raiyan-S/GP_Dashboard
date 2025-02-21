@@ -71,3 +71,8 @@ The project is organized into two main directories: Back-End and Front-End.
     uvicorn main:app --host 0.0.0.0 --port 8000 --reload
     ```
 5. **Open the Project in Your Browser:** Go to: http://localhost:8000/
+
+
+#### Railway URL (will try and fix it asap):
+https://gpdashboard-production.up.railway.app/
+
