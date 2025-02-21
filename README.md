@@ -3,9 +3,6 @@
 FL-ALL Dashboard is a web application for visualizing client performance data. The application is built using React for the frontend and FastAPI for the backend.
 
 ## Project Structure
-Collecting workspace informationSure, here is a README section for the project structure:
-
-## Project Structure
 
 The project is organized into two main directories: Back-End and Front-End.
 
