@@ -1,0 +1,1 @@
+# Necessary for the routes to be recognized by the app

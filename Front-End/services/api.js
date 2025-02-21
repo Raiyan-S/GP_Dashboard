@@ -1,4 +1,4 @@
-const API_URL = 'http://localhost:5000/api';
+const API_URL = 'http://localhost:8000/api';
 
 export const fetchPerformanceData = async (clientId) => {
   const url = new URL(`${API_URL}/performance`);
