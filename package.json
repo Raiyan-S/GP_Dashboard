@@ -8,8 +8,8 @@
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "server": "uvicorn Back-End.main:app --host 0.0.0.0 --port 8000 --reload",
-    "start": "npm run build && cross-env NODE_ENV=production uvicorn Back-End.main:app --host 0.0.0.0 --port 8000"
+    "server": "uvicorn Back-End.main:app --host 0.0.0.0 --port $PORT --reload",
+    "start": "npm run build && cross-env NODE_ENV=production uvicorn Back-End.main:app --host 0.0.0.0 --port $PORT"
   },
   "dependencies": {
     "idb": "^7.1.1",
