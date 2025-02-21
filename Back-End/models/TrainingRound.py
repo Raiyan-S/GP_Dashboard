@@ -2,6 +2,8 @@ from pydantic import BaseModel, Field # Data validation library
 from bson import ObjectId # MongoDB object ID
 import datetime # Date library
 
+# Need to fix localhost:8000/docs
+
 # Handle MongoDB object ID to ensure every ID is unique
 class PyObjectId(ObjectId):
     @classmethod
