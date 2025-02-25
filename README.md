@@ -42,32 +42,43 @@ The project is organized into two main directories: Back-End and Front-End.
 
 ## Setup Instructions
 
-1. **Clone the repository:**
+1. **Clone the repository (or use GitHub Desktop using the URL):**
 
     ```sh
-    git clone https://github.com/your-username/GP_Dashboard.git
-    cd GP_Dashboard/Back-End
+    git clone https://github.com/Raiyan-S/GP_Dashboard.git
     ```
 
 2. **Create a virtual environment and activate it:**
-
+    Python ver 3.11
     ```sh
     python -m venv venv
-    source venv/bin/activate  # On Windows use `venv\Scripts\activate`
+    venv\Scripts\activate
+    ```
+    
+    If powershell policy preventing scripts:
+    ```sh
+    ...\GP_Dashboard\venv\Scripts\Activate.ps1 cannot be        
+    loaded because running scripts is disabled on this system.
+    ```
+    
+    Run this code:
+    ```sh
+    Set-ExecutionPolicy RemoteSigned -Scope CurrentUser
     ```
 
-3. **Install the required dependencies for backend (if missing):**
+4. **Install the required dependencies for backend (if missing):**
 
     ```sh
+    cd Back-End
     pip install -r requirements.txt
     ```
 
-4. **Run the backend server:**
+5. **Run the backend server:**
 
     ```sh
     uvicorn main:app --host 0.0.0.0 --port 8000 --reload
     ```
-5. **Open the Project in Your Browser:** Go to: http://localhost:8000/
+6. **Open the Project in Your Browser:** Go to: http://localhost:8000/
 
 
 #### Railway URL (will try and fix it asap):
