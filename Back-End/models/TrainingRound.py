@@ -1,6 +1,6 @@
 from pydantic import BaseModel, Field # Data validation library
 from bson import ObjectId # MongoDB object ID
-import datetime # Date library
+from datetime import datetime # Date library
 
 # Need to fix localhost:8000/docs
 
@@ -35,7 +35,7 @@ class ClientMetrics(BaseModel):
 class TrainingRound(BaseModel):
     id: PyObjectId = Field(default_factory=PyObjectId, alias='_id') # Generate unique ID
     round_id: str
-    created_at: datetime = Field(default_factory=datetime.datetime.now) # Current date and time
+    created_at: datetime = Field(default_factory=datetime.now) # Current date and time
     clients: list[ClientMetrics] # List of client metrics
 
     # Pydantic configuration
