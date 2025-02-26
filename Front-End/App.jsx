@@ -1,4 +1,4 @@
-import React, { useState } from 'react'; // useState for managing state
+import React, { useState, useEffect } from 'react'; // useState for managing state
 import { Helmet, HelmetProvider } from 'react-helmet-async'; // Helmet for changing page title dynamically
 import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 import Sidebar from './components/layout/Sidebar';
@@ -17,6 +17,12 @@ function App() {
   const [activeTab, setActiveTab] = useState('dashboard');
   // State to manage the sidebar
   const [isSidebarOpen, setSidebarOpen] = useState(false);
+
+  // Update document title whenever the activeTab changes
+  useEffect(() => {
+    const pageTitle = getPageTitle();
+    document.title = `${pageTitle} - FL-ALL`;  // Set page title dynamically
+  }, [activeTab]);
 
   const getPageTitle = () => {
     switch (activeTab) {
@@ -38,7 +44,7 @@ function App() {
       <div className="min-h-screen bg-gray-100 dark:bg-gray-900">
         {/* Title */}
         <Helmet>
-          <title>FL-ALL</title>
+            <title>{getPageTitle()} - FL-ALL</title> 
         </Helmet>
 
         {/* Sidebar component on mobile view */}
@@ -63,8 +69,6 @@ function App() {
               <Route path="/clients" element={<ClientsPage />} />
               <Route path="/model-trial" element={<ModelTrial />} />
               <Route path="/settings" element={<SettingsPage />} />
-              <Route path="/health-check" element={<HealthCheck />} /> {/* Add the HealthCheck route */}
-              <Route path="*" element={<Navigate to="/dashboard" />} />
             </Routes>
           </main>
         </div>

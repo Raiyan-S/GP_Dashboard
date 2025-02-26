@@ -40,11 +40,6 @@ async def serve_frontend(full_path: str):
     file_path = os.path.join(FRONTEND_DIST, "index.html")
     return FileResponse(file_path)
 
-# Health check endpoint
-@app.get("/health")
-async def health_check():
-    return {"status": "healthy"}
-
 # Run the FastAPI app
 if __name__ == "__main__":
     import uvicorn
