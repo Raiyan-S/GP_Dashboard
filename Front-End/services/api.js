@@ -28,3 +28,12 @@ export const fetchRoundData = async (roundId) => {
   }
   return response.json();
 };
+
+// Add the health check function
+export const fetchHealthStatus = async () => {
+  const response = await fetch('http://localhost:8000/health');
+  if (!response.ok) {
+    throw new Error('Failed to fetch health status');
+  }
+  return response.json();
+};

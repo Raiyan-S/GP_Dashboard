@@ -1,0 +1,20 @@
+{
+    "build": {
+      "builder": "Nixpacks"
+    },
+    "deployments": [
+      {
+        "name": "backend",
+        "build": "pip install -r Back-End/requirements.txt",
+        "start": "uvicorn Back-End.main:app --host 0.0.0.0 --port 8000"
+      },
+      {
+        "name": "frontend",
+        "build": "npm install && npm run build",
+        "start": "npx serve -s dist"
+      }
+    ],
+    "plugins": [
+      "mongodb"
+    ]
+  }

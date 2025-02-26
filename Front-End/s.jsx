@@ -1,18 +1,95 @@
+import React, { useState } from 'react'; // useState for managing state
+import { Helmet } from 'react-helmet'; // Helmet for changing page title dynamically
+import { BrowserRouter as Router, Route, Switch, Redirect } from 'react-router-dom';
+import Sidebar from './components/layout/Sidebar';
+import Header from './components/layout/Header';
+import DashboardStats from './components/DashboardStats';
+import ClientOverview from './components/ClientOverview';
+import ModelTrial from './components/ModelTrial';
+import ClientsPage from './components/clients/ClientsPage';
+import SettingsPage from './components/settings/SettingsPage';
+
+// Main Component
+// Used in main.jsx
+function App() {
+  // State to manage the active tab
+  const [activeTab, setActiveTab] = useState('dashboard');
+
+  // State to manage the sidebar
+  const [isSidebarOpen, setSidebarOpen] = useState(false);
+
+  const getPageTitle = () => {
+    switch (activeTab) {
+      case 'dashboard': return 'Dashboard';
+      case 'clients': return 'Clients';
+      case 'model-trial': return 'Model Trial';
+      case 'settings': return 'Settings';
+    }
+  };
+
+  // Function to handle "See All" button
+  const handleSeeAll = () => {
+    setActiveTab('clients');
+  };
+
+  return (
+    <div className="min-h-screen bg-gray-100 dark:bg-gray-900">
+      {/* Title */}
+      <Helmet>
+        <title>FL-ALL - {getPageTitle()}</title>
+      </Helmet>
+
+      {/* Sidebar component on mobile view */}
+      <Sidebar 
+        activeTab={activeTab} 
+        setActiveTab={setActiveTab} 
+        isSidebarOpen={isSidebarOpen}
+        onClose={() => setSidebarOpen(false)}
+      />
+      
+      <div className="lg:pl-64 flex flex-col min-h-screen">
+        {/* Header */}
+        <Header 
+          title={getPageTitle()} 
+          setActiveTab={setActiveTab}
+          menuClick={() => setSidebarOpen(true)}
+        />
+
+        <main className="flex-1 px-4 sm:px-6 lg:px-8 py-6">
+          {/* Conditionally render components based on the active tab */}
+          {activeTab === 'dashboard' && (
+            <>
+              <DashboardStats />
+              <ClientOverview onSeeAll={handleSeeAll} />
+            </>
+          )}
+          {activeTab === 'model-trial' && <ModelTrial />}
+          {activeTab === 'clients' && <ClientsPage />}
+          {activeTab === 'settings' && <SettingsPage />}
+        </main>
+      </div>
+    </div>
+  );
+}
+
+export default App;
+
+
 import React from 'react';
-import { Link } from 'react-router-dom';
 import { Layout, BarChart3, Users, TestTube, Settings, LogOut, X } from 'lucide-react'; // Icons from Lucide 
 
 // Sidebar navigation items
 const navigation = [
-  { name: 'Dashboard', icon: BarChart3, id: 'dashboard', path: '/dashboard' },
-  { name: 'Clients', icon: Users, id: 'clients', path: '/clients' },
-  { name: 'Model Trial', icon: TestTube, id: 'model-trial', path: '/model-trial' },
-  { name: 'Settings', icon: Settings, id: 'settings', path: '/settings' },
+  { name: 'Dashboard', icon: BarChart3, id: 'dashboard' },
+  { name: 'Clients', icon: Users, id: 'clients' },
+  { name: 'Model Trial', icon: TestTube, id: 'model-trial' },
+  { name: 'Settings', icon: Settings, id: 'settings' },
 ];
 
 // Sidebar component
 // Used in App.jsx
 export default function Sidebar({ activeTab, setActiveTab, isSidebarOpen, onClose }) {
+  // 
   const handleTabChange = (id) => {
     setActiveTab(id);
     onClose();
@@ -62,9 +139,8 @@ export default function Sidebar({ activeTab, setActiveTab, isSidebarOpen, onClos
             {/* Iterate through navigation items */}
             {/* Condition when active tab is the item's id, color it blue */}
             {navigation.map((item) => (
-              <Link
+              <button
                 key={item.id}
-                to={item.path}
                 onClick={() => handleTabChange(item.id)}
                 className={`w-full flex items-center px-4 py-3 text-sm font-medium rounded-md transition-colors ${activeTab === item.id
                   ? 'text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/30'
@@ -73,7 +149,7 @@ export default function Sidebar({ activeTab, setActiveTab, isSidebarOpen, onClos
               >
                 <item.icon className="h-5 w-5 mr-3" /> {/* Sidebar Icons */}
                 {item.name}
-              </Link>
+              </button>
             ))}
           </div>
         </nav>
