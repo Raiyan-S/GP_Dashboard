@@ -21,8 +21,15 @@ function App() {
   // Update document title whenever the activeTab changes
   useEffect(() => {
     const pageTitle = getPageTitle();
-    document.title = `${pageTitle} - FL-ALL`;  // Set page title dynamically
+    document.title = `${pageTitle} - FL-ALL`;
+    localStorage.setItem('activeTab', activeTab); // Save to localStorage
   }, [activeTab]);
+
+  // Update active tab based on URL when page loads
+  useEffect(() => {
+    const path = location.pathname.replace('/', '') || 'dashboard';
+    setActiveTab(path);
+  }, [location.pathname]);
 
   const getPageTitle = () => {
     switch (activeTab) {
