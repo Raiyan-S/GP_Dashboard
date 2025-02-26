@@ -5,6 +5,7 @@ from fastapi.middleware.cors import CORSMiddleware # Cross-Origin Resource Shari
 from routes.performance import router as performance_router
 from config.db import connect_to_mongo, close_mongo_connection  # Import database connection functions
 from contextlib import asynccontextmanager
+import os
 
 # Database connection
 @asynccontextmanager
@@ -26,14 +27,18 @@ app.add_middleware(
     
 app.include_router(performance_router, prefix='/api/performance')
 
+# Path to the built frontend (because of Railway)
+FRONTEND_DIST = os.path.join(os.path.dirname(__file__), "../dist")
+
 # Serve static files
 app.mount("/assets", StaticFiles(directory="../dist/assets"), name="assets")
 app.mount("/static", StaticFiles(directory="../dist"), name="static")
 
 # Serve the frontend
-@app.get("/")
-async def serve_frontend():
-    return FileResponse("../dist/index.html")
+@app.get("/{full_path:path}")
+async def serve_frontend(full_path: str):
+    file_path = os.path.join(FRONTEND_DIST, "index.html")
+    return FileResponse(file_path)
 
 # Health check endpoint
 @app.get("/health")
