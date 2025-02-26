@@ -1,4 +1,6 @@
-const API_URL = 'http://localhost:8000/api';
+const API_URL =  process.env.NODE_ENV === "production"
+? "https://gpdashboard-production.up.railway.app/"
+: "http://localhost:8000";
 
 export const fetchPerformanceData = async (clientId) => {
   const url = new URL(`${API_URL}/performance`);
@@ -31,7 +33,7 @@ export const fetchRoundData = async (roundId) => {
 
 // Add the health check function
 export const fetchHealthStatus = async () => {
-  const response = await fetch('http://localhost:8000/health');
+  const response = await fetch(`${API_URL}/health`);
   if (!response.ok) {
     throw new Error('Failed to fetch health status');
   }

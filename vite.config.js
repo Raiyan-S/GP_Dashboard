@@ -15,4 +15,11 @@ export default defineConfig({
       '@types': path.resolve(__dirname, './Front-End/types'),
     },
   },
+  build: {
+    outDir: 'dist', // Ensure the build output is inside `dist/`
+  },
+  server: {
+    historyApiFallback: true, // Fix React Router navigation issues
+    port: 5173, // Set Vite’s local dev port
+  },
 });
