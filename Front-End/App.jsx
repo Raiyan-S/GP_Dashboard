@@ -8,7 +8,8 @@ import ClientOverview from './components/ClientOverview';
 import ModelTrial from './components/ModelTrial';
 import ClientsPage from './components/clients/ClientsPage';
 import SettingsPage from './components/settings/SettingsPage';
-import HealthCheck from './components/HealthCheck'; // Import the HealthCheck component
+import HealthCheck from './components/HealthCheck';
+
 
 // Main Component
 // Used in main.jsx
@@ -51,7 +52,7 @@ function App() {
       <div className="min-h-screen bg-gray-100 dark:bg-gray-900">
         {/* Title */}
         <Helmet>
-            <title>{getPageTitle()} - FL-ALL</title> 
+            <title>{getPageTitle() || ""} - FL-ALL</title> 
         </Helmet>
 
         {/* Sidebar component on mobile view */}
@@ -76,6 +77,7 @@ function App() {
               <Route path="/clients" element={<ClientsPage />} />
               <Route path="/model-trial" element={<ModelTrial />} />
               <Route path="/settings" element={<SettingsPage />} />
+              <Route path="/health" element={<HealthCheck />} />
             </Routes>
           </main>
         </div>

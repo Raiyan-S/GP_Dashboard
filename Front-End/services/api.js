@@ -1,7 +1,8 @@
 const API_URL =  process.env.NODE_ENV === "production"
-? "https://gpdashboard-production.up.railway.app/"
+? "https://gpdashboard-production.up.railway.app"
 : "http://localhost:8000";
 
+/*
 export const fetchPerformanceData = async (clientId) => {
   const url = new URL(`${API_URL}/performance`);
   if (clientId) {
@@ -30,6 +31,8 @@ export const fetchRoundData = async (roundId) => {
   }
   return response.json();
 };
+
+*/
 
 // Add the health check function
 export const fetchHealthStatus = async () => {
