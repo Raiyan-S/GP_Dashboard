@@ -1,12 +1,14 @@
 import React, { useState, useRef, useEffect } from 'react';
 // useState for managing state, useRef for referencing DOM elements, useEffect for side effects
 import { Menu, LogOut, Settings } from 'lucide-react'; // Icons from Lucide 
+import { useNavigate } from 'react-router-dom';
 
 // Header component
 // Used in App.jsx
 export default function Header({ title, setActiveTab, menuClick }) {
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const profileRef = useRef(null);
+  const navigate = useNavigate();
 
   // Function to handle click outside the profile dropdown menu
   const handleClickOutside = (event) => {
@@ -29,6 +31,7 @@ export default function Header({ title, setActiveTab, menuClick }) {
   // Go to Settings tab when the Settings button is clicked and close the profile menu
   const handleSettingsClick = () => {
     setActiveTab('settings');
+    navigate('/settings');
     setIsProfileOpen(false);
   };
 
