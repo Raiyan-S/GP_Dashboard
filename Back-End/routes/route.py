@@ -2,6 +2,8 @@ from fastapi import APIRouter, HTTPException # APIRouter to group routes, HTTPEx
 from models.TrainingRound import TrainingRound
 from config.db import mongodb
 from bson import ObjectId
+from fastapi.encoders import jsonable_encoder # Convert Pydantic models to dictionaries (because of complex types e.g., datetime)
+
 
 router = APIRouter()
 
@@ -11,10 +13,8 @@ async def get_rounds():
 
 @router.post("/", response_model=TrainingRound)
 async def post_round(round: TrainingRound):
-    # Convert pydantic to dictionary
-    round_dict = round.model_dump()  # This will recursively convert nested models
+    round_dict = jsonable_encoder(round.model_dump())  # This will recursively convert nested models
     await mongodb.db['training_rounds'].insert_one(round_dict)
-    return round
 
 # chatgpt generated (need to connect to mongodb to check)
 '''
