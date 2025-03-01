@@ -1,5 +1,5 @@
 from pydantic import BaseModel, Field # Data validation library
-# from bson import ObjectId # MongoDB object ID
+from bson import ObjectId # MongoDB object ID
 from datetime import datetime # Date library
 
 '''
@@ -41,6 +41,14 @@ class TrainingRound(BaseModel):
     round_id: str
     created_at: datetime = Field(default_factory=datetime.now) # Current date and time
     clients: list[ClientMetrics] # List of client metrics
+    id: str = Field(default_factory=lambda: str(ObjectId()), alias='_id')
+
+    # Custom JSON encoder for ObjectId and datetime fields
+    class Config:
+        json_encoders = {
+            ObjectId: str,  # Convert ObjectId to string
+            datetime: lambda v: v.isoformat()  # Convert datetime to ISO format string
+        }
 
     # Pydantic configuration
     class Config:
