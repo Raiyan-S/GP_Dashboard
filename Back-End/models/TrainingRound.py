@@ -1,5 +1,5 @@
 from pydantic import BaseModel, Field # Data validation library
-from bson import ObjectId # MongoDB object ID
+# from bson import ObjectId # MongoDB object ID
 from datetime import datetime # Date library
 
 '''
@@ -19,9 +19,10 @@ class PyObjectId(ObjectId):
     def __get_pydantic_json_schema__(cls, schema):
         schema.update(type="string")
 '''
-# Helper function to handle ObjectId as a string
-def generate_object_id():
-    return str(ObjectId())
+# # Helper function to handle ObjectId as a string
+# def generate_object_id():
+#     return str(ObjectId())
+
 class Metrics(BaseModel):
     accuracy: float = 0.0
     f1_score: float = 0.0
@@ -35,8 +36,8 @@ class ClientMetrics(BaseModel):
 
 # Each training round contains a unique ID, round ID, creation date, and a list of clients, and each client has a unique ID and metrics within the round.
 class TrainingRound(BaseModel):
-    #id: PyObjectId = Field(default_factory=PyObjectId, alias='_id') 
-    id: str = Field(default_factory=generate_object_id, alias='_id') # Generate unique ID
+    # id: PyObjectId = Field(default_factory=PyObjectId, alias='_id') 
+    # id: str = Field(default_factory=generate_object_id, alias='_id') # Generate unique ID
     round_id: str
     created_at: datetime = Field(default_factory=datetime.now) # Current date and time
     clients: list[ClientMetrics] # List of client metrics

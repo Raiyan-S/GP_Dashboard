@@ -1,16 +1,25 @@
 from fastapi import APIRouter, HTTPException # APIRouter to group routes, HTTPException to handle exceptions
 from models.TrainingRound import TrainingRound
 from config.db import mongodb
+from bson import ObjectId
 
 router = APIRouter()
 
-# chatgpt generated (need to connect to mongodb to check)
+@router.get("/")
+async def get_rounds():
+    return mongodb.db['training_rounds'].find()
 
+@router.post("/", response_model=TrainingRound)
+async def post_round(round: TrainingRound):
+     mongodb.db['training_rounds'].insert_one(dict(round))
+
+# chatgpt generated (need to connect to mongodb to check)
+'''
 # Service Functions
 async def fetch_rounds(filter: dict = None): # Fetch rounds from MongoDB (if filter is None, fetch all rounds)
     try:
         query = filter if filter else {}
-        rounds = await mongodb.db['training_rounds'].find(query).sort("created_at", -1).to_list(1000)
+        rounds = await mongodb.db['training_rounds'].find(query).sort("created_at", -1)
         return rounds
     
     except Exception as e:
@@ -86,3 +95,4 @@ async def get_round_by_id_endpoint(round_id: str):
     if not rounds:
         raise HTTPException(status_code=404, detail="Round not found")
     return rounds[0]
+'''

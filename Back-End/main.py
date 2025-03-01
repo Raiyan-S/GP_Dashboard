@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse
 from fastapi.middleware.cors import CORSMiddleware # Cross-Origin Resource Sharing middleware
-from routes.performance import router as performance_router # Import the performance router
+from routes.route import router as router # Import the router
 from config.db import connect_to_mongo, close_mongo_connection # Import database connection functions
 from contextlib import asynccontextmanager
 import os
@@ -26,8 +26,8 @@ app.add_middleware(
     allow_headers=["*"],  
 )
 
-# Include the performance router with a prefix
-app.include_router(performance_router, prefix='/api/performance')
+# Include the router
+app.include_router(router)
 
 # Path to the built frontend (for deployment on Railway)
 FRONTEND_DIST = os.path.join(os.path.dirname(__file__), "../dist")
@@ -41,15 +41,15 @@ app.mount("/static", StaticFiles(directory="../dist"), name="static")
 # async def health_check():
 #     return {"status": "healthy"}
 
+# ping mongo endpoint
 import motor.motor_asyncio
-
-# MongoDB connection URI
+# MongoDB connection URI (currently only works on railway not local)
 MONGO_URI = "mongodb://mongo:HiwDMYxRRpgqkefLILYZynRVwRWqImpy@mongodb.railway.internal:27017"
 
 # Create a MongoDB client
 client = motor.motor_asyncio.AsyncIOMotorClient(MONGO_URI)
 
-# Ping MongoDB to check the connection
+# Ping MongoDB to check the connection 
 @app.get("/ping_mongo")
 async def ping_mongo():
     try:
