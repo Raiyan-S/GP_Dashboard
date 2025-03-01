@@ -34,7 +34,7 @@ export const fetchRoundData = async (roundId) => {
 
 */
 
-// Add the health check function
+// Fetch Health Status from the API
 export const fetchHealthStatus = async () => {
   const response = await fetch(`${API_URL}/health`);
   if (!response.ok) {

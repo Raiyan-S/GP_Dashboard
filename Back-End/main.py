@@ -37,10 +37,27 @@ app.mount("/assets", StaticFiles(directory="../dist/assets"), name="assets")
 app.mount("/static", StaticFiles(directory="../dist"), name="static")
 
 # Health check endpoint to verify the service is running
-@app.get("/health")
-async def health_check():
-    return {"status": "healthy"}
+# @app.get("/health")
+# async def health_check():
+#     return {"status": "healthy"}
 
+import motor.motor_asyncio
+
+# MongoDB connection URI
+MONGO_URI = "mongodb://mongo:HiwDMYxRRpgqkefLILYZynRVwRWqImpy@mongodb.railway.internal:27017"
+
+# Create a MongoDB client
+client = motor.motor_asyncio.AsyncIOMotorClient(MONGO_URI)
+
+# Ping MongoDB to check the connection
+@app.get("/ping_mongo")
+async def ping_mongo():
+    try:
+        await client.admin.command("ping")
+        return {"status": "MongoDB connection successful"}
+    except Exception as e:
+        return {"status": "MongoDB connection failed", "error": str(e)}
+        
 # Serve the frontend application
 @app.get("/{full_path:path}")
 async def serve_frontend(full_path: str):
