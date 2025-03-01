@@ -14,7 +14,7 @@ async def get_rounds():
 @router.post("/", response_model=TrainingRound)
 async def post_round(round: TrainingRound):
     round_dict = jsonable_encoder(round.model_dump())  # This will recursively convert nested models
-    await mongodb.db['training_rounds'].insert_one(round_dict)
+    mongodb.db['training_rounds'].insert_one(round_dict)
 
 # chatgpt generated (need to connect to mongodb to check)
 '''
