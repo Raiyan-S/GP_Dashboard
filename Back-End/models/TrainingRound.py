@@ -1,6 +1,7 @@
 from pydantic import BaseModel, Field # Data validation library
 from bson import ObjectId # MongoDB object ID
 from datetime import datetime # Date library
+from typing import List
 
 '''
 # Handle MongoDB object ID to ensure every ID is unique
@@ -40,7 +41,7 @@ class TrainingRound(BaseModel):
     # id: str = Field(default_factory=generate_object_id, alias='_id') # Generate unique ID
     round_id: str
     created_at: datetime = Field(default_factory=datetime.now) # Current date and time
-    clients: list[ClientMetrics] # List of client metrics
+    clients: List[ClientMetrics] # List of client metrics
     id: str = Field(default_factory=lambda: str(ObjectId()), alias='_id')
 
     # Pydantic configuration
