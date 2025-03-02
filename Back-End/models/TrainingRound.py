@@ -43,15 +43,12 @@ class TrainingRound(BaseModel):
     clients: list[ClientMetrics] # List of client metrics
     id: str = Field(default_factory=lambda: str(ObjectId()), alias='_id')
 
-    # Custom JSON encoder for ObjectId and datetime fields
+    # Pydantic configuration
     class Config:
         json_encoders = {
             ObjectId: str,  # Convert ObjectId to string
             datetime: lambda v: v.isoformat()  # Convert datetime to ISO format string
         }
-
-    # Pydantic configuration
-    class Config:
         populate_by_name = True
         arbitrary_types_allowed = True
         json_schema_extra = {
