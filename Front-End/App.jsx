@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'; // useState for managing state
-import { Helmet, HelmetProvider } from 'react-helmet-async'; // Helmet for changing page title dynamically
-import { BrowserRouter as Router, Route, Routes, useNavigate, useLocation } from 'react-router-dom';
+import { Helmet } from 'react-helmet-async'; // Helmet for changing page title dynamically
+import { Route, Routes, useNavigate, useLocation } from 'react-router-dom';
 import Sidebar from './components/layout/Sidebar';
 import Header from './components/layout/Header';
 import DashboardStats from './components/DashboardStats';

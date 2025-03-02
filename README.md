@@ -66,21 +66,21 @@ The project is organized into two main directories: Back-End and Front-End.
     Set-ExecutionPolicy RemoteSigned -Scope CurrentUser
     ```
 
-4. **Install the required dependencies for backend (if missing):**
+3. **Install the required dependencies for backend (if missing):**
 
     ```sh
     cd Back-End
     pip install -r requirements.txt
     ```
 
-5. **Run the backend server:**
+4. **Run the backend server:**
 
     ```sh
     uvicorn main:app --host 0.0.0.0 --port 8000 --reload
     ```
-6. **Open the Project in Your Browser:** Go to: http://localhost:8000/
+5. **Open the Project in Your Browser:** Go to: http://localhost:8000/
 
 
-#### Railway URL (will try and fix it asap):
+#### Railway URL:
 https://gpdashboard-production.up.railway.app/
 Need to update ReadMe
