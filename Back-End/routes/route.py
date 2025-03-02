@@ -7,7 +7,7 @@ from fastapi.encoders import jsonable_encoder # Convert Pydantic models to dicti
 
 router = APIRouter()
 
-@router.get("/", response_model=list[TrainingRound])
+@router.get("/get", response_model=list[TrainingRound])
 async def get_rounds():
     try:
         rounds = await mongodb.db['training_rounds'].find().to_list(100)
@@ -15,7 +15,7 @@ async def get_rounds():
     except Exception as e:
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
 
-@router.post("/", response_model=TrainingRound)
+@router.post("/post", response_model=TrainingRound)
 async def post_round(round: TrainingRound):
     try: 
         round_dict = jsonable_encoder(round)  # This will recursively convert nested models
