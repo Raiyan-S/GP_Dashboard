@@ -1,4 +1,4 @@
-from fastapi import APIRouter, HTTPException # APIRouter to group routes, HTTPException to handle exceptions
+from fastapi import APIRouter, HTTPException, status # APIRouter to group routes, HTTPException to handle exceptions, status for HTTP status codes
 from models.TrainingRound import TrainingRound
 from config.db import mongodb
 from bson import ObjectId
@@ -13,10 +13,14 @@ async def get_rounds():
 
 @router.post("/", response_model=TrainingRound)
 async def post_round(round: TrainingRound):
-    round_dict = round.dict()  # This will recursively convert nested models
-    print(round_dict)
-    round_dict = jsonable_encoder(round_dict)
-    mongodb.db['training_rounds'].insert_one(round_dict)
+    try: 
+        round_dict = jsonable_encoder(round)  # This will recursively convert nested models
+        result = await mongodb.db['training_rounds'].insert_one(round_dict)
+        round_dict["_id"] = str(result.inserted_id)
+        return round_dict
+    except Exception as e:
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
+
 
 # chatgpt generated (need to connect to mongodb to check)
 '''
