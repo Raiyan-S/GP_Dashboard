@@ -9,8 +9,8 @@ class MongoDB:
 mongodb = MongoDB()
 
 async def connect_to_mongo():
-    mongo_uri = os.getenv("MONGODB_URL", "mongodb://localhost:27017")  # Default URI
-    db_name = os.getenv("DB_NAME", "test_db")  # Default database name
+    mongo_uri = os.getenv("MONGODB_URL", "mongodb://mongo:HiwDMYxRRpgqkefLILYZynRVwRWqImpy@mongodb.railway.internal:27017")
+    db_name = os.getenv("DB_NAME", "fl_all")
     
     mongodb.client = AsyncIOMotorClient(mongo_uri)
     mongodb.db = mongodb.client[db_name]

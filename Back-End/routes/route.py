@@ -9,7 +9,7 @@ router = APIRouter()
 
 @router.get("/")
 async def get_rounds():
-    return mongodb.db['training_rounds'].find()
+    return mongodb.db['training_rounds'].find().to_list(100)
 
 @router.post("/", response_model=TrainingRound)
 async def post_round(round: TrainingRound):
