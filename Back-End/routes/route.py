@@ -7,9 +7,13 @@ from fastapi.encoders import jsonable_encoder # Convert Pydantic models to dicti
 
 router = APIRouter()
 
-@router.get("/")
+@router.get("/", response_model=list[TrainingRound])
 async def get_rounds():
-    return mongodb.db['training_rounds'].find().to_list(100)
+    try:
+        rounds = await mongodb.db['training_rounds'].find().to_list(100)
+        return jsonable_encoder(rounds)
+    except Exception as e:
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
 
 @router.post("/", response_model=TrainingRound)
 async def post_round(round: TrainingRound):
