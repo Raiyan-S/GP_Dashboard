@@ -19,7 +19,7 @@ async def get_rounds():
 async def post_round(round: TrainingRound):
     try: 
         round_dict = jsonable_encoder(round)  # This will recursively convert nested models
-        result = await mongodb.db['training_rounds'].insert_one(round_dict)
+        result = await mongodb.db['training_rounds'].insert_many(round_dict)
         round_dict["_id"] = str(result.inserted_id)
         return round_dict
     except Exception as e:
