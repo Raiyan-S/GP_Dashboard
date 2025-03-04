@@ -41,7 +41,7 @@ class TrainingRound(BaseModel):
     round_id: str
     created_at: datetime = Field(default_factory=datetime.now) # Current date and time
     clients: list[ClientMetrics] # List of client metrics
-    id: str = Field(default_factory=lambda: str(ObjectId()), alias='_id')
+    # id: str = Field(default_factory=lambda: str(ObjectId()), alias='_id')
 
     # Pydantic configuration
     class Config:
