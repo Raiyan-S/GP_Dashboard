@@ -15,15 +15,17 @@ async def get_rounds():
     except Exception as e:
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
 
-@router.post("/post", response_model=TrainingRound)
-async def post_round(round: TrainingRound):
-    try: 
-        round_dict = jsonable_encoder(round)  # This will recursively convert nested models
-        result = await mongodb.db['training_rounds'].insert_many(round_dict)
-        round_dict["_id"] = str(result.inserted_id)
-        return round_dict
+@router.post("/post", response_model=list[TrainingRound])
+async def post_round(rounds: list[TrainingRound]):
+    try:
+        rounds_dict = jsonable_encoder(rounds) # This will recursively convert nested models
+        result = await mongodb.db['training_rounds'].insert_many(rounds_dict)  
+        for i, inserted_id in enumerate(result.inserted_ids):
+            rounds_dict[i]["_id"] = str(inserted_id)
+        return rounds_dict
     except Exception as e:
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
+
 
 
 # chatgpt generated (need to connect to mongodb to check)
