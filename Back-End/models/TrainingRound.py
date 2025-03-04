@@ -39,7 +39,7 @@ class TrainingRound(BaseModel):
     # id: PyObjectId = Field(default_factory=PyObjectId, alias='_id') 
     # id: str = Field(default_factory=generate_object_id, alias='_id') # Generate unique ID
     round_id: int
-    created_at: datetime = Field(default_factory=datetime.now(timezone(timedelta(hours=3)))) # Current date and time
+    created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc) + timedelta(hours=3))  # AST (UTC+3) Current date and time
     clients: list[ClientMetrics] # List of client metrics
     # id: str = Field(default_factory=lambda: str(ObjectId()), alias='_id')
 
