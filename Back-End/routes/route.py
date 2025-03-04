@@ -10,7 +10,7 @@ router = APIRouter()
 @router.get("/get", response_model=list[TrainingRound])
 async def get_rounds():
     try:
-        rounds = await mongodb.db['training_rounds'].find().to_list(100)
+        rounds = await mongodb.db['training_rounds'].find({}, {"_id": 0}).to_list(100)
         return jsonable_encoder(rounds)
     except Exception as e:
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
