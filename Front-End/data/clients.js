@@ -12,6 +12,7 @@ export const clients = [];
 export const loadClients = async () => {
   try {
     const clientIds = await fetchUniqueClientIds();
+    clientIds.sort(); // Sort the client IDs incrementally
     clientIds.forEach((id, index) => {
       clients.push({ id, name: `Client ${index + 1}`});
     });
