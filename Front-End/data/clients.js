@@ -13,7 +13,7 @@ export const loadClients = async () => {
   try {
     const clientIds = await fetchUniqueClientIds();
     clientIds.forEach((id, index) => {
-      clients.push({ id, name: `Client ${index + 1}`, institution: '' });
+      clients.push({ id, name: `Client ${index + 1}`});
     });
   } catch (error) {
     console.error('Error fetching unique client IDs:', error);
