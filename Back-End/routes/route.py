@@ -26,7 +26,18 @@ async def post_round(rounds: list[TrainingRound]):
     except Exception as e:
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
 
-
+@router.get("/clients", response_model=list[str])
+async def get_unique_client_ids():
+    try:
+        pipeline = [
+            {"$unwind": "$clients"},
+            {"$group": {"_id": "$clients.client_id"}}
+        ]
+        result = await mongodb.db['training_rounds'].aggregate(pipeline).to_list(1000)
+        client_ids = [doc["_id"] for doc in result]
+        return client_ids
+    except Exception as e:
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
 
 # chatgpt generated (need to connect to mongodb to check)
 '''

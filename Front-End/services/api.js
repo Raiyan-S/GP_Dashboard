@@ -37,8 +37,25 @@ export const fetchRoundData = async (roundId) => {
 // Fetch Health Status from the API
 export const fetchHealthStatus = async () => {
   const response = await fetch(`${API_URL}/health`);
+  const contentType = response.headers.get("content-type");
+
   if (!response.ok) {
     throw new Error('Failed to fetch health status');
+  }
+
+  if (contentType && contentType.indexOf("application/json") !== -1) {
+    return response.json();
+  } else {
+    const text = await response.text();
+    console.error("Unexpected response format:", text);
+    throw new Error('Unexpected response format');
+  }
+};
+
+export const fetchUniqueClientIds = async () => {
+  const response = await fetch(`${API_URL}/clients`);
+  if (!response.ok) {
+    throw new Error('Failed to fetch unique client IDs');
   }
   return response.json();
 };

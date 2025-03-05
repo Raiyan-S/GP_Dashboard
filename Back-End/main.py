@@ -37,9 +37,9 @@ app.mount("/assets", StaticFiles(directory="../dist/assets"), name="assets")
 app.mount("/static", StaticFiles(directory="../dist"), name="static")
 
 # Health check endpoint to verify the service is running
-# @app.get("/health")
-# async def health_check():
-#     return {"status": "healthy"}
+@app.get("/health")
+async def health_check():
+    return {"status": "healthy"}
 
 # ping mongo endpoint
 import motor.motor_asyncio
