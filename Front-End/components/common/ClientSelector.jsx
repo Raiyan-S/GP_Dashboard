@@ -7,7 +7,7 @@ export default function ClientSelector({ selectedClient, onClientChange }) {
   useEffect(() => {
     const load = async () => {
       await loadClients();  
-      setLoadedClients(clients);
+      setLoadedClients(...clients); // Spread the clients array to trigger re-render
     };
     load();
   }, []);
