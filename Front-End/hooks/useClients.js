@@ -7,13 +7,10 @@ export const useClients = () => {
   useEffect(() => {
     const loadClients = async () => {
       try {
-        const clientIds = await fetchUniqueClientIds();
-        const formattedClients = clientIds.map((id) => ({
-          id: id,
-          name: id.replace("_", " ").replace("client", "Client ")
-        }));
-
-        setClients(formattedClients);
+        const response = await fetch('https://gpdashboard-production.up.railway.app/clients');
+        const data = await response.json();
+        console.log("Fetched Clients:", data);  // Check what data is fetched
+        setClients(data);  // Update state with fetched client IDs
       } catch (error) {
         console.error("Error fetching unique client IDs:", error);
       }
