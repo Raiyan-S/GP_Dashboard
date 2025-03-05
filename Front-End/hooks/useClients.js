@@ -19,6 +19,8 @@ export const useClients = () => {
           id: id,
           name: id.replace("_", " ").replace("client", "Client ")
         }));
+        console.log("Fetched Clients:", formattedClients);
+
         setClients(formattedClients);
       } catch (error) {
         console.error("Error fetching unique client IDs:", error);
