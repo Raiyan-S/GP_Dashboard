@@ -1,16 +1,8 @@
-import React, { useState, useEffect } from 'react';
-import { clients, loadClients } from '../../data/clients';
+import React from 'react';
+import { useClients } from '../../hooks/useClients';
 
 export default function ClientSelector({ selectedClient, onClientChange }) {
-  const [loadedClients, setLoadedClients] = useState([]);
-
-  useEffect(() => {
-    const load = async () => {
-      await loadClients();  
-      setLoadedClients(...clients); // Spread the clients array to trigger re-render
-    };
-    load();
-  }, []);
+  const clients = useClients(); 
 
   return (
     <div className="flex flex-col sm:flex-row sm:items-center gap-2 w-full sm:w-auto">
@@ -22,9 +14,9 @@ export default function ClientSelector({ selectedClient, onClientChange }) {
         value={selectedClient}
         onChange={(e) => onClientChange(e.target.value)}
         className="block w-full sm:w-64 rounded-md border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white shadow-sm focus:border-blue-500 dark:focus:border-blue-400 focus:ring-blue-500 dark:focus:ring-blue-400 sm:text-sm">
-        {loadedClients.map((client) => (
-          <option key={client.id} value={hi}>
-            {hi}
+        {clients.map((client) => (
+          <option key={client.id} value={client.id}>
+            {client.name}
           </option>
         ))}
       </select>
