@@ -16,7 +16,7 @@ export default function ClientSelector({ selectedClient, onClientChange }) {
         className="block w-full sm:w-64 rounded-md border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white shadow-sm focus:border-blue-500 dark:focus:border-blue-400 focus:ring-blue-500 dark:focus:ring-blue-400 sm:text-sm">
         {clients.map((clientId, index) => (  // Loop through client IDs
           <option key={clientId} value={clientId}>
-            Client {index + 1}  {/* Displaying the client name as "Client 1", "Client 2", etc. */}
+            Client {index + 2}  {/* Displaying the client name as "Client 1", "Client 2", etc. */}
           </option>
         ))}
       </select>
