@@ -12,21 +12,25 @@ export const useClients = () => {
   const [clients, setClients] = useState([]);
 
   useEffect(() => {
-    const loadClients = async () => {
+    const fetchClients = async () => {
+      console.log("Fetching clients..."); 
+
       try {
         const clientIds = await fetchUniqueClientIds();
+        console.log("Fetched Clients from API:", clientIds); 
+
         const formattedClients = clientIds.map((id) => ({
-          id: id,
-          name: id.replace("_", " ").replace("client", "Client ")
+          id: id, 
+          name: id.replace("_", " ").replace("client", "Client "), 
         }));
-        console.log("Fetched Clients:", formattedClients);
 
         setClients(formattedClients);
       } catch (error) {
-        console.error("Error fetching unique client IDs:", error);
+        console.error("Error fetching clients:", error);
       }
     };
-    loadClients();
+
+    fetchClients();
   }, []);
 
   return clients;
