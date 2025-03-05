@@ -31,7 +31,8 @@ async def get_unique_client_ids():
     try:
         pipeline = [
             {"$unwind": "$clients"},
-            {"$group": {"_id": "$clients.client_id"}}
+            {"$group": {"_id": "$clients.client_id"}},
+            {"$sort": {"_id": 1}}  # Sort the client IDs in ascending order
         ]
         result = await mongodb.db['training_rounds'].aggregate(pipeline).to_list(1000)
         client_ids = [doc["_id"] for doc in result]
