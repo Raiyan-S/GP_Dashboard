@@ -15,9 +15,9 @@ export const useClients = () => {
     const loadClients = async () => {
       try {
         const clientIds = await fetchUniqueClientIds();
-        const formattedClients = clientIds.map((id, index) => ({
-          id,
-          name: `Client ${index + 1}`,
+        const formattedClients = clientIds.map((id) => ({
+          id: id,
+          name: id.replace("_", " ").replace("client", "Client ")
         }));
         setClients(formattedClients);
       } catch (error) {
