@@ -1,7 +1,8 @@
 // chatgpt generated (Need to rewrite for MongoDB integration)
 import { useState, useCallback } from 'react';
-import { clients } from './useClients';
+import { useClients  } from './useClients';
 
+const clients = useClients();
 // TODO: MongoDB Integration
 // Replace this with MongoDB fetch
 // const fetchClientData = async (clientId) => {
