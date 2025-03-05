@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { clients, loadClients } from '../../data/clients';
 
 export default function ClientSelector({ selectedClient, onClientChange }) {
@@ -6,7 +6,7 @@ export default function ClientSelector({ selectedClient, onClientChange }) {
 
   useEffect(() => {
     const load = async () => {
-      await loadClients();
+      await loadClients();  
       setLoadedClients(clients);
     };
     load();
