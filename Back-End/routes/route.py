@@ -40,6 +40,22 @@ async def get_unique_client_ids():
     except Exception as e:
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
 
+
+@router.get("/rounds/{client_id}", response_model=list[dict])
+async def get_client_rounds(client_id: str):
+    try:
+        pipeline = [
+            {"$unwind": "$clients"},
+            {"$match": {"clients.client_id": client_id}},
+            {"$project": {"round_id": 1, "clients.metrics": 1, "_id": 0}}  # Project only necessary fields
+        ]
+        rounds = await mongodb.db['training_rounds'].aggregate(pipeline).to_list(1000)
+        # All rounds where the client has participated
+        return rounds
+    except Exception as e:
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
+
+    
 # chatgpt generated (need to connect to mongodb to check)
 '''
 # Service Functions

@@ -2,6 +2,35 @@ const API_URL =  process.env.NODE_ENV === "production"
 ? "https://gpdashboard-production.up.railway.app"
 : "http://localhost:8000";
 
+// Fetch Health Status from the API
+export const fetchHealthStatus = async () => {
+  const response = await fetch(`${API_URL}/health`);
+  if (!response.ok) {
+    throw new Error('Failed to fetch health status');
+  }
+  return response.json();
+};
+
+// Fetch Unique Client IDs from the API
+export const fetchUniqueClientIds = async () => {
+  const response = await fetch(`${API_URL}/clients`);
+  if (!response.ok) {
+    throw new Error('Failed to fetch unique client IDs');
+  }
+  return response.json();
+};
+
+// Fetch Training Metrics for a specific round
+export const fetchClientRounds = async (clientId) => {
+  const response = await fetch(`${API_URL}/rounds/${clientId}`);
+  if (!response.ok) {
+    throw new Error('Failed to fetch client rounds');
+  }
+  return response.json();
+};
+
+
+
 /*
 export const fetchPerformanceData = async (clientId) => {
   const url = new URL(`${API_URL}/performance`);
@@ -33,29 +62,3 @@ export const fetchRoundData = async (roundId) => {
 };
 
 */
-
-// Fetch Health Status from the API
-export const fetchHealthStatus = async () => {
-  const response = await fetch(`${API_URL}/health`);
-  const contentType = response.headers.get("content-type");
-
-  if (!response.ok) {
-    throw new Error('Failed to fetch health status');
-  }
-
-  if (contentType && contentType.indexOf("application/json") !== -1) {
-    return response.json();
-  } else {
-    const text = await response.text();
-    console.error("Unexpected response format:", text);
-    throw new Error('Unexpected response format');
-  }
-};
-
-export const fetchUniqueClientIds = async () => {
-  const response = await fetch(`${API_URL}/clients`);
-  if (!response.ok) {
-    throw new Error('Failed to fetch unique client IDs');
-  }
-  return response.json();
-};
