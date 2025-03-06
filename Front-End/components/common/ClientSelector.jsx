@@ -1,5 +1,5 @@
 import React from 'react';
-import { useClients } from '../hooks/useClients';
+import { useClients } from '../../hooks/useClients';
 
 export default function ClientSelector({ selectedClient, onClientChange }) {
   const { clients, loading, error } = useClients();
