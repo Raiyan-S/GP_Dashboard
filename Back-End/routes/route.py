@@ -51,7 +51,7 @@ async def get_client_rounds(client_id: str):
                 "$project": {  # Include only the round_id and the client's metrics
                     "round_id": 1,
                     "metrics": "$clients.metrics",  # Rename 'clients.metrics' to 'metrics'
-                    "timestamp": 1,
+                    "created_at": 1,
                     "_id": 0  # Exclude the _id field
                 }
             }
@@ -62,7 +62,7 @@ async def get_client_rounds(client_id: str):
             {
                 "round_id": round["round_id"],
                 "metrics": round["metrics"],
-                "timestamp": round.get("timestamp")
+                "created_at": round.get("created_at")
             }
             for round in rounds
         ]
