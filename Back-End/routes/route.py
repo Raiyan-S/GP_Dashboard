@@ -45,15 +45,29 @@ async def get_unique_client_ids():
 async def get_client_rounds(client_id: str):
     try:
         pipeline = [
-            {"$unwind": "$clients"},
-            {"$match": {"clients.client_id": client_id}},
-            {"$project": {"round_id": 1, "clients.metrics": 1, "_id": 0}}  # Project only necessary fields
+            {"$unwind": "$clients"},  # Flatten the clients array
+            {"$match": {"clients.client_id": client_id}},  # Filter for the specific client
+            {
+                "$project": {  # Include only the round_id and the client's metrics
+                    "round_id": 1,
+                    "metrics": "$clients.metrics",  # Rename 'clients.metrics' to 'metrics'
+                    "_id": 0  # Exclude the _id field
+                }
+            }
         ]
         rounds = await mongodb.db['training_rounds'].aggregate(pipeline).to_list(1000)
-        # All rounds where the client has participated
-        return rounds
+        # Map the data to the required format, simplifying the structure
+        simplified_rounds = [
+            {
+                "round_id": round["round_id"],
+                "metrics": round["metrics"]
+            }
+            for round in rounds
+        ]
+        return simplified_rounds
     except Exception as e:
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
+
 
     
 # chatgpt generated (need to connect to mongodb to check)

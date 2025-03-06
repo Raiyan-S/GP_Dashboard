@@ -8,15 +8,34 @@ export function usePerformanceData(selectedClient = 'all', showAll = false) {
   const [loading] = useState(false);
   const [error] = useState(null);
 
-  // Fetch rounds for the selected client
   const fetchData = async (clientId) => {
     setLoading(true);
     try {
       const rounds = await fetchClientRounds(clientId);
-      const clientRounds = rounds.map(round => ({
-        round: round.round_id,
-        ...round.clients.find(client => client.client_id === clientId).metrics
-      }));
+  
+      // Check if rounds is an array and it's not empty
+      if (!Array.isArray(rounds) || rounds.length === 0) {
+        throw new Error('No rounds data available');
+      }
+  
+      const clientRounds = rounds.map(round => {
+        if (round && round.clients) {
+          const clientMetrics = round.clients.find(client => client.client_id === clientId);
+          if (clientMetrics) {
+            return {
+              round: round.round_id,
+              ...clientMetrics.metrics,
+            };
+          } else {
+            console.warn(`Client ${clientId} not found in round ${round.round_id}`);
+            return null;
+          }
+        } else {
+          console.warn('Invalid round data', round);
+          return null; 
+        }
+      }).filter(item => item !== null); // Filter out null values
+  
       setData(clientRounds);
     } catch (err) {
       setError('Failed to fetch client rounds');
