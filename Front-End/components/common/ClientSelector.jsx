@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-export default function ClientSelector({ selectedClient, onClientChange, clients  }) {
+export default function ClientSelector({ selectedClient, onClientChange, clients }) {
   return (
     <div className="flex flex-col sm:flex-row sm:items-center gap-2 w-full sm:w-auto">
       <label htmlFor="client-select" className="text-sm font-medium text-gray-700 dark:text-gray-300 whitespace-nowrap">

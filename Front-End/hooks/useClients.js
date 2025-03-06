@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { fetchUniqueClientIds } from "../services/api";
 
 export const useClients = () => {
-  const [clients, setClients] = useState([]);
+  const [clients, setClients] = useState();
 
   useEffect(() => {
     const loadClients = async () => {
