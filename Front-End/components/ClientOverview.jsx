@@ -21,7 +21,7 @@ export default function ClientOverview({ onSeeAll }) {
         <ClientSelector 
           selectedClient={selectedClient} 
           onClientChange={setSelectedClient} 
-          clients={clients}
+          clients={clients || []}
         />
       </div>
       <div className="space-y-6">
