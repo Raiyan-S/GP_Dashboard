@@ -48,6 +48,12 @@ export default function PerformanceChart({ data }) {
   // Find the selected option based on the selected metric
   const { dataKey, color, label } = metricOptions.find(option => option.id === selectedMetric);
 
+  // Ensure `data` contains the 'round' key for all items.
+  const validatedData = data?.map(item => ({
+    ...item,
+    round: item.round || 'N/A',  // Handle undefined or missing 'round' field
+  })) || [];
+
   return (
     <div className="bg-white dark:bg-gray-800 rounded-lg p-6 transition-colors">
       {/* Metric Selector */}
@@ -65,16 +71,14 @@ export default function PerformanceChart({ data }) {
           {/* Recharts Container for the Chart*/}
           <ResponsiveContainer width="100%" height={300}>
             <LineChart
-              data={data}
+              data={validatedData}
               margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
             >
               <CartesianGrid strokeDasharray="3 3" />
-              <XAxis
-                dataKey="round"
-              />
-              <YAxis/>
-              <Tooltip/>
-              <Legend/>
+              <XAxis dataKey="round" />
+              <YAxis />
+              <Tooltip />
+              <Legend />
               <Line
                 type="monotone"
                 dataKey={dataKey}
@@ -87,7 +91,7 @@ export default function PerformanceChart({ data }) {
         </div>
         {/* Latest Round Summary */}
         <div className="w-full lg:w-64">
-          <ClientSummary data={data} />
+          <ClientSummary data={validatedData} />
         </div>
       </div>
     </div>
