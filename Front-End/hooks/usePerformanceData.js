@@ -12,7 +12,7 @@ export function usePerformanceData(selectedClient = 'all', showAll = false) {
     setLoading(true);
     setError(null); // Clear any previous errors
     try {
-      const rounds = await fetchTrainingMetrics(clientId); 
+      const rounds = await fetchTrainingMetrics(clientId); // Make sure fetchTrainingMetrics is correct
   
       // Check if rounds is an array and it's not empty
       if (!Array.isArray(rounds) || rounds.length === 0) {
@@ -21,16 +21,22 @@ export function usePerformanceData(selectedClient = 'all', showAll = false) {
   
       // Map rounds data
       const clientRounds = rounds.map(round => {
-        const clientMetrics = round.clients.find(client => client.client_id === clientId);
-        if (clientMetrics) {
-          return {
-            round: round.round_id,
-            created_at: round.created_at, // Include timestamp
-            ...clientMetrics.metrics,
-          };
+        // Ensure the round object is defined
+        if (round && round.clients) {
+          const clientMetrics = round.clients.find(client => client.client_id === clientId);
+          if (clientMetrics) {
+            return {
+              round: round.round_id,  // Ensure round_id exists
+              created_at: round.created_at, // Include timestamp
+              ...clientMetrics.metrics, // Add metrics
+            };
+          } else {
+            console.warn(`Client ${clientId} not found in round ${round.round_id}`);
+            return null;
+          }
         } else {
-          console.warn(`Client ${clientId} not found in round ${round.round_id}`);
-          return null;
+          console.warn('Invalid round data', round);
+          return null; 
         }
       }).filter(item => item !== null); // Filter out null values
   
@@ -59,7 +65,7 @@ export function usePerformanceData(selectedClient = 'all', showAll = false) {
     data: getData(),
     loading, 
     error,
-    refetch: () => fetchData(selectedClient)
+    refetch: () => fetchData(selectedClient) // Allow manual refresh
   };
 }
 
