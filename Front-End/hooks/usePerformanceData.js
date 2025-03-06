@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useClients } from './useClients';
 import { fetchTrainingMetrics } from '../services/api';
 
@@ -26,7 +26,7 @@ export function usePerformanceData(selectedClient = 'all', showAll = false) {
     }
   };
 
-// Fetch data when a client is selected
+  // Fetch data when a client is selected
   useEffect(() => {
     if (selectedClient !== 'all') {
       fetchData(selectedClient);
