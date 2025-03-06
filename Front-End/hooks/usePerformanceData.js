@@ -20,7 +20,8 @@ export function usePerformanceData(selectedClient = 'all', showAll = false) {
       }
   
       // Map rounds data
-      const clientRounds = rounds.map(round => {
+      // rounds?.map ensures rounds is not null or undefined until the fetch resolves
+      const clientRounds = rounds?.map(round => {
         // Ensure the round object is defined
         if (round && round.clients) {
           const clientMetrics = round.clients.find(client => client.client_id === clientId);
