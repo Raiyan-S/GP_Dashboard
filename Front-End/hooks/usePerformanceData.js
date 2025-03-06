@@ -36,9 +36,9 @@ const generateClientData = (clientId) => {
 };
 
 // Generate data for all clients
-// const clientData = new Map(
-//   clients.map(client => [client.id, generateClientData(client.id)])
-// );
+const clientData = new Map(
+  clients.map(client => [client.id, generateClientData(client.id)])
+);
 
 // TODO: Replace with MongoDB aggregation
 // const fetchAverageLastRoundMetrics = async () => {
