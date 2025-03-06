@@ -7,7 +7,8 @@ export const useClients = () => {
   useEffect(() => {
     const loadClients = async () => {
       try {
-        const clientIds = await fetchUniqueClientIds();
+        // const clientIds = await fetchUniqueClientIds();
+        const clientIds = ['client1', 'client2', 'client3'];
         const formattedClients = clientIds.map((id) => ({
           id: id,
           name: id.replace("_", " ").replace("client", "Client ")
