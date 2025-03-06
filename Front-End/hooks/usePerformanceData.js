@@ -10,38 +10,36 @@ export function usePerformanceData(selectedClient = 'all', showAll = false) {
 
   const fetchData = async (clientId) => {
     setLoading(true);
+    setError(null); // Clear any previous errors
     try {
-      const rounds = await fetchClientRounds(clientId);
+      const rounds = await fetchTrainingMetrics(clientId); 
   
       // Check if rounds is an array and it's not empty
       if (!Array.isArray(rounds) || rounds.length === 0) {
         throw new Error('No rounds data available');
       }
   
+      // Map rounds data
       const clientRounds = rounds.map(round => {
-        if (round && round.clients) {
-          const clientMetrics = round.clients.find(client => client.client_id === clientId);
-          if (clientMetrics) {
-            return {
-              round: round.round_id,
-              ...clientMetrics.metrics,
-            };
-          } else {
-            console.warn(`Client ${clientId} not found in round ${round.round_id}`);
-            return null;
-          }
+        const clientMetrics = round.clients.find(client => client.client_id === clientId);
+        if (clientMetrics) {
+          return {
+            round: round.round_id,
+            created_at: round.created_at, // Include timestamp
+            ...clientMetrics.metrics,
+          };
         } else {
-          console.warn('Invalid round data', round);
-          return null; 
+          console.warn(`Client ${clientId} not found in round ${round.round_id}`);
+          return null;
         }
       }).filter(item => item !== null); // Filter out null values
   
-      setData(clientRounds);
+      setData(clientRounds);  // Update the state with processed rounds data
     } catch (err) {
-      setError('Failed to fetch client rounds');
+      setError('Failed to fetch client rounds: ' + err.message); // Improve error message
       console.error(err);
     } finally {
-      setLoading(false);
+      setLoading(false); // Set loading to false after fetching
     }
   };
 
@@ -57,77 +55,11 @@ export function usePerformanceData(selectedClient = 'all', showAll = false) {
     return showAll ? data : data.slice(-10);  // Show all rounds or the last 10 rounds
   }, [showAll, data]);
 
-
-  // // Generate client-specific data
-  // const generateClientData = (clientId) => {
-  //   const baseAccuracy = clientId === 'client1' ? 90 : 
-  //                       clientId === 'client2' ? 85 :
-  //                       clientId === 'client3' ? 88 : 82;
-    
-  //   return Array.from({ length: 15 }, (_, i) => ({
-  //     round: i + 1,
-  //     accuracy: baseAccuracy + (Math.random() * 5 - 2.5),
-  //     f1Score: (baseAccuracy - 2) + (Math.random() * 5 - 2.5),
-  //     loss: 0.32 - (Math.random() * 0.2) - (baseAccuracy - 85) * 0.01,
-  //     precision: (baseAccuracy - 1) / 100 + (Math.random() * 0.05 - 0.025),
-  //     recall: (baseAccuracy - 1) / 100 + (Math.random() * 0.05 - 0.025)
-  //   }));
-  // };
-
-  // // Generate data for all clients
-  // const clientData = new Map(
-  //   clients.map(client => [client.id, generateClientData(client.id)])
-  // );
-
-  // const getAverageLastRoundMetrics = () => {
-  //   const lastRounds = Array.from(clientData.values()).map(data => data[data.length - 1]);
-  //   return {
-  //     accuracy: lastRounds.reduce((sum, d) => sum + d.accuracy, 0) / lastRounds.length,
-  //     f1Score: lastRounds.reduce((sum, d) => sum + d.f1Score, 0) / lastRounds.length,
-  //     loss: lastRounds.reduce((sum, d) => sum + d.loss, 0) / lastRounds.length,
-  //     precision: lastRounds.reduce((sum, d) => sum + d.precision, 0) / lastRounds.length,
-  //     recall: lastRounds.reduce((sum, d) => sum + d.recall, 0) / lastRounds.length
-  //   };
-  // };
-
-  // const combinedData = Array.from({ length: 15 }, (_, i) => {
-  //   if (i === 14) {
-  //     return {
-  //       round: i + 1,
-  //       ...getAverageLastRoundMetrics()
-  //     };
-  //   }
-    
-  //   const roundData = Array.from(clientData.values()).map(data => data[i]);
-  //   return {
-  //     round: i + 1,
-  //     accuracy: roundData.reduce((sum, d) => sum + d.accuracy, 0) / roundData.length,
-  //     f1Score: roundData.reduce((sum, d) => sum + d.f1Score, 0) / roundData.length,
-  //     loss: roundData.reduce((sum, d) => sum + d.loss, 0) / roundData.length,
-  //     precision: roundData.reduce((sum, d) => sum + d.precision, 0) / roundData.length,
-  //     recall: roundData.reduce((sum, d) => sum + d.recall, 0) / roundData.length
-  //   };
-  // });
-
-  // const getData = useCallback(() => {
-  //   const rawData = selectedClient === 'all' 
-  //     ? combinedData 
-  //     : clientData.get(selectedClient) || [];
-  //   return showAll ? rawData : rawData.slice(-10);
-  // }, [selectedClient, showAll, combinedData, clientData]);
-
-  // const getAllData = useCallback(() => {
-  //   return selectedClient === 'all' 
-  //     ? combinedData 
-  //     : clientData.get(selectedClient) || [];
-  // }, [selectedClient, combinedData, clientData]);
-
   return { 
     data: getData(),
-    // allData: getAllData(),
     loading, 
     error,
-    refetch: () => {fetchData(selectedClient)}
+    refetch: () => fetchData(selectedClient)
   };
 }
 

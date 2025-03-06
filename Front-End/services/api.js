@@ -21,7 +21,7 @@ export const fetchUniqueClientIds = async () => {
 };
 
 // Fetch Training Metrics for a specific round
-export const fetchClientRounds = async (clientId) => {
+export const fetchTrainingMetrics = async (clientId) => {
   const response = await fetch(`${API_URL}/rounds/${clientId}`);
   if (!response.ok) {
     throw new Error('Failed to fetch client rounds');
