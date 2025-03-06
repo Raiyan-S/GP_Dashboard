@@ -1,6 +1,17 @@
-import React, { useState } from 'react';
+import React from 'react';
+import { useClients } from '../hooks/useClients';
 
-export default function ClientSelector({ selectedClient, onClientChange, clients }) {
+export default function ClientSelector({ selectedClient, onClientChange }) {
+  const { clients, loading, error } = useClients();
+
+  if (loading) {
+    return <div>Loading clients...</div>;  // Display loading state
+  }
+
+  if (error) {
+    return <div>Error: {error}</div>;  // Display error state
+  }
+
   return (
     <div className="flex flex-col sm:flex-row sm:items-center gap-2 w-full sm:w-auto">
       <label htmlFor="client-select" className="text-sm font-medium text-gray-700 dark:text-gray-300 whitespace-nowrap">
