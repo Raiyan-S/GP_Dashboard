@@ -9,67 +9,29 @@ export function usePerformanceData(selectedClient = 'all', showAll = false) {
   const [loading] = useState(false);
   const [error] = useState(null);
 
-  console.log = (...args) => window.__REACT_DEVTOOLS_GLOBAL_HOOK__?.emit('console.log', args) || console.__proto__.log(...args);
-  console.error = (...args) => window.__REACT_DEVTOOLS_GLOBAL_HOOK__?.emit('console.error', args) || console.__proto__.error(...args);
-  console.warn = (...args) => window.__REACT_DEVTOOLS_GLOBAL_HOOK__?.emit('console.warn', args) || console.__proto__.warn(...args);
-
-
   const fetchData = async (clientId) => {
+    console.log(`DEBUG: Fetching data for clientId: ${clientId}`);
+  
     setLoading(true);
     setError(null);
   
     try {
       const rounds = await fetchTrainingMetrics(clientId);
       
-      console.log("DEBUG: Raw fetched data:", rounds);
+      console.log("DEBUG: Raw fetched data:", rounds); // 👀 Check if this logs
   
-      if (!rounds) {
-        throw new Error("API returned undefined");
-      }
+      if (!rounds) throw new Error("API returned undefined");
+      if (!Array.isArray(rounds)) throw new Error(`Expected array but got ${typeof rounds}`);
+      if (rounds.length === 0) throw new Error("No rounds available in API response");
   
-      if (!Array.isArray(rounds)) {
-        throw new Error(`Expected array but got ${typeof rounds}`);
-      }
+      rounds.forEach((round, index) => console.log(`DEBUG: Round ${index}:`, round));
   
-      if (rounds.length === 0) {
-        throw new Error("No rounds available in API response");
-      }
-  
-      rounds.forEach((round, index) => {
-        console.log(`DEBUG: Round ${index}:`, round);
-      });
-  
-      // Map the rounds safely
-      const clientRounds = rounds
-        .map((round) => {
-          if (!round || typeof round !== "object") {
-            console.warn("⚠️ WARNING: Found invalid round:", round);
-            return null;
-          }
-  
-          if (!round.round_id) {
-            console.warn("⚠️ WARNING: 'round_id' is missing:", round);
-            return null;
-          }
-  
-          if (!round.clients) {
-            console.warn("⚠️ WARNING: 'clients' field missing in round:", round);
-            return null;
-          }
-  
-          const clientMetrics = round.clients.find(client => client.client_id === clientId);
-          if (!clientMetrics) {
-            console.warn(`⚠️ WARNING: Client ${clientId} not found in round ${round.round_id}`);
-            return null;
-          }
-  
-          return {
-            round: round.round_id,  
-            created_at: round.created_at,
-            ...clientMetrics.metrics,
-          };
-        })
-        .filter((item) => item !== null);
+      // Process data
+      const clientRounds = rounds.map((round) => ({
+        round: round?.round_id,
+        created_at: round?.created_at,
+        ...round?.clients?.find(client => client.client_id === clientId)?.metrics,
+      })).filter(Boolean);
   
       console.log("DEBUG: Processed clientRounds:", clientRounds);
   
@@ -80,15 +42,19 @@ export function usePerformanceData(selectedClient = 'all', showAll = false) {
     } finally {
       setLoading(false);
     }
-  };  
+  };
+    
 
 
   // Fetch data when a client is selected
-  useEffect(() => {
-    if (selectedClient !== 'all') {
+  useEffect(() => { 
+    console.log(`DEBUG: useEffect triggered with selectedClient: "${selectedClient}"`);
+    if (selectedClient) {
+      console.log(`DEBUG: Calling fetchData with "${selectedClient}"`);
       fetchData(selectedClient);
     }
   }, [selectedClient]);
+
 
   // Return the fetched data, loading state, and error handling
   const getData = useCallback(() => {
