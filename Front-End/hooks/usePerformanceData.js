@@ -12,43 +12,44 @@ export function usePerformanceData(selectedClient = 'all', showAll = false) {
     setLoading(true);
     setError(null); // Clear any previous errors
     try {
-      const rounds = await fetchTrainingMetrics(clientId); // Make sure fetchTrainingMetrics is correct
-  
-      // Check if rounds is an array and it's not empty
+      const rounds = await fetchTrainingMetrics(clientId);
+      
+      console.log('Fetched rounds data:', rounds); // Debugging API response
+
       if (!Array.isArray(rounds) || rounds.length === 0) {
         throw new Error('No rounds data available');
       }
-  
-      // Map rounds data
-      // rounds?.map ensures rounds is not null or undefined until the fetch resolves
-      const clientRounds = rounds?.map(round => {
-        // Ensure the round object is defined
-        if (round && round.clients) {
-          const clientMetrics = round.clients.find(client => client.client_id === clientId);
-          if (clientMetrics) {
-            return {
-              round: round.round_id,  // Ensure round_id exists
-              created_at: round.created_at, // Include timestamp
-              ...clientMetrics.metrics, // Add metrics
-            };
-          } else {
-            console.warn(`Client ${clientId} not found in round ${round.round_id}`);
-            return null;
-          }
-        } else {
-          console.warn('Invalid round data', round);
-          return null; 
+
+      const clientRounds = rounds.map(round => {
+        console.log('Processing round:', round); // Debugging each round
+        
+        if (!round || !round.clients || round.clients.length === 0) {
+          console.warn('Skipping invalid round:', round);
+          return null;
         }
-      }).filter(item => item !== null); // Filter out null values
-  
-      setData(clientRounds);  // Update the state with processed rounds data
+
+        const clientMetrics = round.clients.find(client => client.client_id === clientId);
+        if (clientMetrics) {
+          return {
+            round: round.round_id,  // Ensure round_id exists
+            created_at: round.created_at, // Include timestamp
+            ...clientMetrics.metrics, // Add metrics
+          };
+        } else {
+          console.warn(`Client ${clientId} not found in round ${round.round_id}`);
+          return null;
+        }
+      }).filter(item => item !== null);
+
+      setData(clientRounds);
     } catch (err) {
-      setError('Failed to fetch client rounds: ' + err.message); // Improve error message
+      setError('Failed to fetch client rounds: ' + err.message);
       console.error(err);
     } finally {
-      setLoading(false); // Set loading to false after fetching
+      setLoading(false);
     }
   };
+
 
   // Fetch data when a client is selected
   useEffect(() => {
