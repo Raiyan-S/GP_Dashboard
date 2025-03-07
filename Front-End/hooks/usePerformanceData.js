@@ -16,6 +16,8 @@ export function usePerformanceData(selectedClient = 'all', showAll = false) {
       const rounds = await fetchTrainingMetrics(clientId);
       
       console.log('Fetched rounds data:', rounds); // Debugging API response
+      console.error("DEBUG ERROR: Fetched rounds data", rounds);
+      console.warn("DEBUG WARN: Processed client rounds", rounds);
       if (!Array.isArray(rounds) || rounds.length === 0) {
         throw new Error('No rounds data available');
       }
