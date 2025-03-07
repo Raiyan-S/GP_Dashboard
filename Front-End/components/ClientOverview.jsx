@@ -6,7 +6,7 @@ import { usePerformanceData } from '../hooks/usePerformanceData';
 
 // Used in App.jsx
 export default function ClientOverview({ onSeeAll }) {
-  const [selectedClient, setSelectedClient] = useState('all');
+  const [selectedClient, setSelectedClient] = useState('client_1');
   const { data } = usePerformanceData(selectedClient);
 
   return (
