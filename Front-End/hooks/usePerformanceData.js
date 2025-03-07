@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useClients } from './useClients';
 import { fetchTrainingMetrics } from '../services/api';
+console.log("DEBUG: usePerformanceData loaded. NODE_ENV =", process.env.NODE_ENV);
 
 export function usePerformanceData(selectedClient = 'all', showAll = false) {
   const clients = useClients(); // Call useClients inside the function
@@ -15,7 +16,6 @@ export function usePerformanceData(selectedClient = 'all', showAll = false) {
       const rounds = await fetchTrainingMetrics(clientId);
       
       console.log('Fetched rounds data:', rounds); // Debugging API response
-
       if (!Array.isArray(rounds) || rounds.length === 0) {
         throw new Error('No rounds data available');
       }
