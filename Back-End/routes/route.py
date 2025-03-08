@@ -75,11 +75,11 @@ async def get_latest_rounds():
     try:
         pipeline = [
             {"$unwind": "$clients"},  # Flatten clients array
-            {"$sort": {"client_id": 1}}, # Sort by client_id
+            {"$sort": {"created_at": -1}},  # Sort by newest round first
             {
                 "$group": {
                     "_id": "$clients.client_id",  # Group by client_id
-                    "latest_round": {"$first": "$$ROOT"}  # Get the first (latest) round
+                    "latest_round": {"$first": "$$ROOT"}  # Get the first (latest because we sorted by newest round) round
                 }
             },
             {
