@@ -70,6 +70,75 @@ async def get_client_rounds(client_id: str):
     except Exception as e:
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
 
+@router.get("/latest-rounds", response_model=list[dict])
+async def get_latest_rounds():
+    try:
+        pipeline = [
+            {"$unwind": "$clients"},  # Flatten clients array
+            {"$sort": {"created_at": -1}},  # Sort by newest round first
+            {
+                "$group": {
+                    "_id": "$clients.client_id",  # Group by client_id
+                    "latest_round": {"$first": "$$ROOT"}  # Get the first (latest) round
+                }
+            },
+            {
+                "$project": {
+                    "_id": 0,  # Remove MongoDB _id field
+                    "client_id": 1,
+                    "round_id": "$latest_round.round_id",
+                    "metrics": "$latest_round.clients.metrics",
+                    "created_at": "$latest_round.created_at"
+                }
+            }
+        ]
+        
+        latest_rounds = await mongodb.db["training_rounds"].aggregate(pipeline).to_list(1000)
+        return latest_rounds
+    except Exception as e:
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
+
+@router.get("/latest-rounds/averaged", response_model=dict)
+async def get_averaged_metrics():
+    try:
+        pipeline = [
+            {"$unwind": "$clients"},  # Flatten clients array
+            {"$sort": {"created_at": -1}},  # Sort rounds by newest first
+            {
+                "$group": {
+                    "_id": "$clients.client_id",  # Group by client_id
+                    "latest_round": {"$first": "$$ROOT"}  # Get the first (latest) round per client
+                }
+            },
+            {
+                "$project": {
+                    "_id": 0,  # Remove MongoDB _id field
+                    "client_id": 1, 
+                    "metrics": "$latest_round.clients.metrics"
+                }
+            }
+        ]
+        
+        latest_rounds = await mongodb.db["training_rounds"].aggregate(pipeline).to_list(1000)
+
+        # Aggregate metrics across all latest rounds
+        total_metrics = {}
+        client_count = len(latest_rounds)
+
+        for round in latest_rounds:
+            metrics = round["metrics"]
+            for key, value in metrics.items():
+                total_metrics[key] = total_metrics.get(key, 0) + value  # Sum up metric values
+
+        if client_count > 0:
+            averaged_metrics = {key: value / client_count for key, value in total_metrics.items()}  # Compute averages
+        else:
+            averaged_metrics = {}
+
+        return {"averaged_metrics": averaged_metrics, "client_count": client_count}
+    
+    except Exception as e:
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
 
     
 # chatgpt generated (need to connect to mongodb to check)

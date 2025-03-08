@@ -27,7 +27,21 @@ export const fetchTrainingMetrics = async (clientId) => {
   return response.json();
 };
 
+export const fetchLatestRounds = async () => {
+  const response = await fetch(`${API_URL}/latest-rounds`);
+  if (!response.ok) {
+    throw new Error("Failed to fetch latest rounds");
+  }
+  return response.json();
+};
 
+export const fetchAveragedMetrics = async () => {
+  const response = await fetch(`${API_URL}/latest-rounds/averaged`);
+  if (!response.ok) {
+    throw new Error("Failed to fetch averaged metrics");
+  }
+  return response.json();
+};
 
 /*
 export const fetchPerformanceData = async (clientId) => {
