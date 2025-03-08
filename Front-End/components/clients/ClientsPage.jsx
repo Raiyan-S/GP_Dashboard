@@ -29,7 +29,6 @@ export default function ClientsPage() {
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center space-x-2">
           <h1 className="text-2xl font-semibold text-gray-900 dark:text-white">Client Training Logs</h1>
-          <span className="text-sm text-gray-500 dark:text-gray-400">(Dummy data not fetched from database)</span>
         </div>
         <ClientSelector selectedClient={selectedClient} onClientChange={setSelectedClient} />
       </div>
