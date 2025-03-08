@@ -11,7 +11,7 @@ const metricOptions = [
   { id: 'loss', label: 'Loss', dataKey: 'loss', color: '#F87171' },
   { id: 'precision', label: 'Precision', dataKey: 'precision', color: '#34D399' },
   { id: 'recall', label: 'Recall', dataKey: 'recall', color: '#FBBF24' },
-  { id: 'f1Score', label: 'F1 Score', dataKey: 'f1Score', color: '#818CF8' },
+  { id: 'f1_score', label: 'F1 Score', dataKey: 'f1_score', color: '#818CF8' },
 ];
 
 // MetricSelector component
@@ -48,10 +48,10 @@ export default function PerformanceChart({ data }) {
   // Find the selected option based on the selected metric
   const { dataKey, color, label } = metricOptions.find(option => option.id === selectedMetric);
 
-  // Ensure `data` contains the 'round' key for all items.
-  const validatedData = data?.map(item => ({
-    ...item,
-    round: item.round || 'N/A',  // Handle undefined or missing 'round' field
+  // Flatten the data to match Recharts format
+  const validatedData = data?.map(({ round_id, metrics }) => ({
+    round: round_id, // Use round_id as the X-axis key
+    ...metrics, // Spread metrics into the object
   })) || [];
 
   return (
@@ -91,7 +91,7 @@ export default function PerformanceChart({ data }) {
         </div>
         {/* Latest Round Summary */}
         <div className="w-full lg:w-64">
-          <ClientSummary data={validatedData} />
+          <ClientSummary data={data} />
         </div>
       </div>
     </div>

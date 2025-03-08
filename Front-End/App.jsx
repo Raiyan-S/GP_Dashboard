@@ -67,7 +67,7 @@ function App() {
 
           <main className="flex-1 px-4 sm:px-6 lg:px-8 py-6">
             <Routes>
-              <Route path="/dashboard" element={<><DashboardStats />{/*<ClientOverview onSeeAll={handleSeeAll} />*/}</>} />
+              <Route path="/dashboard" element={<><DashboardStats /><ClientOverview onSeeAll={handleSeeAll} /></>} />
               <Route path="/clients" element={<ClientsPage />} />
               <Route path="/model-trial" element={<ModelTrial />} />
               <Route path="/settings" element={<SettingsPage />} />

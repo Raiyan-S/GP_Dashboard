@@ -1,12 +1,12 @@
 from fastapi import APIRouter, HTTPException, status # APIRouter to group routes, HTTPException to handle exceptions, status for HTTP status codes
 from models.TrainingRound import TrainingRound
 from config.db import mongodb
-from bson import ObjectId
 from fastapi.encoders import jsonable_encoder # Convert Pydantic models to dictionaries (because of complex types e.g., datetime)
 
 
 router = APIRouter()
 
+# get all rounds
 @router.get("/get", response_model=list[TrainingRound])
 async def get_rounds():
     try:
@@ -15,6 +15,7 @@ async def get_rounds():
     except Exception as e:
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
 
+# post a round or rounds (For testing purposes)
 @router.post("/post", response_model=list[TrainingRound])
 async def post_round(rounds: list[TrainingRound]):
     try:
@@ -26,6 +27,7 @@ async def post_round(rounds: list[TrainingRound]):
     except Exception as e:
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
 
+# get all unique client IDs
 @router.get("/clients", response_model=list[str])
 async def get_unique_client_ids():
     try:
@@ -40,7 +42,7 @@ async def get_unique_client_ids():
     except Exception as e:
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
 
-
+# get all rounds for a specific client
 @router.get("/rounds/{client_id}", response_model=list[dict])
 async def get_client_rounds(client_id: str):
     try:
@@ -70,6 +72,7 @@ async def get_client_rounds(client_id: str):
     except Exception as e:
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
 
+# get the latest round for each client (probably will remove)
 @router.get("/latest-rounds", response_model=list[dict]) # just for debugging
 async def get_latest_rounds():
     try:
@@ -98,6 +101,7 @@ async def get_latest_rounds():
     except Exception as e:
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
 
+# get the latest round for each client then average the metrics
 @router.get("/latest-rounds/averaged", response_model=dict)
 async def get_averaged_metrics():
     try:
@@ -141,87 +145,46 @@ async def get_averaged_metrics():
     except Exception as e:
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
 
-    
-# chatgpt generated (need to connect to mongodb to check)
-'''
-# Service Functions
-async def fetch_rounds(filter: dict = None): # Fetch rounds from MongoDB (if filter is None, fetch all rounds)
+# get the second latest round for each client then average the metrics (I think I'll need this for comparing the last round if it's up or down trending)
+@router.get("/second-latest-rounds/averaged", response_model=dict) # need to check if there's a better way
+async def get_second_last_averaged_metrics():
     try:
-        query = filter if filter else {}
-        rounds = await mongodb.db['training_rounds'].find(query).sort("created_at", -1)
-        return rounds
-    
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
-
-async def fetch_aggregated_stats(): # Fetch aggregated stats (for summary average in dashboard)
-    try:
-        stats = await mongodb.db['training_rounds'].aggregate([
-            {"$unwind": "$clients"},
+        pipeline = [
+            {"$unwind": "$clients"},  # Flatten clients array
+            {"$sort": {"created_at": -1}},  # Sort rounds by newest first
             {
                 "$group": {
-                    "_id": None,
-                    "totalRounds": {"$addToSet": "$round_id"},
-                    "avgAccuracy": {"$avg": "$clients.metrics.accuracy"},
-                    "avgF1Score": {"$avg": "$clients.metrics.f1_score"},
-                    "avgLoss": {"$avg": "$clients.metrics.loss"}
+                    "_id": "$clients.client_id",  # Group by client_id
+                    "rounds": {"$push": "$$ROOT"}  # Push all rounds to an array
                 }
             },
             {
                 "$project": {
-                    "_id": 0,
-                    "totalRounds": {"$size": "$totalRounds"},
-                    "avgAccuracy": 1,
-                    "avgF1Score": 1,
-                    "avgLoss": 1
+                    "_id": 0,  # Remove MongoDB _id field
+                    "client_id": "$_id",
+                    "second_latest_round": {"$arrayElemAt": ["$rounds", 1]}  # Get the second latest round
                 }
             }
-        ]).to_list(1)
+        ]
         
-        if not stats:
-            return {
-                "totalRounds": 0,
-                "avgAccuracy": 0,
-                "avgF1Score": 0,
-                "avgLoss": 0
-            }
-        
-        return {
-            "totalRounds": stats[0]['totalRounds'],
-            "avgAccuracy": stats[0]['avgAccuracy'] * 100,
-            "avgF1Score": stats[0]['avgF1Score'] * 100,
-            "avgLoss": stats[0]['avgLoss']
-        }
+        second_latest_rounds = await mongodb.db["training_rounds"].aggregate(pipeline).to_list(1000)
+
+        # Aggregate metrics across all second latest rounds
+        total_metrics = {}
+        client_count = len(second_latest_rounds)
+
+        for round_data in second_latest_rounds:
+            metrics = round_data["second_latest_round"]["clients"]["metrics"]
+            for key, value in metrics.items():
+                total_metrics[key] = total_metrics.get(key, 0) + value  # Sum up metric values
+
+        # Compute averages and round the results at the end
+        if client_count > 0:
+            averaged_metrics = {key: round(value / client_count, 3) for key, value in total_metrics.items()}  # Compute averages
+        else:
+            averaged_metrics = {}
+
+        return {"averaged_metrics": averaged_metrics, "client_count": client_count}
+    
     except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
-
-# API Endpoints
-@router.get("/", response_model = list[TrainingRound]) 
-async def get_all_rounds_endpoint(client_id: str = None):
-    filter = {"clients.client_id": client_id} if client_id else {}
-    rounds = await fetch_rounds(filter)
-    transformed_data = []
-    for round in rounds:
-        client_data = next((c for c in round['clients'] if c['client_id'] == client_id), round['clients'][0])
-        transformed_data.append({
-            "round": round['round_id'],
-            "timestamp": round['created_at'],
-            "accuracy": client_data['metrics']['accuracy'] * 100,
-            "f1Score": client_data['metrics']['f1_score'] * 100,
-            "loss": client_data['metrics']['loss'],
-            "precision": client_data['metrics']['precision'],
-            "recall": client_data['metrics']['recall']
-        })
-    return transformed_data
-
-@router.get("/stats") 
-async def get_performance_stats_endpoint():
-    return await fetch_aggregated_stats()
-
-@router.get("/round/{round_id}", response_model=TrainingRound)
-async def get_round_by_id_endpoint(round_id: str):
-    rounds = await fetch_rounds({"round_id": round_id})
-    if not rounds:
-        raise HTTPException(status_code=404, detail="Round not found")
-    return rounds[0]
-'''
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))

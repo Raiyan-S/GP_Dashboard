@@ -2,76 +2,70 @@ import React from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { formatPercentage, formatDecimal, formatTimestamp } from '../../utils/formatters';
 
-export default function ClientsTable({ data, loading, pagination }) {
+export default function ClientsTable({ data, pagination }) {
   const { currentPage, totalPages, onPageChange } = pagination;
-
-  if (loading) {
-    return (
-      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md">
-        <div className="p-6 space-y-4">
-          {[...Array(10)].map((_, i) => (
-            <div key={i} className="animate-pulse bg-gray-200 dark:bg-gray-700 rounded h-12 w-full" />
-          ))}
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md dark:shadow-gray-900/30 transition-colors">
       {/* Mobile View */}
       <div className="block sm:hidden">
         <div className="divide-y divide-gray-200 dark:divide-gray-700">
-          {data.map((row, index) => (
-            <div key={index} className="p-4 space-y-3">
-              <div className="flex justify-between items-start">
-                <span className="font-medium text-gray-900 dark:text-white">Round {row.round}</span>
-                <span className="text-sm text-gray-500 dark:text-gray-400">{formatTimestamp(index)}</span>
+          {data.map((row, index) => {
+            // Ensure row is defined and has a round property
+            const round = row?.round_id || "N/A"; // Fallback if round_id is undefined
+            const metrics = row?.metrics || {};
+            const timestamp = row?.created_at || "N/A"
+            return (
+              <div key={index} className="p-4 space-y-3">
+                <div className="flex justify-between items-start">
+                  <span className="font-medium text-gray-900 dark:text-white">Round {round}</span>
+                  <span className="text-sm text-gray-500 dark:text-gray-400">{timestamp}</span>
+                </div>
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <span className="text-xs text-gray-500 dark:text-gray-400">Accuracy</span>
+                    <div className="mt-1">
+                      <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 dark:bg-blue-900/50 text-blue-800 dark:text-blue-300">
+                        {metrics.accuracy.toFixed(3) + '%'}
+                      </span>
+                    </div>
+                  </div>
+                  <div>
+                    <span className="text-xs text-gray-500 dark:text-gray-400">F1 Score</span>
+                    <div className="mt-1">
+                      <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 dark:bg-green-900/50 text-green-800 dark:text-green-300">
+                        {metrics.f1_score.toFixed(3) + '%'}
+                      </span>
+                    </div>
+                  </div>
+                  <div>
+                    <span className="text-xs text-gray-500 dark:text-gray-400">Loss</span>
+                    <div className="mt-1">
+                      <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 dark:bg-red-900/50 text-red-800 dark:text-red-300">
+                        {metrics.loss.toFixed(3)}
+                      </span>
+                    </div>
+                  </div>
+                  <div>
+                    <span className="text-xs text-gray-500 dark:text-gray-400">Precision</span>
+                    <div className="mt-1">
+                      <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-purple-100 dark:bg-purple-900/50 text-purple-800 dark:text-purple-300">
+                        {metrics.precision.toFixed(3)}
+                      </span>
+                    </div>
+                  </div>
+                  <div>
+                    <span className="text-xs text-gray-500 dark:text-gray-400">Recall</span>
+                    <div className="mt-1">
+                      <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-indigo-100 dark:bg-indigo-900/50 text-indigo-800 dark:text-indigo-300">
+                        {metrics.recall.toFixed(3)}
+                      </span>
+                    </div>
+                  </div>
+                </div>
               </div>
-              <div className="grid grid-cols-2 gap-3">
-                <div>
-                  <span className="text-xs text-gray-500 dark:text-gray-400">Accuracy</span>
-                  <div className="mt-1">
-                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 dark:bg-blue-900/50 text-blue-800 dark:text-blue-300">
-                      {formatPercentage(row.accuracy)}
-                    </span>
-                  </div>
-                </div>
-                <div>
-                  <span className="text-xs text-gray-500 dark:text-gray-400">F1 Score</span>
-                  <div className="mt-1">
-                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 dark:bg-green-900/50 text-green-800 dark:text-green-300">
-                      {formatPercentage(row.f1Score)}
-                    </span>
-                  </div>
-                </div>
-                <div>
-                  <span className="text-xs text-gray-500 dark:text-gray-400">Loss</span>
-                  <div className="mt-1">
-                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 dark:bg-red-900/50 text-red-800 dark:text-red-300">
-                      {formatDecimal(row.loss)}
-                    </span>
-                  </div>
-                </div>
-                <div>
-                  <span className="text-xs text-gray-500 dark:text-gray-400">Precision</span>
-                  <div className="mt-1">
-                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-purple-100 dark:bg-purple-900/50 text-purple-800 dark:text-purple-300">
-                      {formatDecimal(row.precision)}
-                    </span>
-                  </div>
-                </div>
-                <div>
-                  <span className="text-xs text-gray-500 dark:text-gray-400">Recall</span>
-                  <div className="mt-1">
-                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-indigo-100 dark:bg-indigo-900/50 text-indigo-800 dark:text-indigo-300">
-                      {formatDecimal(row.recall)}
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          ))}
+            )
+          })}
         </div>
       </div>
 
@@ -92,47 +86,53 @@ export default function ClientsTable({ data, loading, pagination }) {
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-200 dark:divide-gray-700 bg-white dark:bg-gray-800">
-                {data.map((row, index) => (
-                  <tr key={index} className="hover:bg-gray-50 dark:hover:bg-gray-700/50">
-                    <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 dark:text-white sm:pl-6">
-                      {row.round}
-                    </td>
-                    <td className="whitespace-nowrap px-3 py-4">
-                      <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 dark:bg-blue-900/50 text-blue-800 dark:text-blue-300">
-                        {formatPercentage(row.accuracy)}
-                      </span>
-                    </td>
-                    <td className="whitespace-nowrap px-3 py-4">
-                      <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 dark:bg-green-900/50 text-green-800 dark:text-green-300">
-                        {formatPercentage(row.f1Score)}
-                      </span>
-                    </td>
-                    <td className="whitespace-nowrap px-3 py-4">
-                      <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 dark:bg-red-900/50 text-red-800 dark:text-red-300">
-                        {formatDecimal(row.loss)}
-                      </span>
-                    </td>
-                    <td className="whitespace-nowrap px-3 py-4">
-                      <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-purple-100 dark:bg-purple-900/50 text-purple-800 dark:text-purple-300">
-                        {formatDecimal(row.precision)}
-                      </span>
-                    </td>
-                    <td className="whitespace-nowrap px-3 py-4">
-                      <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-indigo-100 dark:bg-indigo-900/50 text-indigo-800 dark:text-indigo-300">
-                        {formatDecimal(row.recall)}
-                      </span>
-                    </td>
-                    <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500 dark:text-gray-400">
-                      {formatTimestamp(index)}
-                    </td>
-                  </tr>
-                ))}
+                {data.map((row, index) => {
+                  // Ensure row is defined and has a round property
+                  const round = row?.round_id || "N/A"; // Fallback if round_id is undefined
+                  const metrics = row?.metrics || {};
+                  const timestamp = row?.created_at || "N/A"
+                  return (
+                    <tr key={index} className="hover:bg-gray-50 dark:hover:bg-gray-700/50">
+                      <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 dark:text-white sm:pl-6">
+                        {round}
+                      </td>
+                      <td className="whitespace-nowrap px-3 py-4">
+                        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 dark:bg-blue-900/50 text-blue-800 dark:text-blue-300">
+                          {metrics.accuracy.toFixed(3) + '%'}
+                        </span>
+                      </td>
+                      <td className="whitespace-nowrap px-3 py-4">
+                        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 dark:bg-green-900/50 text-green-800 dark:text-green-300">
+                          {metrics.f1_score.toFixed(3) + '%'}
+                        </span>
+                      </td>
+                      <td className="whitespace-nowrap px-3 py-4">
+                        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 dark:bg-red-900/50 text-red-800 dark:text-red-300">
+                          {metrics.loss.toFixed(3)}
+                        </span>
+                      </td>
+                      <td className="whitespace-nowrap px-3 py-4">
+                        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-purple-100 dark:bg-purple-900/50 text-purple-800 dark:text-purple-300">
+                          {metrics.precision.toFixed(3)}
+                        </span>
+                      </td>
+                      <td className="whitespace-nowrap px-3 py-4">
+                        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-indigo-100 dark:bg-indigo-900/50 text-indigo-800 dark:text-indigo-300">
+                          {metrics.recall.toFixed(3)}
+                        </span>
+                      </td>
+                      <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500 dark:text-gray-400">
+                        {timestamp}
+                      </td>
+                    </tr>
+                  )
+                })}
               </tbody>
             </table>
           </div>
         </div>
       </div>
-      
+
       {/* Pagination */}
       <div className="px-4 py-3 border-t dark:border-gray-700">
         <div className="flex items-center justify-between">

@@ -21,17 +21,3 @@ async def connect_to_mongo():
 async def close_mongo_connection():
     if mongodb.client:
         mongodb.client.close()
-        
-COLLECTION_NAME = "training_rounds"
-
-async def insert_training_round(training_round):
-    await mongodb.db[COLLECTION_NAME].insert_one(training_round)
-
-async def get_training_rounds():
-    return await mongodb.db[COLLECTION_NAME].find().to_list(100)
-
-async def update_training_round(round_id, update_data):
-    await mongodb.db[COLLECTION_NAME].update_one({"round_id": round_id}, {"$set": update_data})
-
-async def delete_training_round(round_id):
-    await mongodb.db[COLLECTION_NAME].delete_one({"round_id": round_id})

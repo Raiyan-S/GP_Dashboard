@@ -27,6 +27,7 @@ export const fetchTrainingMetrics = async (clientId) => {
   return response.json();
 };
 
+// Probably will remove
 export const fetchLatestRounds = async () => {
   const response = await fetch(`${API_URL}/latest-rounds`);
   if (!response.ok) {
@@ -35,6 +36,7 @@ export const fetchLatestRounds = async () => {
   return response.json();
 };
 
+// Fetch all client's latest round then average the metrics for "Summary" section
 export const fetchAveragedMetrics = async () => {
   const response = await fetch(`${API_URL}/latest-rounds/averaged`);
   if (!response.ok) {
@@ -42,35 +44,3 @@ export const fetchAveragedMetrics = async () => {
   }
   return response.json();
 };
-
-/*
-export const fetchPerformanceData = async (clientId) => {
-  const url = new URL(`${API_URL}/performance`);
-  if (clientId) {
-    url.searchParams.append('client_id', clientId);
-  }
-
-  const response = await fetch(url);
-  if (!response.ok) {
-    throw new Error('Failed to fetch performance data');
-  }
-  return response.json();
-};
-
-export const fetchDashboardStats = async () => {
-  const response = await fetch(`${API_URL}/performance/stats`);
-  if (!response.ok) {
-    throw new Error('Failed to fetch dashboard stats');
-  }
-  return response.json();
-};
-
-export const fetchRoundData = async (roundId) => {
-  const response = await fetch(`${API_URL}/performance/round/${roundId}`);
-  if (!response.ok) {
-    throw new Error('Failed to fetch round data');
-  }
-  return response.json();
-};
-
-*/
