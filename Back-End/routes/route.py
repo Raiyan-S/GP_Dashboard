@@ -85,7 +85,7 @@ async def get_latest_rounds():
             {
                 "$project": {
                     "_id": 0,  # Remove MongoDB _id field
-                    "client_id": 1,
+                    "client_id": "$_id",
                     "round_id": "$latest_round.round_id",
                     "metrics": "$latest_round.clients.metrics",
                     "created_at": "$latest_round.created_at"
@@ -113,7 +113,7 @@ async def get_averaged_metrics():
             {
                 "$project": {
                     "_id": 0,  # Remove MongoDB _id field
-                    "client_id": 1, 
+                    "client_id": "$_id", 
                     "metrics": "$latest_round.clients.metrics"
                 }
             }
