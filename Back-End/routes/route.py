@@ -125,13 +125,16 @@ async def get_averaged_metrics():
         total_metrics = {}
         client_count = len(latest_rounds)
 
-        for round in latest_rounds:
-            metrics = round["metrics"]
+        for round_data in latest_rounds:
+            metrics = round_data["metrics"]
             for key, value in metrics.items():
                 total_metrics[key] = total_metrics.get(key, 0) + value  # Sum up metric values
 
+        # Compute averages and round the results at the end
         if client_count > 0:
-            averaged_metrics = {key: round(value / client_count,4) for key, value in total_metrics.items()}  # Compute averages
+            averaged_metrics = {key: round(value / client_count, 4) for key, value in total_metrics.items()}  # Compute averages
+        else:
+            averaged_metrics = {}
 
         return {"averaged_metrics": averaged_metrics, "client_count": client_count}
     
