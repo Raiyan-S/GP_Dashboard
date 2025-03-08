@@ -12,7 +12,7 @@ class MongoDB:
 mongodb = MongoDB()
 
 async def connect_to_mongo():
-    mongo_uri = os.getenv("MONGODB_URL")
+    mongo_uri = os.getenv("MONGO_URL")
     db_name = os.getenv("DB_NAME")
     
     mongodb.client = AsyncIOMotorClient(mongo_uri)
