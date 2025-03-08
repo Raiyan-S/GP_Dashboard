@@ -9,7 +9,7 @@ export function usePerformanceData(selectedClient = '', showAll = false) {
 
   // Fetch data when a client is selected
   useEffect(() => { 
-    console.log(`DEBUG: useEffect triggered with selectedClient: "${selectedClient}"`);
+    console.log(`DEBUG:  useEffect triggered with selectedClient: "${selectedClient}"`);
     if (selectedClient) {
       console.log(`DEBUG: Calling fetchData with "${selectedClient}"`);
       fetchData(selectedClient);
@@ -25,6 +25,7 @@ export function usePerformanceData(selectedClient = '', showAll = false) {
     try {
       const rounds = await fetchTrainingMetrics(clientId);
       console.log("DEBUG: Raw fetched data:", rounds); 
+      setData(rounds); // Set the fetched data
     } catch (err) {
       setError(`Failed to fetch client rounds: ${err.message}`);
       console.error("Fetch Error:", err);

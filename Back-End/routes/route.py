@@ -132,7 +132,7 @@ async def get_averaged_metrics():
 
         # Compute averages and round the results at the end
         if client_count > 0:
-            averaged_metrics = {key: round(value / client_count, 4) for key, value in total_metrics.items()}  # Compute averages
+            averaged_metrics = {key: round(value / client_count, 3) for key, value in total_metrics.items()}  # Compute averages
         else:
             averaged_metrics = {}
 
