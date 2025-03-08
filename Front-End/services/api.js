@@ -1,18 +1,4 @@
-// const API_URL =  process.env.NODE_ENV === "production"
-// ? "https://gpdashboard-production.up.railway.app"
-// : "http://localhost:8000";
-
-const API_URL = "https://gpdashboard-production.up.railway.app";
-
-if (process.env.NODE_ENV === 'production') { 
-  console.log = console.warn = console.error = (...args) => { 
-    if (typeof args[0] === 'string' && args[0].startsWith('DEBUG:')) {
-      window.__DEBUG_LOGS = window.__DEBUG_LOGS || [];
-      window.__DEBUG_LOGS.push(args);
-      console.info(...args);
-    }
-  };
-}
+const API_URL = import.meta.env.VITE_API_URL;;
 
 // Fetch Health Status from the API
 export const fetchHealthStatus = async () => {

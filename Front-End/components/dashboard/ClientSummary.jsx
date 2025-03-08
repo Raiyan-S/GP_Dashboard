@@ -1,7 +1,6 @@
 import React from 'react';
 import { formatPercentage, formatDecimal } from '../../utils/formatters';
 
-// Used in ClientOverview.jsx
 export default function ClientSummary({ data }) {
   const latestRound = data[data.length - 1];
 
@@ -11,7 +10,7 @@ export default function ClientSummary({ data }) {
       <div className="space-y-4">
         <div>
           <p className="text-sm text-gray-600 dark:text-gray-400">Round</p>
-          <p className="text-xl font-semibold text-gray-900 dark:text-white">{latestRound.round}</p>
+          <p className="text-xl font-semibold text-gray-900 dark:text-white">{latestRound.round_id}</p>
         </div>
         <div>
           <p className="text-sm text-gray-600 dark:text-gray-400">Accuracy</p>
@@ -19,7 +18,7 @@ export default function ClientSummary({ data }) {
         </div>
         <div>
           <p className="text-sm text-gray-600 dark:text-gray-400">F1 Score</p>
-          <p className="text-xl font-semibold text-green-600 dark:text-green-400">{formatPercentage(latestRound.f1Score)}</p>
+          <p className="text-xl font-semibold text-green-600 dark:text-green-400">{formatPercentage(latestRound.f1_score)}</p>
         </div>
         <div>
           <p className="text-sm text-gray-600 dark:text-gray-400">Loss</p>

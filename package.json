@@ -12,6 +12,7 @@
     "start": "npm run build && npx cross-env NODE_ENV=production uvicorn Back-End.main:app --host 0.0.0.0 --port 8000"
   },
   "dependencies": {
+    "dotenv": "^16.4.7",
     "idb": "^7.1.1",
     "lucide-react": "^0.344.0",
     "react": "^18.3.1",

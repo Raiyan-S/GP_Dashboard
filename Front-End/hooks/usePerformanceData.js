@@ -1,50 +1,11 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useClients } from './useClients';
 import { fetchTrainingMetrics } from '../services/api';
-console.log("DEBUG: usePerformanceData loaded. NODE_ENV =", process.env.NODE_ENV);
 
-export function usePerformanceData(selectedClient = 'all', showAll = false) {
-  const clients = useClients(); // Call useClients inside the function
+export function usePerformanceData(selectedClient = '', showAll = false) {
   const [data, setData] = useState([]); // Store performance data
-  const [loading] = useState(false);
-  const [error] = useState(null);
-
-  const fetchData = async (clientId) => {
-    console.log(`DEBUG: Fetching data for clientId: ${clientId}`);
-  
-    setLoading(true);
-    setError(null);
-  
-    try {
-      const rounds = await fetchTrainingMetrics(clientId);
-      
-      console.log("DEBUG: Raw fetched data:", rounds); // 👀 Check if this logs
-  
-      if (!rounds) throw new Error("API returned undefined");
-      if (!Array.isArray(rounds)) throw new Error(`Expected array but got ${typeof rounds}`);
-      if (rounds.length === 0) throw new Error("No rounds available in API response");
-  
-      rounds.forEach((round, index) => console.log(`DEBUG: Round ${index}:`, round));
-  
-      // Process data
-      const clientRounds = rounds.map((round) => ({
-        round: round?.round_id,
-        created_at: round?.created_at,
-        ...round?.clients?.find(client => client.client_id === clientId)?.metrics,
-      })).filter(Boolean);
-  
-      console.log("DEBUG: Processed clientRounds:", clientRounds);
-  
-      setData(clientRounds);
-    } catch (err) {
-      setError(`Failed to fetch client rounds: ${err.message}`);
-      console.error("Fetch Error:", err);
-    } finally {
-      setLoading(false);
-    }
-  };
-    
-
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
 
   // Fetch data when a client is selected
   useEffect(() => { 
@@ -55,6 +16,22 @@ export function usePerformanceData(selectedClient = 'all', showAll = false) {
     }
   }, [selectedClient]);
 
+  const fetchData = async (clientId) => {
+    console.log(`DEBUG: Fetching data for clientId: ${clientId}`);
+  
+    setLoading(true);
+    setError(null);
+  
+    try {
+      const rounds = await fetchTrainingMetrics(clientId);
+      console.log("DEBUG: Raw fetched data:", rounds); 
+    } catch (err) {
+      setError(`Failed to fetch client rounds: ${err.message}`);
+      console.error("Fetch Error:", err);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   // Return the fetched data, loading state, and error handling
   const getData = useCallback(() => {

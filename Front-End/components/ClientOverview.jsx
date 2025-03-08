@@ -1,13 +1,22 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import PerformanceChart from './dashboard/PerformanceChart';
 import PerformanceTable from './dashboard/PerformanceTable';
 import ClientSelector from './common/ClientSelector';
 import { usePerformanceData } from '../hooks/usePerformanceData';
+import { useClients } from '../hooks/useClients';
 
 // Used in App.jsx
 export default function ClientOverview({ onSeeAll }) {
-  const [selectedClient, setSelectedClient] = useState('client_1');
+  const clients = useClients();
+  const [selectedClient, setSelectedClient] = useState('');
   const { data } = usePerformanceData(selectedClient);
+
+  // Set the first client as the default selected client
+  useEffect(() => {
+    if (clients.length > 0) {
+      setSelectedClient(clients[0].id);
+    }
+  }, [clients]);
 
   return (
     <div className="mt-8">
@@ -19,8 +28,8 @@ export default function ClientOverview({ onSeeAll }) {
         <ClientSelector selectedClient={selectedClient} onClientChange={setSelectedClient} />
       </div>
       <div className="space-y-6">
-        <PerformanceTable data={data} onSeeAll={onSeeAll} />
-        <PerformanceChart data={data} />
+        {/* <PerformanceTable data={data} />
+        <PerformanceChart data={data} /> */}
       </div>
     </div>
   );

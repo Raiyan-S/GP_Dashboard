@@ -4,7 +4,7 @@ import { ChevronRight, Download } from 'lucide-react'; // Icons from lucide-reac
 import { exportToCSV } from '../../utils/export';
 import { usePerformanceData } from '../../hooks/usePerformanceData';
 
-export default function PerformanceTable({ data, onSeeAll }) {
+export default function PerformanceTable({ data }) {
   const { allData } = usePerformanceData();
 
   const handleExport = () => {

@@ -6,7 +6,7 @@ import { usePerformanceData } from '../../hooks/usePerformanceData';
 const ITEMS_PER_PAGE = 10;
 
 export default function ClientsPage() {
-  const [selectedClient, setSelectedClient] = useState('all');
+  const [selectedClient, setSelectedClient] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const { data, loading, error } = usePerformanceData(selectedClient, true);
 

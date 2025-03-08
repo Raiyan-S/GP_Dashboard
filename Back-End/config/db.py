@@ -1,5 +1,8 @@
 from motor.motor_asyncio import AsyncIOMotorClient  # Asynchronous operations for MongoDB (FastAPI is asynchronous)
 import os
+from dotenv import load_dotenv
+
+load_dotenv()  # Load environment variables from .env file
 
 class MongoDB:
     def __init__(self):
@@ -9,8 +12,8 @@ class MongoDB:
 mongodb = MongoDB()
 
 async def connect_to_mongo():
-    mongo_uri = os.getenv("MONGODB_URL", "mongodb://mongo:HiwDMYxRRpgqkefLILYZynRVwRWqImpy@mongodb.railway.internal:27017")
-    db_name = os.getenv("DB_NAME", "fl_all")
+    mongo_uri = os.getenv("MONGODB_URL")
+    db_name = os.getenv("DB_NAME")
     
     mongodb.client = AsyncIOMotorClient(mongo_uri)
     mongodb.db = mongodb.client[db_name]
