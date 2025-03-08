@@ -70,7 +70,7 @@ async def get_client_rounds(client_id: str):
     except Exception as e:
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
 
-@router.get("/latest-rounds", response_model=list[dict])
+@router.get("/latest-rounds", response_model=list[dict]) # just for debugging
 async def get_latest_rounds():
     try:
         pipeline = [
