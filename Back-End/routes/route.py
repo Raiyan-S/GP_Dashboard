@@ -49,6 +49,7 @@ async def get_client_rounds(client_id: str):
         pipeline = [
             {"$unwind": "$clients"},  # Flatten the clients array
             {"$match": {"clients.client_id": client_id}},  # Filter for the specific client
+            {"$sort": {"_id": 1}},  # Sort by created_at in ascending order
             {
                 "$project": {  # Include only the round_id and the client's metrics
                     "round_id": 1,

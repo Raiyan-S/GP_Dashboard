@@ -3,6 +3,7 @@ import { ChevronLeft, ChevronRight } from 'lucide-react';
 import ClientSelector from '../ClientSelector';
 import { usePerformanceData } from '../../hooks/usePerformanceData';
 import ResponsiveTable from '../Table';
+import { useMemo, useEffect } from 'react';
 
 const ITEMS_PER_PAGE = 10;
 
@@ -11,13 +12,16 @@ export default function ClientsPage() {
   const [currentPage, setCurrentPage] = useState(1);
   const { data } = usePerformanceData(selectedClient, true);
 
-  // Sort data by round in ascending order (starting from round 1)
-  const sortedData = [...data].sort((a, b) => a.round - b.round);
+  // // Sort data by round in ascending order (starting from round 1)
+  // const sortedData = useMemo(() => data.sort((a, b) => a.round_id - b.round_id), [data]);
+  // useEffect(() => {
+  //   console.log(data);
+  // }, [sortedData]);
 
   // Calculate pagination
-  const totalPages = Math.ceil(sortedData.length / ITEMS_PER_PAGE);
+  const totalPages = Math.ceil(data.length / ITEMS_PER_PAGE);
   const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
-  const paginatedData = sortedData.slice(startIndex, startIndex + ITEMS_PER_PAGE);
+  const paginatedData = data.slice(startIndex, startIndex + ITEMS_PER_PAGE);
 
   const onPageChange = (page) => {
     if (page >= 1 && page <= totalPages) {
