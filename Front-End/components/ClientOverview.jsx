@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import PerformanceChart from './dashboard/PerformanceChart';
 import PerformanceTable from './dashboard/PerformanceTable';
-import ClientSelector from './common/ClientSelector';
+import ClientSelector from './ClientSelector';
 import { usePerformanceData } from '../hooks/usePerformanceData';
 import { useClients } from '../hooks/useClients';
 

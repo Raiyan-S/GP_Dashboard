@@ -1,7 +1,5 @@
 import React from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
-import { formatPercentage, formatDecimal, formatTimestamp } from '../../utils/formatters';
-
 export default function ClientsTable({ data, pagination }) {
   const { currentPage, totalPages, onPageChange } = pagination;
 

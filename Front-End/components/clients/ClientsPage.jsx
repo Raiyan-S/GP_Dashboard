@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import ClientsTable from './ClientsTable';
-import ClientSelector from '../common/ClientSelector';
+import ClientSelector from '../ClientSelector';
 import { usePerformanceData } from '../../hooks/usePerformanceData';
 
 const ITEMS_PER_PAGE = 10;

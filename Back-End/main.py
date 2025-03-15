@@ -44,7 +44,7 @@ async def health_check():
 # ping mongo endpoint
 import motor.motor_asyncio
 # MongoDB connection URI (currently only works on railway not local)
-MONGO_URI = "mongodb://mongo:HiwDMYxRRpgqkefLILYZynRVwRWqImpy@mongodb.railway.internal:27017"
+MONGO_URI = "mongodb://mongo:HiwDMYxRRpgqkefLILYZynRVwRWqImpy@autorack.proxy.rlwy.net:44467"
 
 # Create a MongoDB client
 client = motor.motor_asyncio.AsyncIOMotorClient(MONGO_URI)

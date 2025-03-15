@@ -1,5 +1,4 @@
 import { useState, useEffect, useCallback } from 'react';
-import { useClients } from './useClients';
 import { fetchTrainingMetrics } from '../services/api';
 
 export function usePerformanceData(selectedClient = '', showAll = false) {

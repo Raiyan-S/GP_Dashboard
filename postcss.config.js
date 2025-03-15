@@ -4,3 +4,4 @@ export default {
     autoprefixer: {},
   },
 };
+// Tailwind CSS requires PostCSS to process its styles.

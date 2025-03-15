@@ -1,13 +1,13 @@
-const API_URL = import.meta.env.VITE_API_URL;
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
 
-// Fetch Health Status from the API
-export const fetchHealthStatus = async () => {
-  const response = await fetch(`${API_URL}/health`);
-  if (!response.ok) {
-    throw new Error('Failed to fetch health status');
-  }
-  return response.json();
-};
+// // Fetch Health Status from the API
+// export const fetchHealthStatus = async () => {
+//   const response = await fetch(`${API_URL}/health`);
+//   if (!response.ok) {
+//     throw new Error('Failed to fetch health status');
+//   }
+//   return response.json();
+// };
 
 // Fetch Unique Client IDs from the API
 export const fetchUniqueClientIds = async () => {
@@ -27,7 +27,7 @@ export const fetchTrainingMetrics = async (clientId) => {
   return response.json();
 };
 
-// Probably will remove
+// Probably will remove (used it for debugging)
 export const fetchLatestRounds = async () => {
   const response = await fetch(`${API_URL}/latest-rounds`);
   if (!response.ok) {

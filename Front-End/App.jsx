@@ -8,7 +8,7 @@ import ClientOverview from './components/ClientOverview';
 import ModelTrial from './components/ModelTrial';
 import ClientsPage from './components/clients/ClientsPage';
 import SettingsPage from './components/settings/SettingsPage';
-import HealthCheck from './components/HealthCheck';
+// import HealthCheck from './components/HealthCheck';
 
 
 // Main Component
@@ -71,7 +71,7 @@ function App() {
               <Route path="/clients" element={<ClientsPage />} />
               <Route path="/model-trial" element={<ModelTrial />} />
               <Route path="/settings" element={<SettingsPage />} />
-              <Route path="/health" element={<HealthCheck />} />
+              {/* <Route path="/health" element={<HealthCheck />} /> */}
             </Routes>
           </main>
         </div>
