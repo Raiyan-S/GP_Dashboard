@@ -1,6 +1,6 @@
 # FL-ALL Dashboard
 
-FL-ALL Dashboard is a web application for visualizing client performance data. The application is built using React for the frontend and FastAPI for the backend.
+FL-ALL Dashboard is a web application for visualizing client/global model performance data. The application is built using React for the frontend and FastAPI for the backend.
 
 ## Project Structure
 
@@ -8,36 +8,38 @@ The project is organized into two main directories: Back-End and Front-End.
 
 ### Back-End
 
-- **config/**: Contains configuration file for the backend, such as database connection settings.
-  - db.py: Handles the connection to the MongoDB database.
+- **config/**: Contains configuration file for the database connection.
+  - db.py: Handles the connection to the MongoDB database by loading the environment variables.
 - **models/**: Contains data models used in the application.
   - TrainingRound.py: Defines the schema for training rounds.
 - **routes/**: Contains route definition for the API.
-  - performance.py: Defines routes related to performance data.
+  - route.py: Defines routes related to performance data.
 - main.py: The main entry point for the FastAPI backend application.
-- Procfile: Defines the command to run the backend server.
 - requirements.txt: Lists the Python dependencies for the backend.
+- .env: MongoDB connection string private
 
-### Front-End (no need to read)
+### Front-End
 
-- **assets/**: Contains static assets such as images.
 - **components/**: Contains React components used in the application.
   - ClientOverview.jsx: Component for displaying client performance overview.
-  - `clients/`: Contains components related to client management.
-  - `common/`: Contains common reusable components.
-- **data/**: Contains static data used in the application.
+  - ClientSelector.jsx: Component to select a client and display the values accordingly.
+  - DashboardStats.jsx: Component for displaying summary stats.
+  - `clients/`: Contains components related to clients page.
 - **hooks/**: Contains custom React hooks.
   - useTheme.js: Custom hook for managing theme settings.
-- **services/**: Contains service modules for API calls.
+  - usePerformanceData.js: Custom hook for fetching performance data for a selected client.
+  - useClients.js: Custom hook for fetching unique client IDs.
+- **services/**: Contains service module for API calls.
 - **utils/**: Contains utility functions.
 - App.jsx: The main React component that sets up the application.
-- index.css: Global CSS file.
+- index.css: Compiles Tailwind CSS to build static files.
 - main.jsx: The entry point for the React application.
 - index.html: The main HTML file for the application.
 - package.json: Lists the JavaScript dependencies and scripts for the frontend.
-- postcss.config.js: Configuration for PostCSS.
+- postcss.config.js: Configuration for PostCSS because Tailwind CSS requires PostCSS to process its styles.
 - tailwind.config.js: Configuration for Tailwind CSS.
 - vite.config.js: Configuration for Vite, the build tool.
+- Procfile: Defines the command to run the backend server.
 
 
 ## Setup Instructions
@@ -82,5 +84,4 @@ The project is organized into two main directories: Back-End and Front-End.
 
 
 #### Railway URL:
-https://gpdashboard-production.up.railway.app/
-Need to update ReadMe
+https://gpdashboard-production.up.railway.app/dashboard
