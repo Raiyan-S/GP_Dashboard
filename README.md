@@ -20,7 +20,7 @@ The project is organized into two main directories: Back-End and Front-End.
 - requirements.txt: Lists the Python dependencies for the backend.
 - .env: MongoDB connection string private
 
-### Front-End
+### Front-End (need to update to add further details)
 
 - **components/**: Contains React components used in the application.
   - ClientOverview.jsx: Component for displaying client performance overview.
@@ -32,10 +32,12 @@ The project is organized into two main directories: Back-End and Front-End.
   - usePerformanceData.js: Custom hook for fetching performance data for a selected client.
   - useClients.js: Custom hook for fetching unique client IDs.
 - **services/**: Contains service module for API calls.
-- **utils/**: Contains utility functions.
+<!--- **utils/**: Contains utility functions. -->
 - App.jsx: The main React component that sets up the application.
 - index.css: Compiles Tailwind CSS to build static files.
 - main.jsx: The entry point for the React application.
+  
+**root**
 - index.html: The main HTML file for the application.
 - package.json: Lists the JavaScript dependencies and scripts for the frontend.
 - postcss.config.js: Configuration for PostCSS because Tailwind CSS requires PostCSS to process its styles.
