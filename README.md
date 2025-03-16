@@ -6,7 +6,7 @@ FL-ALL Dashboard is a web application for visualizing client/global model perfor
 
 The project is organized into two main directories: Back-End and Front-End.
 
-![](https://github.com/Raiyan-S/GP_Dashboard/blob/main/Structure1.png)
+![](https://github.com/Raiyan-S/GP_Dashboard/blob/main/Structure.png)
 
 ### Back-End
 
