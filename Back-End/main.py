@@ -17,10 +17,17 @@ async def lifespan(app: FastAPI):
 # Create a FastAPI instance 
 app = FastAPI(lifespan=lifespan)
 
-# Add CORS middleware to allow cross-origin requests
+# Defined allowed frontend origins
+origins = [
+    "http://localhost:8000", # Local using uvicorn FastAPI
+    "http://localhost:5173", # Local using npm run dev 
+    "https://gpdashboard-production.up.railway.app" # Railway
+]
+
+# CORS middleware to allow cross-origin requests
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  
+    allow_origins= origins,  
     allow_credentials=True,
     allow_methods=["*"],  
     allow_headers=["*"],  
