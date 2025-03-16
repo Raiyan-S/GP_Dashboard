@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react'; // useState for managing state
+import React, { useState } from 'react'; // useState for managing state
 import { Helmet } from 'react-helmet-async'; // Helmet for changing page title dynamically
-import { Route, Routes, useNavigate, useLocation } from 'react-router-dom';
+import { Route, Routes, useNavigate } from 'react-router-dom';
 import Sidebar from './components/layout/Sidebar';
 import Header from './components/layout/Header';
 import DashboardStats from './components/dashboard/DashboardStats';
@@ -17,13 +17,6 @@ function App() {
   // State to manage the sidebar
   const [isSidebarOpen, setSidebarOpen] = useState(false);
   const navigate = useNavigate();
-  const location = useLocation();
-
-  // Update active tab based on URL when page loads
-  useEffect(() => {
-    const path = location.pathname.replace('/', '') || 'dashboard';
-    setActiveTab(path);
-  }, [location.pathname]);
 
   const getPageTitle = () => {
     switch (activeTab) {
@@ -37,7 +30,7 @@ function App() {
   // Function to handle "See All" button
   const handleSeeAll = () => {
     setActiveTab('clients');
-    navigate('/clients');
+    navigate('clients');
   };
 
   return (
