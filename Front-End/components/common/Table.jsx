@@ -1,5 +1,6 @@
 import React from "react";
 
+// Used in ClientOverview.jsx & ClientsPage.jsx
 export default function ResponsiveTable({ data }) {
   if (data.length === 0) {
     return (

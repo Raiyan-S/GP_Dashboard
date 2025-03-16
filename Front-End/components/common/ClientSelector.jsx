@@ -1,6 +1,7 @@
 import React from 'react';
-import { useClients } from '../hooks/useClients';
+import { useClients } from '../../hooks/useClients';
 
+// Used in ClientOverview.jsx & ClientsPage.jsx
 export default function ClientSelector({ selectedClient, onClientChange }) {
   const clients = useClients(); 
 

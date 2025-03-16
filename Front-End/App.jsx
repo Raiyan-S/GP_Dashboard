@@ -3,13 +3,11 @@ import { Helmet } from 'react-helmet-async'; // Helmet for changing page title d
 import { Route, Routes, useNavigate, useLocation } from 'react-router-dom';
 import Sidebar from './components/layout/Sidebar';
 import Header from './components/layout/Header';
-import DashboardStats from './components/DashboardStats';
-import ClientOverview from './components/ClientOverview';
-import ModelTrial from './components/ModelTrial';
+import DashboardStats from './components/dashboard/DashboardStats';
+import ClientOverview from './components/dashboard/ClientOverview';
+import ModelTrial from './components/model-trial/ModelTrial';
 import ClientsPage from './components/clients/ClientsPage';
-import SettingsPage from './components/settings/SettingsPage';
-// import HealthCheck from './components/HealthCheck';
-
+import Setting from './components/settings/Settings';
 
 // Main Component
 // Used in main.jsx
@@ -70,8 +68,7 @@ function App() {
               <Route path="/dashboard" element={<><DashboardStats /><ClientOverview onSeeAll={handleSeeAll} /></>} />
               <Route path="/clients" element={<ClientsPage />} />
               <Route path="/model-trial" element={<ModelTrial />} />
-              <Route path="/settings" element={<SettingsPage />} />
-              {/* <Route path="/health" element={<HealthCheck />} /> */}
+              <Route path="/settings" element={<Setting />} />
             </Routes>
           </main>
         </div>

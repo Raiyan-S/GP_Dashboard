@@ -14,7 +14,6 @@ const metricOptions = [
   { id: 'f1_score', label: 'F1 Score', dataKey: 'f1_score', color: '#818CF8' },
 ];
 
-// MetricSelector component
 function MetricSelector({ selectedMetric, onMetricChange }) {
   return (
     <div className="flex items-center space-x-2">
@@ -40,7 +39,6 @@ function MetricSelector({ selectedMetric, onMetricChange }) {
   );
 }
 
-// PerformanceChart component
 // Used in ClientOverview.jsx
 export default function PerformanceChart({ data }) {
   // State to store the selected metric (accuracy by default)

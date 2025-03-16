@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { fetchUniqueClientIds } from "../services/api";
 
+// Used in ClientOverview.jsx & ClientsPage.jsx & ClientSelector.jsx
 export const useClients = () => {
   const [clients, setClients] = useState([]);
 

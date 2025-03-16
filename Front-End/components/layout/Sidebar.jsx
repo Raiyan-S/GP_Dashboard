@@ -10,7 +10,6 @@ const navigation = [
   { name: 'Settings', icon: Settings, id: 'settings', path: '/settings' },
 ];
 
-// Sidebar component
 // Used in App.jsx
 export default function Sidebar({ activeTab, setActiveTab, isSidebarOpen, onClose }) {
   const handleTabChange = (id) => {

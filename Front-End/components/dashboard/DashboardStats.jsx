@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Users, Target, TrendingDown, Award } from 'lucide-react'; // Icons from Lucide 
-import StatsCard from './dashboard/StatsCard';
-import { fetchAveragedMetrics } from '../services/api'; // Import fetchAveragedMetrics
+import StatsCard from './StatsCard' // Import StatsCard component
+import { fetchAveragedMetrics } from '../../services/api'; // Import fetchAveragedMetrics
 
-// DashboardStats component
 // Used in App.jsx
 export default function DashboardStats() {
   const [averagedMetrics, setAveragedMetrics] = useState(null);

@@ -5,10 +5,8 @@ export default function StatsCard({ title, value, Icon, trend }) {
   const isPositive = trendValue > 0;
   const isNegative = trendValue < 0;
 
-  // StatsCard component
   // Used in DashboardStats.jsx
   return (
-    // White in light mode and gray-800 in dark mode
     <div className="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-md transition-colors">
       <div className="flex items-center justify-between">
         <div> 

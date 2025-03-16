@@ -1,5 +1,6 @@
 import React from 'react';
 
+// Used in PerformanceChart.jsx
 export default function ClientSummary({ data }) {
   if (!data || data.length === 0) {
     return <p className="text-gray-600 dark:text-gray-400">No data available</p>;

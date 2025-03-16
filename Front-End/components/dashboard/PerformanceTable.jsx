@@ -2,8 +2,9 @@ import React from 'react';
 import { ChevronRight, Download } from 'lucide-react'; // Icons from lucide-react
 import { exportToCSV } from '../../utils/export';
 import { usePerformanceData } from '../../hooks/usePerformanceData';
-import ResponsiveTable from '../Table';
+import ResponsiveTable from '../common/Table';
 
+// Used in ClientOverview.jsx
 export default function PerformanceTable({ data, onSeeAll }) {
   const { allData } = usePerformanceData();
 

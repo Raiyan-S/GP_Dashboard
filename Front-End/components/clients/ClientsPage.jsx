@@ -1,27 +1,40 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
-import ClientSelector from '../ClientSelector';
+import ClientSelector from '../common/ClientSelector';
 import { usePerformanceData } from '../../hooks/usePerformanceData';
-import ResponsiveTable from '../Table';
-import { useMemo, useEffect } from 'react';
+import { useClients } from '../../hooks/useClients';
+import ResponsiveTable from '../common/Table';
 
 const ITEMS_PER_PAGE = 10;
 
+// Used in App.jsx
 export default function ClientsPage() {
-  const [selectedClient, setSelectedClient] = useState('client_1');
+  const clients = useClients();
+  const [selectedClient, setSelectedClient] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const { data } = usePerformanceData(selectedClient, true);
 
-  // // Sort data by round in ascending order (starting from round 1)
-  // const sortedData = useMemo(() => data.sort((a, b) => a.round_id - b.round_id), [data]);
-  // useEffect(() => {
-  //   console.log(data);
-  // }, [sortedData]);
+  // Load selected client from localStorage or set the first client as default
+  useEffect(() => {
+    const storedClient = localStorage.getItem("selectedClient");
+    if (storedClient) {
+      setSelectedClient(storedClient);
+    } else if (clients.length > 0) {
+      setSelectedClient(clients[0].id);
+    }
+  }, [clients]);
+
+  // Save to localStorage whenever selectedClient changes
+  useEffect(() => {
+    if (selectedClient) {
+      localStorage.setItem("selectedClient", selectedClient);
+    }
+  }, [selectedClient]);
 
   // Calculate pagination
-  const totalPages = Math.ceil(data.length / ITEMS_PER_PAGE);
-  const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
-  const paginatedData = data.slice(startIndex, startIndex + ITEMS_PER_PAGE);
+  const totalPages = Math.ceil(data.length / ITEMS_PER_PAGE); // If we have 11 items, we need 2 pages (10 items per page)
+  const startIndex = (currentPage - 1) * ITEMS_PER_PAGE; // If currentPage is 2, we start at index 10 (0 to 9 is page 1)
+  const paginatedData = data.slice(startIndex, startIndex + ITEMS_PER_PAGE);  // If startIndex is 10, we slice from 10 to 19 (10 items)
 
   const onPageChange = (page) => {
     if (page >= 1 && page <= totalPages) {

@@ -3,7 +3,6 @@ import React, { useState, useRef, useEffect } from 'react';
 import { Menu, LogOut, Settings } from 'lucide-react'; // Icons from Lucide 
 import { useNavigate } from 'react-router-dom';
 
-// Header component
 // Used in App.jsx
 export default function Header({ title, setActiveTab, menuClick }) {
   const [isProfileOpen, setIsProfileOpen] = useState(false);

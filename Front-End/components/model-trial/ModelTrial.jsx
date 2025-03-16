@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import ImageUploader from './model-trial/ImageUploader';
-import PredictionDisplay from './model-trial/PredictionResult';
-import PredictionHistory from './model-trial/PredictionHistory';
+import ImageUploader from './ImageUploader';
+import PredictionDisplay from './PredictionResult';
+import PredictionHistory from './PredictionHistory';
 import { AlertCircle, Trash2 } from 'lucide-react';
 
 const CLASSES = [

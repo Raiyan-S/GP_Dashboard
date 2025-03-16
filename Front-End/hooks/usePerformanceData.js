@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { fetchTrainingMetrics } from '../services/api';
 
+// Used in ClientsPage.jsx & ClientOverview.jsx & PerformanceTable.jsx
 export function usePerformanceData(selectedClient = '', showAll = false) {
   const [data, setData] = useState([]); // Store performance data
   const [loading, setLoading] = useState(false);
