@@ -1,19 +1,28 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Depends
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse
 from fastapi.middleware.cors import CORSMiddleware # Cross-Origin Resource Sharing middleware
 from routes.route import router as router # Import the router
-from config.db import connect_to_mongo, close_mongo_connection # Import database connection functions
+
+from beanie import init_beanie
+from config.db import User, db
+from routes.auth import auth_backend, current_active_user, fastapi_users
+from models.user import UserRead, UserCreate, UserUpdate
+
 from contextlib import asynccontextmanager
 import os
 
 # Database connection context manager
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    await connect_to_mongo()  # Connect to the MongoDB database
-    yield  # Yield control back to the application
-    await close_mongo_connection()  # Close the MongoDB connection when the app shuts down
-
+    await init_beanie(
+        database=db,
+        document_models=[
+            User,
+        ],
+    )
+    yield
+    
 # Create a FastAPI instance 
 app = FastAPI(lifespan=lifespan)
 
@@ -35,6 +44,35 @@ app.add_middleware(
 
 # Include the router
 app.include_router(router)
+
+app.include_router(
+    fastapi_users.get_auth_router(auth_backend), prefix="/auth/cookies", tags=["auth"]
+)
+app.include_router(
+    fastapi_users.get_register_router(UserRead, UserCreate),
+    prefix="/auth",
+    tags=["auth"],
+)
+app.include_router(
+    fastapi_users.get_reset_password_router(),
+    prefix="/auth",
+    tags=["auth"],
+)
+app.include_router(
+    fastapi_users.get_verify_router(UserRead),
+    prefix="/auth",
+    tags=["auth"],
+)
+app.include_router(
+    fastapi_users.get_users_router(UserRead, UserUpdate),
+    prefix="/users",
+    tags=["users"],
+)
+
+
+@app.get("/authenticated-route")
+async def authenticated_route(user: User = Depends(current_active_user)):
+    return {"message": f"Hello {user.email}!"}
 
 # Path to the built frontend (for deployment on Railway)
 FRONTEND_DIST = os.path.join(os.path.dirname(__file__), "../dist")

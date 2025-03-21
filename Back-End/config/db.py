@@ -1,23 +1,32 @@
 from motor.motor_asyncio import AsyncIOMotorClient  # Asynchronous operations for MongoDB (FastAPI is asynchronous)
 import os
 from dotenv import load_dotenv
+from beanie import Document
+from fastapi_users.db import BeanieBaseUser, BeanieUserDatabase
+from fastapi_users_db_beanie.access_token import (
+    BeanieAccessTokenDatabase,
+    BeanieBaseAccessToken,
+)
 
 load_dotenv()  # Load environment variables from .env file
 
-class MongoDB:
-    def __init__(self):
-        self.client = None  # Initialize client to None
-        self.db = None  # Initialize db to None
+DATABASE_URL = os.getenv("MONGO_PUBLIC_URL")
+DB_NAME = os.getenv("DB_NAME")
+client = AsyncIOMotorClient(DATABASE_URL)
+db = client[DB_NAME]
 
-mongodb = MongoDB()
 
-async def connect_to_mongo():
-    mongo_uri = os.getenv("MONGO_PUBLIC_URL")
-    db_name = os.getenv("DB_NAME")
+class User(BeanieBaseUser, Document):
+    pass
 
-    mongodb.client = AsyncIOMotorClient(mongo_uri)
-    mongodb.db = mongodb.client[db_name]
-    
-async def close_mongo_connection():
-    if mongodb.client:
-        mongodb.client.close()
+
+class AccessToken(BeanieBaseAccessToken, Document):  
+    pass
+
+
+async def get_user_db():
+    yield BeanieUserDatabase(User)
+
+
+async def get_access_token_db():  
+    yield BeanieAccessTokenDatabase(AccessToken)

@@ -1,6 +1,6 @@
 from fastapi import APIRouter, HTTPException, status # APIRouter to group routes, HTTPException to handle exceptions, status for HTTP status codes
 from models.TrainingRound import TrainingRound
-from config.db import mongodb
+from config.db import db
 from fastapi.encoders import jsonable_encoder # Convert Pydantic models to dictionaries (because of complex types e.g., datetime)
 
 
@@ -10,7 +10,7 @@ router = APIRouter()
 @router.get("/get", response_model=list[TrainingRound])
 async def get_rounds():
     try:
-        rounds = await mongodb.db['training_rounds'].find({}, {"_id": 0}).to_list(100)
+        rounds = await db['training_rounds'].find({}, {"_id": 0}).to_list(100)
         return jsonable_encoder(rounds)
     except Exception as e:
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
@@ -20,7 +20,7 @@ async def get_rounds():
 async def post_round(rounds: list[TrainingRound]):
     try:
         rounds_dict = jsonable_encoder(rounds) # This will recursively convert nested models
-        result = await mongodb.db['training_rounds'].insert_many(rounds_dict)  
+        result = await db['training_rounds'].insert_many(rounds_dict)  
         for i, inserted_id in enumerate(result.inserted_ids):
             rounds_dict[i]["_id"] = str(inserted_id)
         return rounds_dict
@@ -36,7 +36,7 @@ async def get_unique_client_ids():
             {"$group": {"_id": "$clients.client_id"}},
             {"$sort": {"_id": 1}}  # Sort the client IDs in ascending order
         ]
-        result = await mongodb.db['training_rounds'].aggregate(pipeline).to_list(1000)
+        result = await db['training_rounds'].aggregate(pipeline).to_list(1000)
         client_ids = [doc["_id"] for doc in result]
         return client_ids
     except Exception as e:
@@ -59,7 +59,7 @@ async def get_client_rounds(client_id: str):
                 }
             }
         ]
-        rounds = await mongodb.db['training_rounds'].aggregate(pipeline).to_list(1000)
+        rounds = await db['training_rounds'].aggregate(pipeline).to_list(1000)
         # Map the data to the required format, simplifying the structure
         simplified_rounds = [
             {
@@ -97,7 +97,7 @@ async def get_latest_rounds():
             }
         ]
         
-        latest_rounds = await mongodb.db["training_rounds"].aggregate(pipeline).to_list(1000)
+        latest_rounds = await db["training_rounds"].aggregate(pipeline).to_list(1000)
         return latest_rounds
     except Exception as e:
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
@@ -124,7 +124,7 @@ async def get_averaged_metrics():
             }
         ]
         
-        latest_rounds = await mongodb.db["training_rounds"].aggregate(pipeline).to_list(1000)
+        latest_rounds = await db["training_rounds"].aggregate(pipeline).to_list(1000)
 
         # Aggregate metrics across all latest rounds
         total_metrics = {}
@@ -168,7 +168,7 @@ async def get_second_last_averaged_metrics():
             }
         ]
         
-        second_latest_rounds = await mongodb.db["training_rounds"].aggregate(pipeline).to_list(1000)
+        second_latest_rounds = await db["training_rounds"].aggregate(pipeline).to_list(1000)
 
         # Aggregate metrics across all second latest rounds
         total_metrics = {}
