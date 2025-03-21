@@ -8,7 +8,7 @@ from fastapi_users.authentication import (
     CookieTransport
 )
 from fastapi_users.authentication.strategy.db import AccessTokenDatabase, DatabaseStrategy
-from fastapi_users.db import BeanieUserDatabase, ObjectIDIDMixin
+from fastapi_users_db_beanie import BeanieUserDatabase, ObjectIDIDMixin
 from config.db import AccessToken, get_access_token_db
 
 from config.db import User, get_user_db

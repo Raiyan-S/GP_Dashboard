@@ -2,10 +2,10 @@ from motor.motor_asyncio import AsyncIOMotorClient  # Asynchronous operations fo
 import os
 from dotenv import load_dotenv
 from beanie import Document
-from fastapi_users.db import BeanieBaseUser, BeanieUserDatabase
+from fastapi_users_db_beanie import BeanieBaseUser, BeanieUserDatabase
 from fastapi_users_db_beanie.access_token import (
     BeanieAccessTokenDatabase,
-    BeanieBaseAccessToken,
+    BeanieBaseAccessToken
 )
 
 load_dotenv()  # Load environment variables from .env file
