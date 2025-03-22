@@ -1,6 +1,6 @@
 import React, { useState } from 'react'; // useState for managing state
 import { Helmet } from 'react-helmet-async'; // Helmet for changing page title dynamically
-import { Route, Routes, useNavigate } from 'react-router-dom';
+import { Route, Routes, useNavigate, useLocation } from 'react-router-dom';
 import Sidebar from './components/layout/Sidebar';
 import Header from './components/layout/Header';
 import DashboardStats from './components/dashboard/DashboardStats';
@@ -8,6 +8,9 @@ import ClientOverview from './components/dashboard/ClientOverview';
 import ModelTrial from './components/model-trial/ModelTrial';
 import ClientsPage from './components/clients/ClientsPage';
 import Setting from './components/settings/Settings';
+import Login from './components/auth/Login';
+import Register from './components/auth/Register';
+import ProtectedRoute from './components/auth/ProtectRoute';
 
 // Main Component
 // Used in main.jsx
@@ -17,6 +20,7 @@ function App() {
   // State to manage the sidebar
   const [isSidebarOpen, setSidebarOpen] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
 
   const getPageTitle = () => {
     switch (activeTab) {
@@ -33,39 +37,45 @@ function App() {
     navigate('clients');
   };
 
-  return (
-      <div className="min-h-screen bg-gray-100 dark:bg-gray-900">
-        {/* Title */}
-        <Helmet>
-            <title>{getPageTitle() || ""} - FL-ALL</title> 
-        </Helmet>
+  const showSidebarAndHeader = !['/login', '/register'].includes(location.pathname); // Check if it's not login or register route
 
-        {/* Sidebar component on mobile view */}
-        <Sidebar 
-        activeTab={activeTab} 
-        setActiveTab={setActiveTab} 
-        isSidebarOpen={isSidebarOpen}
-        onClose={() => setSidebarOpen(false)}
-        />
-        
-        <div className="lg:pl-64 flex flex-col min-h-screen">
-          {/* Header */}
-          <Header 
-              title={getPageTitle()} 
+  return (
+    <div className="min-h-screen bg-gray-100 dark:bg-gray-900">
+      {/* Title */}
+      <Helmet>
+        <title>{getPageTitle() || ""} - FL-ALL</title>
+      </Helmet>
+
+      <div className={`flex flex-col min-h-screen ${showSidebarAndHeader ? 'lg:pl-64' : ''}`}>
+        {/* Conditionally render Sidebar and Header */}
+        {showSidebarAndHeader && (
+          <>
+            <Sidebar
+              activeTab={activeTab}
+              setActiveTab={setActiveTab}
+              isSidebarOpen={isSidebarOpen}
+              onClose={() => setSidebarOpen(false)}
+            />
+            <Header
+              title={getPageTitle()}
               setActiveTab={setActiveTab}
               menuClick={() => setSidebarOpen(true)}
             />
+          </>
+        )}
 
-          <main className="flex-1 px-4 sm:px-6 lg:px-8 py-6">
-            <Routes>
-              <Route path="/dashboard" element={<><DashboardStats /><ClientOverview onSeeAll={handleSeeAll} /></>} />
-              <Route path="/clients" element={<ClientsPage />} />
-              <Route path="/model-trial" element={<ModelTrial />} />
-              <Route path="/settings" element={<Setting />} />
-            </Routes>
-          </main>
-        </div>
+        <main className={`flex-1 ${showSidebarAndHeader ? 'px-4 sm:px-6 lg:px-8 py-6' : ''}`}>
+          <Routes>
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
+            <Route path="/dashboard" element={<><DashboardStats /><ClientOverview onSeeAll={handleSeeAll} /></>} />
+            <Route path="/clients" element={<ClientsPage />} />
+            <Route path="/model-trial" element={<ModelTrial />} />
+            <Route path="/settings" element={<Setting />} />
+          </Routes>
+        </main>
       </div>
+    </div>
   );
 }
 

@@ -5,7 +5,7 @@ from fastapi.middleware.cors import CORSMiddleware # Cross-Origin Resource Shari
 from routes.route import router as router # Import the router
 
 from beanie import init_beanie
-from config.db import User, db
+from config.db import User, AccessToken, db
 from routes.auth import auth_backend, current_active_user, fastapi_users
 from models.user import UserRead, UserCreate, UserUpdate
 
@@ -19,6 +19,7 @@ async def lifespan(app: FastAPI):
         database=db,
         document_models=[
             User,
+            AccessToken,
         ],
     )
     yield
@@ -68,7 +69,6 @@ app.include_router(
     prefix="/users",
     tags=["users"],
 )
-
 
 @app.get("/authenticated-route")
 async def authenticated_route(user: User = Depends(current_active_user)):
