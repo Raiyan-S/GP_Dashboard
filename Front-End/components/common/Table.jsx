@@ -43,12 +43,12 @@ export default function ResponsiveTable({ data }) {
                         </td>
                         <td className="whitespace-nowrap px-3 py-4">
                           <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 dark:bg-green-900/50 text-green-800 dark:text-green-300">
-                            {(metrics.f1_score?.toFixed(3) ?? 'N/A') + '%'}
+                            {(metrics.f1?.toFixed(3) ?? 'N/A') + '%'}
                           </span>
                         </td>
                         <td className="whitespace-nowrap px-3 py-4">
                           <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 dark:bg-red-900/50 text-red-800 dark:text-red-300">
-                            {metrics.loss?.toFixed(3) ?? 'N/A'}
+                            {metrics.avg_loss?.toFixed(3) ?? 'N/A'}
                           </span>
                         </td>
                         <td className="whitespace-nowrap px-3 py-4">
@@ -100,7 +100,7 @@ export default function ResponsiveTable({ data }) {
                       <span className="text-xs text-gray-500 dark:text-gray-400">F1 Score</span>
                       <div className="mt-1">
                         <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 dark:bg-green-900/50 text-green-800 dark:text-green-300">
-                          {(metrics.f1_score?.toFixed(3) ?? 'N/A') + '%'}
+                          {(metrics.f1?.toFixed(3) ?? 'N/A') + '%'}
                         </span>
                       </div>
                     </div>
@@ -108,7 +108,7 @@ export default function ResponsiveTable({ data }) {
                       <span className="text-xs text-gray-500 dark:text-gray-400">Loss</span>
                       <div className="mt-1">
                         <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 dark:bg-red-900/50 text-red-800 dark:text-red-300">
-                          {metrics.loss?.toFixed(3) ?? 'N/A'}
+                          {metrics.avg_loss?.toFixed(3) ?? 'N/A'}
                         </span>
                       </div>
                     </div>

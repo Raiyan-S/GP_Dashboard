@@ -29,6 +29,7 @@ async def verify_user_token(
     access_token_db: AccessTokenDatabase[AccessToken] = Depends(get_access_token_db),
     user_db = Depends(get_user_db),
 ):
+    
     session_token = request.cookies.get("session_token")
     
     if not session_token:

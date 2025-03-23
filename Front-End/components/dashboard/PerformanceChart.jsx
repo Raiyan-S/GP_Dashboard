@@ -8,10 +8,10 @@ import ClientSummary from './ClientSummary';
 // (Change colors later)
 const metricOptions = [
   { id: 'accuracy', label: 'Accuracy', dataKey: 'accuracy', color: '#60A5FA' },
-  { id: 'loss', label: 'Loss', dataKey: 'loss', color: '#F87171' },
+  { id: 'avg_loss', label: 'Loss', dataKey: 'avg_loss', color: '#F87171' },
   { id: 'precision', label: 'Precision', dataKey: 'precision', color: '#34D399' },
   { id: 'recall', label: 'Recall', dataKey: 'recall', color: '#FBBF24' },
-  { id: 'f1_score', label: 'F1 Score', dataKey: 'f1_score', color: '#818CF8' },
+  { id: 'f1', label: 'F1 Score', dataKey: 'f1', color: '#818CF8' },
 ];
 
 function MetricSelector({ selectedMetric, onMetricChange }) {
