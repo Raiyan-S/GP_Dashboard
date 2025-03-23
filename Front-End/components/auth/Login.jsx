@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { Layout } from 'lucide-react';
+import { login } from "../../services/api";
 
 export default function Login() {
   const [email, setEmail] = useState('');
@@ -11,20 +12,9 @@ export default function Login() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
-
+    
     try {
-      const response = await fetch('http://localhost:8000/auth/cookies/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email, password }),
-      });
-
-      if (!response.ok) {
-        throw new Error('Login failed');
-      }
-
+      const response = await login(email, password);
       navigate('/dashboard');
     } catch (error) {
       setError(error.message);
@@ -46,6 +36,7 @@ export default function Login() {
             <input
               type="email"
               value={email}
+              placeholder="Enter your email"
               onChange={(e) => setEmail(e.target.value)}
               className="w-full p-2 border rounded-md bg-gray-100 text-gray-900"
               required
@@ -56,6 +47,7 @@ export default function Login() {
             <input
               type="password"
               value={password}
+              placeholder="Enter your password"
               onChange={(e) => setPassword(e.target.value)}
               className="w-full p-2 border rounded-md bg-gray-100 text-gray-900"
               required

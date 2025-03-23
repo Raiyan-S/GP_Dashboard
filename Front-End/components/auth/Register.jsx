@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { Layout } from 'lucide-react';
+import { register } from "../../services/api";
 
 export default function Register() {
   const [email, setEmail] = useState('');
@@ -13,18 +14,7 @@ export default function Register() {
     setError('');
 
     try {
-      const response = await fetch('http://localhost:8000/auth/register', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email, password }),
-      });
-
-      if (!response.ok) {
-        throw new Error('Registration failed');
-      }
-
+      const response = await register(email, password);
       navigate('/login');
     } catch (error) {
       setError(error.message);

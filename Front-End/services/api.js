@@ -44,3 +44,31 @@ export const fetchAveragedMetrics = async () => {
   }
   return response.json();
 };
+
+export const login = async (email, password) => {
+  const response = await fetch(`${API_URL}/auth/cookies/login`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ email, password }),
+  });
+  if (!response.ok) {
+    throw new Error('Failed to login');
+  }
+  return response.json();
+};
+
+export const register = async (email, password) => {
+  const response = await fetch(`${API_URL}/auth/register`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ email, password }),
+  });
+  if (!response.ok) {
+    throw new Error('Registration failed');
+  }
+  return response.json();
+};
