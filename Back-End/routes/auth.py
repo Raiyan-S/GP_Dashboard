@@ -21,7 +21,6 @@ SECRET = os.getenv("SECRET_KEY")
 router = APIRouter()
 
 import logging
-logging.basicConfig(level=logging.DEBUG)
 
 @router.get("/auth/verify-token")
 async def verify_user_token(

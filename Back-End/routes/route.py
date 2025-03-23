@@ -42,20 +42,20 @@ async def post_round(rounds: list[TrainingRound]):
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
 
 
-@router.get("/clients", response_model=list[str])
-async def get_unique_client_ids():
-    try:
-        pipeline = [
-            {"$project": {"clients": {"$objectToArray": "$clients"}}},  # Convert 'clients' object to an array of key-value pairs
-            {"$unwind": "$clients"},  # Flatten the 'clients' array
-            {"$group": {"_id": "$clients.k"}},  # Group by client ID (the keys of the 'clients' object)
-            {"$sort": {"_id": 1}}  # Sort the client IDs in ascending order
-        ]
-        result = await db['test1'].aggregate(pipeline).to_list(1000)
-        client_ids = [doc["_id"] for doc in result]
-        return client_ids
-    except Exception as e:
-        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
+# @router.get("/clients", response_model=list[str])
+# async def get_unique_client_ids():
+#     try:
+#         pipeline = [
+#             {"$project": {"clients": {"$objectToArray": "$clients"}}},  # Convert 'clients' object to an array of key-value pairs
+#             {"$unwind": "$clients"},  # Flatten the 'clients' array
+#             {"$group": {"_id": "$clients.k"}},  # Group by client ID (the keys of the 'clients' object)
+#             {"$sort": {"_id": 1}}  # Sort the client IDs in ascending order
+#         ]
+#         result = await db['test1'].aggregate(pipeline).to_list(1000)
+#         client_ids = [doc["_id"] for doc in result]
+#         return client_ids
+#     except Exception as e:
+#         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
 
 @router.get("/rounds/{client_id}", response_model=list[dict])
 async def get_client_rounds(client_id: str):
@@ -90,20 +90,20 @@ async def get_client_rounds(client_id: str):
     except Exception as e:
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
 
-# # get all unique client IDs
-# @router.get("/clients", response_model=list[str])
-# async def get_unique_client_ids():
-#     try:
-#         pipeline = [
-#             {"$unwind": "$clients"},
-#             {"$group": {"_id": "$clients.client_id"}},
-#             {"$sort": {"_id": 1}}  # Sort the client IDs in ascending order
-#         ]
-#         result = await db['training_rounds'].aggregate(pipeline).to_list(1000)
-#         client_ids = [doc["_id"] for doc in result]
-#         return client_ids
-#     except Exception as e:
-#         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
+# get all unique client IDs
+@router.get("/clients", response_model=list[str])
+async def get_unique_client_ids():
+    try:
+        pipeline = [
+            {"$unwind": "$clients"},
+            {"$group": {"_id": "$clients.client_id"}},
+            {"$sort": {"_id": 1}}  # Sort the client IDs in ascending order
+        ]
+        result = await db['training_rounds'].aggregate(pipeline).to_list(1000)
+        client_ids = [doc["_id"] for doc in result]
+        return client_ids
+    except Exception as e:
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
 
 # # get all rounds for a specific client
 # @router.get("/rounds/{client_id}", response_model=list[dict])
