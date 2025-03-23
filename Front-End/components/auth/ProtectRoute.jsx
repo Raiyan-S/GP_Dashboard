@@ -6,8 +6,11 @@ const ProtectedRoute = ({ children }) => {
   const { isAuthenticated, loading, checkAuth } = useContext(AuthContext);
 
   useEffect(() => {
+    console.log("Checking authentication...");
     checkAuth();
-  }, []); // Runs once when component loads
+  }, []); // Runs when the component mounts
+
+  console.log("Auth state:", { isAuthenticated, loading });
 
   if (loading) {
     return <div>Loading...</div>;

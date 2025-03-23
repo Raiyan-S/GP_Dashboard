@@ -11,12 +11,14 @@ export const AuthProvider = ({ children }) => {
     setLoading(true);
     try {
       const response = await verify_token();
+      console.log("Auth check response:", response);
       if (response.status === 200) {
         setIsAuthenticated(true);
       } else {
         setIsAuthenticated(false);
       }
     } catch (error) {
+      console.log("Auth check failed:", error);
       setIsAuthenticated(false);
     } finally {
       setLoading(false);

@@ -69,6 +69,17 @@ export const login = async (username, password) => {
   return response; 
 };
 
+export const logout = async () => {
+  const response = await fetch(`${API_URL}/auth/cookies/logout`, {
+    method: 'POST',
+    credentials: 'include',
+  });
+  if (!response.ok) {
+    throw new Error('Failed to logout');
+  }
+  return response;
+};
+
 export const register = async (email, password) => {
   const response = await fetch(`${API_URL}/auth/register`, {
     method: 'POST',
