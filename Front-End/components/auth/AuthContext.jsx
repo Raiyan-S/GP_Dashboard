@@ -15,11 +15,9 @@ export const AuthProvider = ({ children }) => {
         } else {
           console.error("Token verification failed:", await response.json());
           setIsAuthenticated(false);
-          // Cookies.remove('session_token');
         }
       } catch (error) {
-        // setIsAuthenticated(false);
-        // Cookies.remove('session_token');
+        setIsAuthenticated(false);
       }
     };
     checkAuth();

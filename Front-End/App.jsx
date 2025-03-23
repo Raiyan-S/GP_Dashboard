@@ -69,12 +69,12 @@ function App() {
         <main className={`flex-1 ${showSidebarAndHeader ? 'px-4 sm:px-6 lg:px-8 py-6' : ''}`}>
           <Routes>
             <Route path="/" element={<Navigate to="/login" />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/register" element={<Register />} />
-            <Route path="/dashboard" element={<><DashboardStats /><ClientOverview onSeeAll={handleSeeAll} /></>} />
-            <Route path="/clients" element={<ClientsPage />} />
-            <Route path="/model-trial" element={<ModelTrial />} />
-            <Route path="/settings" element={<Setting />} />
+            <Route path="/login" element={<ProtectedRoute><Login /></ProtectedRoute>} />
+            <Route path="/register" element={<ProtectedRoute><Register /></ProtectedRoute>} />
+            <Route path="/dashboard" element={<ProtectedRoute><><DashboardStats /><ClientOverview onSeeAll={handleSeeAll} /></></ProtectedRoute>} />
+            <Route path="/clients" element={<ProtectedRoute><ClientsPage /></ProtectedRoute>} />
+            <Route path="/model-trial" element={<ProtectedRoute><ModelTrial /></ProtectedRoute>} />
+            <Route path="/settings" element={<ProtectedRoute><Setting /></ProtectedRoute>} />
           </Routes>
         </main>
       </div>

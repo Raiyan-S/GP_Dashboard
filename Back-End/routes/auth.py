@@ -40,14 +40,7 @@ async def verify_user_token(
     user = await user_db.get(PydanticObjectId(token_entry.user_id))
     if not user:
         raise HTTPException(status_code=401, detail="User not found")
-
-    # 🔹 Ensure session_token matches the one stored in the database
-    if token_entry.token != session_token:
-        raise HTTPException(status_code=401, detail="Token mismatch")
-    # 🔹 Print session_token, token_entry, and user details
-    print(f"Session Token: {session_token}")
-    print(f"Token Entry: {token_entry}")
-    print(f"User: {user}")
+    
     return {"message": "Token is valid", "user_id": str(user.id)}
 
 class UserManager(ObjectIDIDMixin, BaseUserManager[User, PydanticObjectId]):
