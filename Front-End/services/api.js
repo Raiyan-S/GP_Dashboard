@@ -56,7 +56,7 @@ export const login = async (username, password) => {
   const response = await fetch(`${API_URL}/auth/cookies/login`, {
     method: 'POST',
     headers: {
-      'Content-Type': 'application/json',
+      'Content-Type': 'application/x-www-form-urlencoded',
     },
     credentials: 'include',
     body: params.toString(),
