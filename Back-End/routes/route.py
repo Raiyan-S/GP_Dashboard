@@ -36,7 +36,7 @@ async def get_unique_client_ids():
             {"$group": {"_id": "$clients.client_id"}},
             {"$sort": {"_id": 1}}  # Sort the client IDs in ascending order
         ]
-        result = await db['training_rounds'].aggregate(pipeline).to_list(1000)
+        result = await db['test'].aggregate(pipeline).to_list(1000)
         client_ids = [doc["_id"] for doc in result]
         return client_ids
     except Exception as e:
