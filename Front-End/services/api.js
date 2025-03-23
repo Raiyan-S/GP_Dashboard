@@ -50,11 +50,14 @@ export const login = async (email, password) => {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
+      'Authorization': `Bearer ${authToken}`,
     },
     credentials: 'include',
     body: JSON.stringify({ email, password }),
   });
   if (!response.ok) {
+    const errorData = await response.json(); 
+    console.error('Login failed:', errorData); 
     throw new Error('Failed to login');
   }
   return response.json();

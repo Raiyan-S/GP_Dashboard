@@ -42,7 +42,7 @@ async def get_user_manager(user_db: BeanieUserDatabase = Depends(get_user_db)):
     yield UserManager(user_db)
 
 
-cookie_transport = CookieTransport(cookie_name="session_token", cookie_max_age=3600, cookie_secure=True, cookie_httponly=True, cookie_samesite="lax")
+cookie_transport = CookieTransport(cookie_name="session_token", cookie_max_age=3600, cookie_secure=True, cookie_httponly=True, cookie_samesite="none")
 
 
 def get_database_strategy(
