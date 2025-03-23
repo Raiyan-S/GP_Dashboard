@@ -88,6 +88,9 @@ export const verify_token = async () => {
   const response = await fetch(`${API_URL}/auth/verify-token`, {
     method: 'POST',
     credentials: "include", 
+    headers: {
+      "Content-Type": "application/json",
+    },
   });
-  return response.json();
+  return response;
 };

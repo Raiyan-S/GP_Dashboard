@@ -15,7 +15,9 @@ export default function Register() {
 
     try {
       const response = await register(email, password);
-      navigate('/login');
+      if (response.ok) {
+        navigate('/login');
+      }
     } catch (error) {
       setError(error.message);
     }
