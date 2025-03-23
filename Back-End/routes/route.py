@@ -2,6 +2,7 @@ from fastapi import APIRouter, HTTPException, status # APIRouter to group routes
 from models.TrainingRound import TrainingRound
 from config.db import db
 from fastapi.encoders import jsonable_encoder # Convert Pydantic models to dictionaries (because of complex types e.g., datetime)
+import numpy as np
 
 
 router = APIRouter()
@@ -15,19 +16,21 @@ async def get_rounds():
     except Exception as e:
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
 
-# post a round or rounds (For testing purposes)
+# post a round or rounds
 @router.post("/post", response_model=list[TrainingRound])
 async def post_round(rounds: list[TrainingRound]):
     try:
         # Convert confusion_matrix arrays to lists before sending to the database
         rounds_dict = jsonable_encoder(rounds)  # This will recursively convert nested models
+        
         for round_data in rounds_dict:
             for client_id, client_metrics in round_data['clients'].items():
                 if client_metrics['metrics']:
                     # Convert confusion_matrix arrays to lists
-                    if client_metrics['metrics'].get('confusion_matrix'):
+                    if isinstance(client_metrics['metrics'].get('confusion_matrix'), np.ndarray):
                         client_metrics['metrics']['confusion_matrix'] = client_metrics['metrics']['confusion_matrix'].tolist()
-                    if client_metrics['metrics'].get('per_class_accuracy'):
+                    if isinstance(client_metrics['metrics'].get('per_class_accuracy'), dict):
+                        # Ensure per_class_accuracy is a dict (might need to process it further if it's a complex type)
                         client_metrics['metrics']['per_class_accuracy'] = dict(client_metrics['metrics']['per_class_accuracy'])
 
         # Insert the rounds data into the database
