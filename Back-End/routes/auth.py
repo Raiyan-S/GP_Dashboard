@@ -20,27 +20,32 @@ SECRET = os.getenv("SECRET_KEY")
 
 router = APIRouter()
 
+import logging
+logging.basicConfig(level=logging.DEBUG)
+
 @router.get("/auth/verify-token")
 async def verify_user_token(
     request: Request,
     access_token_db: AccessTokenDatabase[AccessToken] = Depends(get_access_token_db),
     user_db = Depends(get_user_db),
 ):
-    # Extract session token from cookies
     session_token = request.cookies.get("session_token")
+    
     if not session_token:
+        logging.debug("🚨 Token missing in request")
         raise HTTPException(status_code=401, detail="Token missing")
 
-    # Find the token in the database
     token_entry = await access_token_db.get_by_token(session_token)
     if not token_entry:
+        logging.debug(f"🚨 Invalid token: {session_token}")
         raise HTTPException(status_code=401, detail="Invalid token")
 
-    # Get user details
     user = await user_db.get(PydanticObjectId(token_entry.user_id))
     if not user:
+        logging.debug(f"🚨 User not found for token {session_token}")
         raise HTTPException(status_code=401, detail="User not found")
     
+    logging.debug(f"✅ Token valid for user {user.id}")
     return {"message": "Token is valid", "user_id": str(user.id)}
 
 class UserManager(ObjectIDIDMixin, BaseUserManager[User, PydanticObjectId]):

@@ -11,19 +11,23 @@ export const AuthProvider = ({ children }) => {
     setLoading(true);
     try {
       const response = await verify_token();
-      console.log("Auth check response:", response);
+      
       if (response.status === 200) {
         setIsAuthenticated(true);
-      } else {
+      } else if (response.status === 401) {
+        console.log("🔴 User not authenticated, redirecting to login...");
         setIsAuthenticated(false);
+      } else {
+        console.log("⚠️ Unexpected response:", response);
       }
     } catch (error) {
-      console.log("Auth check failed:", error);
+      console.log("🔴 Auth check failed:", error);
       setIsAuthenticated(false);
     } finally {
       setLoading(false);
     }
   };
+  
 
   useEffect(() => {
     checkAuth();
