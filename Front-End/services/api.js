@@ -47,13 +47,19 @@ export const fetchAveragedMetrics = async () => {
 
 export const login = async (username, password) => {
   console.log('DEBUG: Logging in with:', username , password);
+  // Data in application/x-www-form-urlencoded format
+  const params = new URLSearchParams({
+    username: username, 
+    password: password   
+  });
+
   const response = await fetch(`${API_URL}/auth/cookies/login`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
     },
     credentials: 'include',
-    body: JSON.stringify({ username, password, grant_type: 'password' }),
+    body: params.toString(),
   });
   if (!response.ok) {
     const errorData = await response.json(); 
