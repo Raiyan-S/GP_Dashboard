@@ -28,6 +28,8 @@ function App() {
       case 'clients': return 'Clients';
       case 'model-trial': return 'Model Trial';
       case 'settings': return 'Settings';
+      case 'login': return 'Login';
+      case 'register': return 'Register';
     }
   };
 
@@ -66,6 +68,7 @@ function App() {
 
         <main className={`flex-1 ${showSidebarAndHeader ? 'px-4 sm:px-6 lg:px-8 py-6' : ''}`}>
           <Routes>
+            <Route path="/" element={<Navigate to="/login" />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
             <Route path="/dashboard" element={<><DashboardStats /><ClientOverview onSeeAll={handleSeeAll} /></>} />
