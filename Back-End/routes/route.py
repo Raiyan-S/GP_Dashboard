@@ -59,7 +59,7 @@ async def get_client_rounds(client_id: str):
                 }
             }
         ]
-        rounds = await db['training_rounds'].aggregate(pipeline).to_list(1000)
+        rounds = await db['test'].aggregate(pipeline).to_list(1000)
         # Map the data to the required format, simplifying the structure
         simplified_rounds = [
             {
