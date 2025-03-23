@@ -10,12 +10,12 @@ class Metrics(BaseModel):
     
     @model_validator(mode='before')
     def remove_unwanted_fields(cls, values):
-        # Remove the unwanted fields if they exist
-        for client, metrics in values.get('clients', {}).items():
-            if 'confusion_matrix' in metrics:
-                del metrics['confusion_matrix']
-            if 'per_class_accuracy' in metrics:
-                del metrics['per_class_accuracy']
+        # Remove unwanted fields from the clients' metrics
+        if 'clients' in values:
+            for client_id, client_metrics in values['clients'].items():
+                # Remove confusion_matrix and per_class_accuracy from each client's metrics
+                client_metrics.metrics.confusion_matrix = None
+                client_metrics.metrics.per_class_accuracy = None
         return values
     
 class ClientMetrics(BaseModel):
