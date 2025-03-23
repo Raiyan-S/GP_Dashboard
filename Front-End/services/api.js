@@ -45,14 +45,14 @@ export const fetchAveragedMetrics = async () => {
   return response.json();
 };
 
-export const login = async (email, password) => {
+export const login = async (username, password) => {
   const response = await fetch(`${API_URL}/auth/cookies/login`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
     },
     credentials: 'include',
-    body: JSON.stringify({ email, password }),
+    body: JSON.stringify({ username, password }),
   });
   if (!response.ok) {
     const errorData = await response.json(); 
