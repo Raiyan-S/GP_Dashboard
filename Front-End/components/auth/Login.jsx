@@ -14,6 +14,8 @@ export default function Login() {
     setError('');
     
     try {
+      console.log('Email:', email);
+      console.log('Password:', password);
       const response = await login(email, password);
       navigate('/dashboard');
     } catch (error) {
