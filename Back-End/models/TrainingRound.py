@@ -1,4 +1,4 @@
-from pydantic import BaseModel, Field, model_validator, root_validator
+from pydantic import BaseModel, Field, model_validator
 from typing import Dict, Any
 from datetime import datetime, timezone, timedelta
 

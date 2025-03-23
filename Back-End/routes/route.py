@@ -3,7 +3,7 @@ from models.TrainingRound import TrainingRound
 from config.db import db
 from fastapi.encoders import jsonable_encoder # Convert Pydantic models to dictionaries (because of complex types e.g., datetime)
 import numpy as np
-
+import json
 
 router = APIRouter()
 
@@ -41,40 +41,43 @@ async def post_round(rounds: list[TrainingRound]):
     except Exception as e:
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
 
-# get all unique client IDs
+
 @router.get("/clients", response_model=list[str])
 async def get_unique_client_ids():
     try:
         pipeline = [
-            {"$unwind": "$clients"},
-            {"$group": {"_id": "$clients.client_id"}},
+            {"$project": {"clients": {"$objectToArray": "$clients"}}},  # Convert 'clients' object to an array of key-value pairs
+            {"$unwind": "$clients"},  # Flatten the 'clients' array
+            {"$group": {"_id": "$clients.k"}},  # Group by client ID (the keys of the 'clients' object)
             {"$sort": {"_id": 1}}  # Sort the client IDs in ascending order
         ]
-        result = await db['training_rounds'].aggregate(pipeline).to_list(1000)
+        result = await db['test1'].aggregate(pipeline).to_list(1000)
         client_ids = [doc["_id"] for doc in result]
         return client_ids
     except Exception as e:
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
 
-# get all rounds for a specific client
 @router.get("/rounds/{client_id}", response_model=list[dict])
 async def get_client_rounds(client_id: str):
     try:
         pipeline = [
-            {"$unwind": "$clients"},  # Flatten the clients array
-            {"$match": {"clients.client_id": client_id}},  # Filter for the specific client
-            {"$sort": {"_id": 1}},  # Sort by created_at in ascending order
+            {"$project": {
+                "rounds": {"$objectToArray": "$$ROOT"}  # Convert the entire document into an array of round objects
+            }},
+            {"$unwind": "$rounds"},  # Flatten the rounds array (0, 1, 2, etc.)
+            {"$unwind": "$rounds.v.clients"},  # Flatten the clients inside each round
+            {"$match": {"rounds.v.clients.k": client_id}},  # Match the specific client in each round
+            {"$sort": {"rounds.k": 1}},  # Sort by round number (key)
             {
-                "$project": {  # Include only the round_id and the client's metrics
-                    "round_id": 1,
-                    "metrics": "$clients.metrics",  # Rename 'clients.metrics' to 'metrics'
+                "$project": {  # Only select relevant fields
+                    "round_id": "$rounds.k",
+                    "metrics": "$rounds.v.clients.v",  # Client metrics
                     "created_at": 1,
-                    "_id": 0  # Exclude the _id field
+                    "_id": 0
                 }
             }
         ]
-        rounds = await db['training_rounds'].aggregate(pipeline).to_list(1000)
-        # Map the data to the required format, simplifying the structure
+        rounds = await db['test1'].aggregate(pipeline).to_list(1000)
         simplified_rounds = [
             {
                 "round_id": round["round_id"],
@@ -86,6 +89,52 @@ async def get_client_rounds(client_id: str):
         return simplified_rounds
     except Exception as e:
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
+
+# # get all unique client IDs
+# @router.get("/clients", response_model=list[str])
+# async def get_unique_client_ids():
+#     try:
+#         pipeline = [
+#             {"$unwind": "$clients"},
+#             {"$group": {"_id": "$clients.client_id"}},
+#             {"$sort": {"_id": 1}}  # Sort the client IDs in ascending order
+#         ]
+#         result = await db['training_rounds'].aggregate(pipeline).to_list(1000)
+#         client_ids = [doc["_id"] for doc in result]
+#         return client_ids
+#     except Exception as e:
+#         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
+
+# # get all rounds for a specific client
+# @router.get("/rounds/{client_id}", response_model=list[dict])
+# async def get_client_rounds(client_id: str):
+#     try:
+#         pipeline = [
+#             {"$unwind": "$clients"},  # Flatten the clients array
+#             {"$match": {"clients.client_id": client_id}},  # Filter for the specific client
+#             {"$sort": {"_id": 1}},  # Sort by created_at in ascending order
+#             {
+#                 "$project": {  # Include only the round_id and the client's metrics
+#                     "round_id": 1,
+#                     "metrics": "$clients.metrics",  # Rename 'clients.metrics' to 'metrics'
+#                     "created_at": 1,
+#                     "_id": 0  # Exclude the _id field
+#                 }
+#             }
+#         ]
+#         rounds = await db['training_rounds'].aggregate(pipeline).to_list(1000)
+#         # Map the data to the required format, simplifying the structure
+#         simplified_rounds = [
+#             {
+#                 "round_id": round["round_id"],
+#                 "metrics": round["metrics"],
+#                 "created_at": round.get("created_at")
+#             }
+#             for round in rounds
+#         ]
+#         return simplified_rounds
+#     except Exception as e:
+#         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
 
 # get the latest round for each client (probably will remove)
 @router.get("/latest-rounds", response_model=list[dict]) # just for debugging
