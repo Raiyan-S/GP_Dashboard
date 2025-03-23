@@ -20,7 +20,7 @@ SECRET = os.getenv("SECRET_KEY")
 
 router = APIRouter()
 
-@router.post("/auth/verify-token")
+@router.get("/auth/verify-token")
 async def verify_user_token(
     request: Request,
     access_token_db: AccessTokenDatabase[AccessToken] = Depends(get_access_token_db),
