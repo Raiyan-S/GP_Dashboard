@@ -1,6 +1,6 @@
 import React, { useState } from 'react'; // useState for managing state
 import { Helmet } from 'react-helmet-async'; // Helmet for changing page title dynamically
-import { Route, Routes, useNavigate, useLocation } from 'react-router-dom';
+import { Route, Routes, useNavigate, useLocation, Navigate } from 'react-router-dom'; // useNavigate for event handling like onClick while Navigate for redirecting and used inside JSX 
 import Sidebar from './components/layout/Sidebar';
 import Header from './components/layout/Header';
 import DashboardStats from './components/dashboard/DashboardStats';
