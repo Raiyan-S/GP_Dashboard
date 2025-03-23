@@ -19,8 +19,19 @@ async def get_rounds():
 @router.post("/post", response_model=list[TrainingRound])
 async def post_round(rounds: list[TrainingRound]):
     try:
-        rounds_dict = jsonable_encoder(rounds) # This will recursively convert nested models
-        result = await db['test1'].insert_many(rounds_dict)  
+        # Convert confusion_matrix arrays to lists before sending to the database
+        rounds_dict = jsonable_encoder(rounds)  # This will recursively convert nested models
+        for round_data in rounds_dict:
+            for client_id, client_metrics in round_data['clients'].items():
+                if client_metrics['metrics']:
+                    # Convert confusion_matrix arrays to lists
+                    if client_metrics['metrics'].get('confusion_matrix'):
+                        client_metrics['metrics']['confusion_matrix'] = client_metrics['metrics']['confusion_matrix'].tolist()
+                    if client_metrics['metrics'].get('per_class_accuracy'):
+                        client_metrics['metrics']['per_class_accuracy'] = dict(client_metrics['metrics']['per_class_accuracy'])
+
+        # Insert the rounds data into the database
+        result = await db['test1'].insert_many(rounds_dict)
         for i, inserted_id in enumerate(result.inserted_ids):
             rounds_dict[i]["_id"] = str(inserted_id)
         return rounds_dict
