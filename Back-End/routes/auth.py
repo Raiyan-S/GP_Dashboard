@@ -26,17 +26,17 @@ async def verify_user_token(
     access_token_db: AccessTokenDatabase[AccessToken] = Depends(get_access_token_db),
     user_db = Depends(get_user_db),
 ):
-    # 🔹 Extract session token from cookies
+    # Extract session token from cookies
     session_token = request.cookies.get("session_token")
     if not session_token:
         raise HTTPException(status_code=401, detail="Token missing")
 
-    # 🔹 Find the token in the database
+    # Find the token in the database
     token_entry = await access_token_db.get_by_token(session_token)
     if not token_entry:
         raise HTTPException(status_code=401, detail="Invalid token")
 
-    # 🔹 Get user details
+    # Get user details
     user = await user_db.get(PydanticObjectId(token_entry.user_id))
     if not user:
         raise HTTPException(status_code=401, detail="User not found")
