@@ -10,7 +10,7 @@ export const AuthProvider = ({ children }) => {
     const checkAuth = async () => {
       try {
         const response = await verify_token();
-        if (response.status === 204) {
+        if (response.status === 200) {
           setIsAuthenticated(true);
         } else {
           console.error("Token verification failed:", await response.json());
