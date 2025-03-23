@@ -46,6 +46,7 @@ export const fetchAveragedMetrics = async () => {
 };
 
 export const login = async (username, password) => {
+  console.log('DEBUG: Logging in with:', username , password);
   const response = await fetch(`${API_URL}/auth/cookies/login`, {
     method: 'POST',
     headers: {
