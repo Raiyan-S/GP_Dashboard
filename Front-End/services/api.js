@@ -66,7 +66,7 @@ export const login = async (username, password) => {
     console.error('Login failed:', errorData); 
     throw new Error('Failed to login');
   }
-  return response.status === 204 ? null : await response.json(); // Return null if status is 204 (No Content)
+  return response.status;
 };
 
 export const register = async (email, password) => {
