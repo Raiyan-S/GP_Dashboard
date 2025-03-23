@@ -36,6 +36,7 @@ export default function Register() {
             <input
               type="email"
               value={email}
+              placeholder="Enter your email"
               onChange={(e) => setEmail(e.target.value)}
               className="w-full p-2 border rounded-md bg-gray-100 text-gray-900"
               required
@@ -46,6 +47,7 @@ export default function Register() {
             <input
               type="password"
               value={password}
+              placeholder="Enter your password"
               onChange={(e) => setPassword(e.target.value)}
               className="w-full p-2 border rounded-md bg-gray-100 text-gray-900"
               required

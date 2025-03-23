@@ -83,3 +83,11 @@ export const register = async (email, password) => {
   }
   return response.json();
 };
+
+export const verify_token = async () => {
+  const response = await fetch(`${API_URL}/auth/verify-token`, {
+    method: 'POST',
+    credentials: "include", 
+  });
+  return response.json();
+};
