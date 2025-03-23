@@ -53,7 +53,7 @@ export const login = async (username, password) => {
       'Content-Type': 'application/json',
     },
     credentials: 'include',
-    body: JSON.stringify({ username, password }),
+    body: JSON.stringify({ username, password, grant_type: 'password' }),
   });
   if (!response.ok) {
     const errorData = await response.json(); 
