@@ -86,8 +86,9 @@ export const register = async (email, password) => {
 
 export const verify_token = async () => {
   const response = await fetch(`${API_URL}/auth/verify-token`, {
-    method: 'get',
+    method: 'GET',
     credentials: "include", 
   });
+  console.log('DEBUG: Verifying token:', response);
   return response;
 };
