@@ -50,7 +50,6 @@ export const login = async (email, password) => {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      'Authorization': `Bearer ${authToken}`,
     },
     credentials: 'include',
     body: JSON.stringify({ email, password }),
