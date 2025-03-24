@@ -15,6 +15,9 @@ db_name = os.getenv("DB_NAME")
 
 mongodb.client = AsyncIOMotorClient(mongo_uri)
 mongodb.db = mongodb.client[db_name]
+
+# need to check out the problem later
+
 async def open_connection():
     mongo_uri = os.getenv("MONGO_PUBLIC_URL")
     db_name = os.getenv("DB_NAME")
