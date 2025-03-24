@@ -9,12 +9,12 @@ import { AuthProvider } from './components/auth/AuthContext';
 // Root container for the React application
 createRoot(document.getElementById('root')).render(
   <HelmetProvider>
-    <AuthProvider>
       <BrowserRouter>
-        <StrictMode>
-          <App />
-        </StrictMode>
+        <AuthProvider>
+          <StrictMode>
+            <App />
+          </StrictMode>
+        </AuthProvider>
       </BrowserRouter>
-    </AuthProvider>
   </HelmetProvider>
 );

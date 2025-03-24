@@ -10,7 +10,7 @@ export function useTheme() {
     localStorage.setItem('theme', theme); // // Save the theme in localStorage
 
     // Check if the theme is dark and set the class on the root element else remove it
-    const isDark = theme === 'dark' || (theme === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches);
+    const isDark = theme === 'dark';
     root.classList.toggle('dark', isDark); // Toggle the 'dark' class on the root
   }, [theme]);
 

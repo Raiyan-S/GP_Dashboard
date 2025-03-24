@@ -1,13 +1,10 @@
-from fastapi import FastAPI, Depends
+from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse
 from fastapi.middleware.cors import CORSMiddleware # Cross-Origin Resource Sharing middleware
-from routes.route import router as router # Import the router
-
-from beanie import init_beanie
-from config.db import User, AccessToken, db
-from routes.auth import auth_backend, current_active_user, fastapi_users
-from models.user import UserRead, UserCreate, UserUpdate
+from routes.route import router as router
+from routes.auth import router as auth_router
+from config.db import open_connection, close_connection
 
 from contextlib import asynccontextmanager
 import os
@@ -15,14 +12,9 @@ import os
 # Database connection context manager
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    await init_beanie(
-        database=db,
-        document_models=[
-            User,
-            AccessToken,
-        ],
-    )
+    await open_connection()
     yield
+    await close_connection()
     
 # Create a FastAPI instance 
 app = FastAPI(lifespan=lifespan)
@@ -44,35 +36,8 @@ app.add_middleware(
 )
 
 # Include the router
-app.include_router(router)
-
-app.include_router(
-    fastapi_users.get_auth_router(auth_backend), prefix="/auth/cookies", tags=["auth"]
-)
-app.include_router(
-    fastapi_users.get_register_router(UserRead, UserCreate),
-    prefix="/auth",
-    tags=["auth"],
-)
-app.include_router(
-    fastapi_users.get_reset_password_router(),
-    prefix="/auth",
-    tags=["auth"],
-)
-app.include_router(
-    fastapi_users.get_verify_router(UserRead),
-    prefix="/auth",
-    tags=["auth"],
-)
-app.include_router(
-    fastapi_users.get_users_router(UserRead, UserUpdate),
-    prefix="/users",
-    tags=["users"],
-)
-
-@app.get("/authenticated-route")
-async def authenticated_route(user: User = Depends(current_active_user)):
-    return {"message": f"Hello {user.email}!"}
+app.include_router(router, prefix="/api")
+app.include_router(auth_router, prefix="/api/auth")
 
 # Path to the built frontend (for deployment on Railway)
 FRONTEND_DIST = os.path.join(os.path.dirname(__file__), "../dist")

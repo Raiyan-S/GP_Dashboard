@@ -1,22 +1,23 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext } from "react";
 import { Navigate } from "react-router-dom";
 import { AuthContext } from "./AuthContext";
 
-const ProtectedRoute = ({ children }) => {
-  const { isAuthenticated, loading, checkAuth } = useContext(AuthContext);
-
-  useEffect(() => {
-    console.log("Checking authentication...");
-    checkAuth();
-  }, []); // Runs when the component mounts
-
-  console.log("Auth state:", { isAuthenticated, loading });
+const ProtectedRoute = ({ element, allowedRoles }) => {
+  const { isAuthenticated, loading, userRole } = useContext(AuthContext);
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <p>Loading...</p>;
   }
 
-  return isAuthenticated ? children : <Navigate to="/login" />;
+  if (!isAuthenticated) {
+    return <Navigate to="/login" />;
+  }
+
+  if (allowedRoles && !allowedRoles.includes(userRole)) {
+    return <Navigate to="/unauthorized" />; // Redirect to an unauthorized page
+  }
+
+  return element;
 };
 
 export default ProtectedRoute;

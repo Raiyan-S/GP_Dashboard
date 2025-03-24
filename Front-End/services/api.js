@@ -1,4 +1,4 @@
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000/api';
 
 // // Fetch Health Status from the API
 // export const fetchHealthStatus = async () => {
@@ -11,7 +11,7 @@ const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
 
 // Fetch Unique Client IDs from the API
 export const fetchUniqueClientIds = async () => {
-  const response = await fetch(`${API_URL}/clients`);
+  const response = await fetch(`${API_URL}/client`);
   if (!response.ok) {
     throw new Error('Failed to fetch unique client IDs');
   }
@@ -46,53 +46,68 @@ export const fetchAveragedMetrics = async () => {
 };
 
 export const login = async (username, password) => {
-  console.log('DEBUG: Logging in with:', username , password);
-  // Data in application/x-www-form-urlencoded format
+  console.log('DEBUG: Logging in with:', username, password);
+  
   const params = new URLSearchParams({
     username: username, 
     password: password   
   });
 
-  const response = await fetch(`${API_URL}/auth/cookies/login`, {
+  const response = await fetch(`${API_URL}/auth/login`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded',
     },
-    credentials: 'include',
+    credentials: 'include', // Ensures cookies are sent with the request
     body: params.toString(),
   });
+
   if (!response.ok) {
     const errorData = await response.json(); 
     console.error('Login failed:', errorData); 
-    throw new Error('Failed to login');
+    throw new Error(errorData.detail || 'Failed to login');
   }
-  return response; 
-};
 
-export const logout = async () => {
-  const response = await fetch(`${API_URL}/auth/cookies/logout`, {
-    method: 'POST',
-    credentials: 'include',
-  });
-  if (!response.ok) {
-    throw new Error('Failed to logout');
-  }
   return response;
 };
 
-export const register = async (email, password) => {
+export const logout = async () => {
+  const response = await fetch(`${API_URL}/auth/logout`, {
+    method: 'POST',
+    credentials: 'include',
+  });
+
+  if (!response.ok) {
+    throw new Error('Failed to logout');
+  }
+
+  return response;
+};
+
+export const register = async (username, password) => {
+  console.log('DEBUG: Registering with:', username, password);
+  
+  const params = new URLSearchParams({
+    username: username,
+    password: password,
+  });
+
   const response = await fetch(`${API_URL}/auth/register`, {
     method: 'POST',
     headers: {
-      'Content-Type': 'application/json',
+      'Content-Type': 'application/x-www-form-urlencoded',
     },
-    credentials: 'include',
-    body: JSON.stringify({ email, password }),
+    credentials: 'include',  // Ensures cookies are sent with the request if needed
+    body: params.toString(),
   });
+
   if (!response.ok) {
-    throw new Error('Registration failed');
+    const errorData = await response.json();
+    console.error('Registration failed:', errorData);
+    throw new Error(errorData.detail || 'Failed to register');
   }
-  return response.json();
+
+  return response;
 };
 
 export const verify_token = async () => {

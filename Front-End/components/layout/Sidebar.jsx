@@ -1,21 +1,30 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { Link } from 'react-router-dom';
 import { Layout, BarChart3, Users, TestTube, Settings, LogOut, X } from 'lucide-react'; // Icons from Lucide 
+import { AuthContext } from '../auth/AuthContext'; // Import AuthContext
 
 // Sidebar navigation items
-const navigation = [
+const adminNavigation = [
   { name: 'Dashboard', icon: BarChart3, id: 'dashboard', path: '/dashboard' },
   { name: 'Clients', icon: Users, id: 'clients', path: '/clients' },
   { name: 'Model Trial', icon: TestTube, id: 'model-trial', path: '/model-trial' },
-  { name: 'Settings', icon: Settings, id: 'settings', path: '/settings' },
+];
+
+const clinicNavigation = [
+  { name: 'Model Trial', icon: TestTube, id: 'model-trial', path: '/model-trial' },
 ];
 
 // Used in App.jsx
 export default function Sidebar({ activeTab, setActiveTab, isSidebarOpen, onClose }) {
+  const { userRole, logoutt } = useContext(AuthContext); // Get user role and logout function from AuthContext
+
   const handleTabChange = (id) => {
     setActiveTab(id);
     onClose();
   };
+
+  // Determine the navigation items based on the user role
+  const navigation = userRole === 'admin' ? adminNavigation : clinicNavigation;
 
   return (
     <div>
@@ -78,9 +87,9 @@ export default function Sidebar({ activeTab, setActiveTab, isSidebarOpen, onClos
         </nav>
 
         <div className="border-t border-gray-200 dark:border-gray-700">
-          {/* Logout function (Not implemented yet, same thing in Header.jsx) */}
+          {/* Logout function */}
           <button
-            onClick={() => console.log('Logout clicked')}
+            onClick={logoutt}
             className="w-full flex items-center px-6 py-4 text-sm font-medium text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
           >
             <LogOut className="h-5 w-5 mr-3" /> {/* Signout Icon */}

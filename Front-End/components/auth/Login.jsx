@@ -16,7 +16,9 @@ export default function Login() {
     try {
       const response = await login(email, password);
       if (response.ok) {
-        navigate('/dashboard');
+        setTimeout(() => {
+          navigate('/dashboard');
+        }, 300); // 300 milliseconds delay to ensure session token is properly set as cookie
       }
     } catch (error) {
       setError(error.message);

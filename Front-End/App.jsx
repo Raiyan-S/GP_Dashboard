@@ -11,6 +11,7 @@ import Setting from './components/settings/Settings';
 import Login from './components/auth/Login';
 import Register from './components/auth/Register';
 import ProtectedRoute from './components/auth/ProtectRoute';
+import Unauthorized from './components/auth/Unauthorized'; 
 
 // Main Component
 // Used in main.jsx
@@ -66,15 +67,17 @@ function App() {
           </>
         )}
 
+        {/* The allowedRoles is ghetto but works. I'll have to authenticate from the backend to make it extra secure */}
         <main className={`flex-1 ${showSidebarAndHeader ? 'px-4 sm:px-6 lg:px-8 py-6' : ''}`}>
           <Routes>
             <Route path="/" element={<Navigate to="/login" />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
-            <Route path="/dashboard" element={<ProtectedRoute><><DashboardStats /><ClientOverview onSeeAll={handleSeeAll} /></></ProtectedRoute>} />
-            <Route path="/clients" element={<ProtectedRoute><ClientsPage /></ProtectedRoute>} />
-            <Route path="/model-trial" element={<ProtectedRoute><ModelTrial /></ProtectedRoute>} />
-            <Route path="/settings" element={<ProtectedRoute><Setting /></ProtectedRoute>} />
+            <Route path="/dashboard" element={<ProtectedRoute element={<><DashboardStats /><ClientOverview onSeeAll={handleSeeAll} /></>} allowedRoles={['admin']} />} />
+            <Route path="/clients" element={<ProtectedRoute element={<ClientsPage />} allowedRoles={['admin']} />} />
+            <Route path="/model-trial" element={<ProtectedRoute element={<ModelTrial />} allowedRoles={['admin', 'client']} />} />
+            <Route path="/settings" element={<Setting />} />
+            <Route path="/unauthorized" element={<Unauthorized />} /> 
           </Routes>
         </main>
       </div>

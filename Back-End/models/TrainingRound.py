@@ -1,6 +1,5 @@
 from pydantic import BaseModel, Field
 from datetime import datetime, timezone, timedelta
-from typing import Dict
 
 class Metrics(BaseModel):
     accuracy: float = 0.0

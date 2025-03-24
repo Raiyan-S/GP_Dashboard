@@ -2,7 +2,6 @@ from fastapi import APIRouter, HTTPException, status # APIRouter to group routes
 from models.TrainingRound import TrainingRound
 from config.db import db
 from fastapi.encoders import jsonable_encoder # Convert Pydantic models to dictionaries (because of complex types e.g., datetime)
-import numpy as np
 
 router = APIRouter()
 
@@ -30,7 +29,6 @@ async def post_round(rounds: list[TrainingRound]):
         return rounds_dict
     except Exception as e:
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
-
 
 
 # @router.get("/clients", response_model=list[str])
@@ -108,7 +106,7 @@ async def post_round(rounds: list[TrainingRound]):
 #         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
 
 # get all unique client IDs
-@router.get("/clients", response_model=list[str])
+@router.get("/client", response_model=list[str])
 async def get_unique_client_ids():
     try:
         pipeline = [
