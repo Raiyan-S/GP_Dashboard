@@ -15,14 +15,14 @@ async def get_rounds():
     except Exception as e:
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
 
-# post a round or rounds
+# post rounds
 @router.post("/post", response_model=list[TrainingRound])
 async def post_round(rounds: list[TrainingRound]):
     try:
         rounds_dict = jsonable_encoder(rounds)  # This will recursively convert nested models
 
         # Insert the rounds data into the database (insert_many for multiple records)
-        result = await db['test3'].insert_one(rounds_dict)
+        result = await db['test3'].insert_many(rounds_dict)
         
         # Add the inserted IDs to each round
         for i, inserted_id in enumerate(result.inserted_ids):
