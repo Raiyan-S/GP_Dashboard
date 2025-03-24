@@ -12,13 +12,13 @@ class Metrics(BaseModel):
 class TrainingRound(BaseModel):
     round: str
     created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc) + timedelta(hours=3))  # AST (UTC+3)
-    Global: Metrics
     # Unfortunately hardcoding the client names is necessary because of problems when fetching the data from the database
     # If we had done clients: Dict[str, Metrics] = {}, the data would not be fetched correctly and extra endpoints would be needed
     client_0: Metrics
     client_1: Metrics
     client_2: Metrics
     client_3: Metrics
+    Global: Metrics
         
     class Config:
         json_encoders = {
