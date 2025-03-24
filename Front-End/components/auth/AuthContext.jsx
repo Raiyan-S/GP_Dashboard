@@ -26,7 +26,6 @@ export const AuthProvider = ({ children }) => {
         }
       } catch {
         setIsAuthenticated(false);
-        navigate("/login");
       } finally {
         setLoading(false);
       }

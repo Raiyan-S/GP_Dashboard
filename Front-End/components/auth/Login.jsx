@@ -33,6 +33,12 @@ export default function Login() {
           <span className="ml-2 text-2xl font-semibold text-gray-900">FL-ALL Dashboard</span>
         </div>
         <h2 className="text-2xl font-semibold text-gray-900 mb-6">Login</h2>
+
+        {/* Note */}
+        <p className="text-gray-600 mb-4">
+          admin email: admin123@gmail.com, pass: admin123, when you register it will be clinic role (only model-trial page)
+        </p>
+
         {error && <p className="text-red-500 mb-4">{error}</p>}
         <form onSubmit={handleSubmit}>
           <div className="mb-4">

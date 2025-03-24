@@ -38,14 +38,18 @@ export default function Header({ title, setActiveTab, menuClick }) {
             )}
           </button>
 
-          <div className="relative w-8 h-8 rounded-full bg-blue-100 dark:bg-blue-900 flex items-center justify-center">
-            <span className="text-blue-600 dark:text-blue-400 font-medium">
-              {username?.charAt(0).toUpperCase()}
-            </span>
-          </div>
-          <span className="text-sm font-medium text-gray-700 dark:text-gray-300 ml-2">
-            {username.split('@')[0]}
-          </span>
+          {username && (
+            <>
+              <div className="relative w-8 h-8 rounded-full bg-blue-100 dark:bg-blue-900 flex items-center justify-center">
+                <span className="text-blue-600 dark:text-blue-400 font-medium">
+                  {username.charAt(0).toUpperCase()}
+                </span>
+              </div>
+              <span className="text-sm font-medium text-gray-700 dark:text-gray-300 ml-2">
+                {username.split('@')[0]}
+              </span>
+            </>
+          )}
         </div>
       </div>
     </header>
