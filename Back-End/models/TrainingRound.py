@@ -23,7 +23,7 @@ class TrainingRound(BaseModel):
         
     @model_validator(mode='before')
     def check_client_fields(cls, values):
-        allowed_fields = ['round', 'Global']
+        allowed_fields = ['round', 'Global', 'created_at']
         
         # Ensure that all extra fields have the prefix "client_"
         for field in values:
