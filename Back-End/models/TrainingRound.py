@@ -25,6 +25,6 @@ class TrainingRound(BaseModel):
     def check_client_fields(cls, values):
         # Ensure that all extra fields have the prefix "client_"
         for field in values:
-            if not field.startswith("client_") and field != "Global":
+            if not field.startswith("client_"):
                 raise ValueError(f"Invalid field name: {field}. Field names must start with 'client_'")
         return values
