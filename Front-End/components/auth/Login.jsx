@@ -18,7 +18,7 @@ export default function Login() {
       if (response.ok) {
         setTimeout(() => {
           navigate('/dashboard');
-        }, 300); // 300 milliseconds delay to ensure session token is properly set as cookie
+        }, 1000); // 1000 milliseconds delay to ensure session token is properly set as cookie
       }
     } catch (error) {
       setError(error.message);
@@ -34,9 +34,9 @@ export default function Login() {
         </div>
         <h2 className="text-2xl font-semibold text-gray-900 mb-6">Login</h2>
 
-        {/* Note */}
+        {/* NOTE */}
         <p className="text-gray-600 mb-4">
-          admin email: admin123@gmail.com, pass: admin123, when you register it will be clinic role (only model-trial page)
+          admin email: admin123@gmail.com, pass: admin123, when you register it will be clinic role (only model-trial page) also for some reason you have to enter login twice and i will fix it later
         </p>
 
         {error && <p className="text-red-500 mb-4">{error}</p>}

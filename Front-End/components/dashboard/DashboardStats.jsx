@@ -64,6 +64,10 @@ export default function DashboardStats() {
   return (
     <div className="space-y-6">
       <h2 className="text-xl font-semibold dark:text-white">Summary</h2>
+      {/* NOTE */}
+      <p className="text-sm text-gray-500 dark:text-gray-400">
+        Note: I will need to update this to maybe global model instead of average of all clients' last round (yes the active clients should be 5 i will fix it)
+      </p>
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
         <StatsCard
           title="Active Clients"

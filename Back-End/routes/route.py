@@ -110,7 +110,7 @@ async def post_round(rounds: list[TrainingRound]):
 async def get_unique_client_ids():
     try:
         # Fetch a single document to get the client field names and check for "Global"
-        first_doc = await db['test3'].find_one()
+        first_doc = await db['test4'].find_one()
 
         # Get the client field names dynamically (keys of the document excluding _id and other fields)
         client_fields = [key for key in first_doc.keys() if key.startswith('client_')]
@@ -119,19 +119,20 @@ async def get_unique_client_ids():
         if "Global" in first_doc:
             client_fields.append("Global")
 
-        # Build the aggregation pipeline dynamically using the client fields and "Global"
-        pipeline = [
-            {"$project": {
-                "client_ids": client_fields  # Use the dynamic client fields including "Global"
-            }},
-            {"$unwind": "$client_ids"},  # Unwind to get each client and Global as separate documents
-            {"$group": {"_id": "$client_ids"}},  # Group by field names (client_0, client_1, etc., and "Global")
-            {"$sort": {"_id": 1}}  # Sort the client IDs and Global in ascending order
-        ]
+        # # Build the aggregation pipeline dynamically using the client fields and "Global"
+        # pipeline = [
+        #     {"$project": {
+        #         "client_ids": client_fields  # Use the dynamic client fields including "Global"
+        #     }},
+        #     {"$unwind": "$client_ids"},  # Unwind to get each client and Global as separate documents
+        #     {"$group": {"_id": "$client_ids"}},  # Group by field names (client_0, client_1, etc., and "Global")
+        #     {"$sort": {"_id": 1}}  # Sort the client IDs and Global in ascending order
+        # ]
 
-        result = await db['test3'].aggregate(pipeline).to_list(1000)
-        client_ids = [doc["_id"] for doc in result]
-        return client_ids
+        # result = await db['test4'].aggregate(pipeline).to_list(1000)
+        # client_ids = [doc["_id"] for doc in result]
+        
+        return client_fields
     except Exception as e:
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
 
@@ -141,7 +142,7 @@ async def get_client_rounds(client_id: str):
     try:
         # Aggregate pipeline to retrieve all rounds and check if the client exists
         pipeline = [
-            # Match documents where the client_id exists (e.g., client_0, client_1, etc.)
+            # Match documents where the client_id/Global field exists
             {"$match": {f"{client_id}": {"$exists": True}}},
             # Project the fields 
             {"$project": {
@@ -155,7 +156,7 @@ async def get_client_rounds(client_id: str):
         ]
 
         # Execute the aggregation pipeline
-        rounds = await db['test3'].aggregate(pipeline).to_list(1000)
+        rounds = await db['test4'].aggregate(pipeline).to_list(1000)
 
         # Simplify the response format
         simplified_rounds = [

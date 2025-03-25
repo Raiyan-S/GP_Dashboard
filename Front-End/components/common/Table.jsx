@@ -29,7 +29,7 @@ export default function ResponsiveTable({ data }) {
                   {data.map((row, index) => {
                     // Ensure row is defined and has a round property
                     const round = row.round_id || "N/A"; // "N/A" if round_id is undefined
-                    const metrics = row.metrics // Using optional chaining (?.) to handle undefined metrics and return as null/undefined and nullish coalescing (??) to handle undefined values
+                    const metrics = row?.metrics || {} // Using optional chaining (?.) to handle undefined metrics and return as null/undefined and nullish coalescing (??) to handle undefined values
                     const timestamp = row.created_at || "N/A" // "N/A" if created_at is undefined
                     return (
                       <tr key={index} className="hover:bg-gray-50 dark:hover:bg-gray-700/50">
@@ -79,7 +79,7 @@ export default function ResponsiveTable({ data }) {
             {data.map((row, index) => {
               // Ensure row is defined and has a round property
               const round = row.round_id || "N/A"; // "N/A" if round_id is undefined
-              const metrics = row.metrics // Using optional chaining (?.) to handle undefined metrics and return as null/undefined and nullish coalescing (??) to handle undefined values
+              const metrics = row?.metrics || {} // Using optional chaining (?.) to handle undefined metrics and return as null/undefined and nullish coalescing (??) to handle undefined values
               const timestamp = row.created_at || "N/A" // "N/A" if created_at is undefined
               return (
                 <div key={index} className="p-4 space-y-3">
