@@ -23,8 +23,10 @@ class TrainingRound(BaseModel):
         
     @model_validator(mode='before')
     def check_client_fields(cls, values):
+        allowed_fields = ['round', 'Global']
+        
         # Ensure that all extra fields have the prefix "client_"
         for field in values:
-            if not field.startswith("client_"):
+            if not (field.startswith("client_") or field in allowed_fields):
                 raise ValueError(f"Invalid field name: {field}. Field names must start with 'client_'")
         return values
