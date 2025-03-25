@@ -1,5 +1,5 @@
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000/api';
-
+// import.meta.env.VITE_API_URL || 
 // // Fetch Health Status from the API
 // export const fetchHealthStatus = async () => {
 //   const response = await fetch(`${API_URL}/health`);

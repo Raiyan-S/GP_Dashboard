@@ -21,7 +21,7 @@ async def post_round(rounds: list[TrainingRound]):
         rounds_dict = jsonable_encoder(rounds)  # This will recursively convert nested models
 
         # Insert the rounds data into the database (insert_many for multiple records)
-        result = await db['test3'].insert_many(rounds_dict)
+        result = await db['test4'].insert_many(rounds_dict)
         
         # Add the inserted IDs to each round
         for i, inserted_id in enumerate(result.inserted_ids):
@@ -109,12 +109,27 @@ async def post_round(rounds: list[TrainingRound]):
 @router.get("/client", response_model=list[str])
 async def get_unique_client_ids():
     try:
+        # Fetch a single document to get the client field names and check for "Global"
+        first_doc = await db['test3'].find_one()
+
+        # Get the client field names dynamically (keys of the document excluding _id and other fields)
+        client_fields = [key for key in first_doc.keys() if key.startswith('client_')]
+
+        # Check if "Global" field exists and add it if it does
+        if "Global" in first_doc:
+            client_fields.append("Global")
+
+        # Build the aggregation pipeline dynamically using the client fields and "Global"
         pipeline = [
-            {"$unwind": "$clients"},
-            {"$group": {"_id": "$clients.client_id"}},
-            {"$sort": {"_id": 1}}  # Sort the client IDs in ascending order
+            {"$project": {
+                "client_ids": client_fields  # Use the dynamic client fields including "Global"
+            }},
+            {"$unwind": "$client_ids"},  # Unwind to get each client and Global as separate documents
+            {"$group": {"_id": "$client_ids"}},  # Group by field names (client_0, client_1, etc., and "Global")
+            {"$sort": {"_id": 1}}  # Sort the client IDs and Global in ascending order
         ]
-        result = await db['training_rounds'].aggregate(pipeline).to_list(1000)
+
+        result = await db['test3'].aggregate(pipeline).to_list(1000)
         client_ids = [doc["_id"] for doc in result]
         return client_ids
     except Exception as e:
@@ -124,30 +139,36 @@ async def get_unique_client_ids():
 @router.get("/rounds/{client_id}", response_model=list[dict])
 async def get_client_rounds(client_id: str):
     try:
+        # Aggregate pipeline to retrieve all rounds and check if the client exists
         pipeline = [
-            {"$unwind": "$clients"},  # Flatten the clients array
-            {"$match": {"clients.client_id": client_id}},  # Filter for the specific client
-            {"$sort": {"_id": 1}},  # Sort by created_at in ascending order
-            {
-                "$project": {  # Include only the round_id and the client's metrics
-                    "round_id": 1,
-                    "metrics": "$clients.metrics",  # Rename 'clients.metrics' to 'metrics'
-                    "created_at": 1,
-                    "_id": 0  # Exclude the _id field
-                }
-            }
+            # Match documents where the client_id exists (e.g., client_0, client_1, etc.)
+            {"$match": {f"{client_id}": {"$exists": True}}},
+            # Project the fields 
+            {"$project": {
+                "round": 1,  # Include the round field
+                "created_at": 1,  # Include the created_at field
+                f"metrics": f"${client_id}",  # Directly access the client_id as a field
+            }},
+
+            # Sort by round number
+            {"$sort": {"round": 1}}
         ]
-        rounds = await db['training_rounds'].aggregate(pipeline).to_list(1000)
-        # Map the data to the required format, simplifying the structure
+
+        # Execute the aggregation pipeline
+        rounds = await db['test3'].aggregate(pipeline).to_list(1000)
+
+        # Simplify the response format
         simplified_rounds = [
             {
-                "round_id": round["round_id"],
-                "metrics": round["metrics"],
-                "created_at": round.get("created_at")
+                "round_id": round["round"],
+                "metrics": round.get("metrics"),  
+                "created_at": round.get("created_at"),
             }
             for round in rounds
         ]
+
         return simplified_rounds
+    
     except Exception as e:
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
 

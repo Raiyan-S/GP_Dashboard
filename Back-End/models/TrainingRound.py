@@ -1,4 +1,4 @@
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, model_validator
 from datetime import datetime, timezone, timedelta
 
 class Metrics(BaseModel):
@@ -25,3 +25,12 @@ class TrainingRound(BaseModel):
         }
         populate_by_name = True
         arbitrary_types_allowed = True
+        extra = 'allow'
+        
+    @model_validator(mode='before')
+    def check_client_fields(cls, values):
+        # Ensure that all extra fields have the prefix "client_"
+        for field in values:
+            if not field.startswith("client_") and field != "Global":
+                raise ValueError(f"Invalid field name: {field}. Field names must start with 'client_'")
+        return values
