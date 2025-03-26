@@ -21,7 +21,7 @@ async def post_round(rounds: list[TrainingRound]):
         rounds_dict = jsonable_encoder(rounds)  # This will recursively convert nested models
 
         # Insert the rounds data into the database (insert_many for multiple records)
-        result = await db['test4'].insert_many(rounds_dict)
+        result = await db['Rounds'].insert_many(rounds_dict)
         
         # Add the inserted IDs to each round
         for i, inserted_id in enumerate(result.inserted_ids):
