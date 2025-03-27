@@ -6,4 +6,7 @@ python-dotenv==1.0.1
 passlib==1.7.4
 beanie==1.29.0
 numpy==1.26.1
+torch==2.6.0
+torchvision==0.21.0
+pillow==10.1.0
 fastapi-users[beanie]

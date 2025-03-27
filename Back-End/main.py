@@ -4,6 +4,7 @@ from fastapi.responses import FileResponse
 from fastapi.middleware.cors import CORSMiddleware # Cross-Origin Resource Sharing middleware
 from routes.route import router as router
 from routes.auth import router as auth_router
+from routes.predict import router as predict_router
 from config.db import open_connection, close_connection
 
 from contextlib import asynccontextmanager
@@ -38,6 +39,7 @@ app.add_middleware(
 # Include the router
 app.include_router(router, prefix="/api")
 app.include_router(auth_router, prefix="/api/auth")
+app.include_router(predict_router, prefix="/api/modeltrial")
 
 # Path to the built frontend (for deployment on Railway)
 FRONTEND_DIST = os.path.join(os.path.dirname(__file__), "../dist")
