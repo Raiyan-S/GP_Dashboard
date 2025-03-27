@@ -15,26 +15,19 @@ async def get_rounds():
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
 
 # post a single round
-@router.post("/post", response_model=TrainingRound)
-async def post_round(round: TrainingRound):
+@router.post("/post", response_model=list[TrainingRound])
+async def post_round(round: list[TrainingRound]):
     try:
-        round_dict = jsonable_encoder(round)  # Convert the Pydantic model to a dictionary
-
-        # Replace the document with same round number in database, or insert if it doesn't
-        result = await db["Rounds"].replace_one(
-            {"round": round_dict["round"]},  # Match by round number
-            round_dict,  # Replace with this document
-            upsert=True  # Insert if no matching document is found
-        )
-
-        # Add the inserted or updated ID to the response
-        if result.upserted_id:  # If a new document was inserted
-            round_dict["_id"] = str(result.upserted_id)
-        else:  # If an existing document was replaced
-            existing_doc = await db["Rounds"].find_one({"round": round_dict["round"]})
-            round_dict["_id"] = str(existing_doc["_id"])
-
-        return round_dict
+        rounds_dict = jsonable_encoder(round)  
+        await db['Rounds'].drop()
+        
+        # Insert the rounds data into the database (insert_many for multiple records)
+        result = await db['Rounds'].insert_many(rounds_dict)
+        
+        # Add the inserted IDs to each round
+        for i, inserted_id in enumerate(result.inserted_ids):
+            rounds_dict[i]["_id"] = str(inserted_id)
+        return rounds_dict
     except Exception as e:
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
 
