@@ -76,7 +76,7 @@ function App() {
             <Route path="/dashboard" element={<ProtectedRoute element={<><DashboardStats /><ClientOverview onSeeAll={handleSeeAll} /></>} allowedRoles={['admin']} />} />
             <Route path="/clients" element={<ProtectedRoute element={<ClientsPage />} allowedRoles={['admin']} />} />
             <Route path="/model-trial" element={<ProtectedRoute element={<ModelTrial />} allowedRoles={['admin', 'client']} />} />
-            <Route path="/settings" element={<Setting />} />
+            <Route path="/settings" element={<Setting />} /> {/* NOTE: remove settings page */}
             <Route path="/unauthorized" element={<Unauthorized />} /> 
           </Routes>
         </main>

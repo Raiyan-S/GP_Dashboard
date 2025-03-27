@@ -96,7 +96,7 @@ async def predict(file: UploadFile = File(...)):
         all_probs = probabilities.squeeze(0).tolist()  # Convert tensor to list
 
     return {
-        "prediction": predicted_class,
+        "prediction": f"class_{predicted_class}",
         "confidence": round(confidence_score, 4),
         "probabilities": {f"class_{i}": round(prob, 4) for i, prob in enumerate(all_probs)},
         "model_upload_date": str(upload_date),

@@ -3,25 +3,17 @@ import ImageUploader from './ImageUploader';
 import PredictionDisplay from './PredictionResult';
 import PredictionHistory from './PredictionHistory';
 import { AlertCircle, Trash2 } from 'lucide-react';
+import { predict } from '../../services/api'; 
 
-const CLASSES = [
-  'Benign',
-  'Early Stage Malignant',
-  'Premalignant',
-  'Progressive Malignant'
-];
+const CLASSES = {
+  class_0: 'Benign',
+  class_1: 'Early Stage Malignant',
+  class_2: 'Premalignant',
+  class_3: 'Progressive Malignant',
+};
 
 const STORAGE_KEY = 'model-predictions';
 const COUNTER_KEY = 'prediction-counter';
-
-const fileToBase64 = (file) => {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.readAsDataURL(file);
-    reader.onload = () => resolve(reader.result);
-    reader.onerror = error => reject(error);
-  });
-};
 
 export default function ModelTrial() {
   const [predictions, setPredictions] = useState(() => {
@@ -47,29 +39,27 @@ export default function ModelTrial() {
     setError(null);
     
     try {
-      // Convert image to base64
-      const base64Image = await fileToBase64(file);
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      
-      const randomClass = CLASSES[Math.floor(Math.random() * CLASSES.length)];
+      const prediction = await predict(file);
+
+      console.log("Prediction result:", prediction);
+
       const newId = counter + 1;
       
       const result = {
         id: newId,
-        class: randomClass,
-        confidence: 85 + Math.random() * 14,
-        imageUrl: base64Image,
+        class: CLASSES[prediction.prediction],
+        confidence: prediction.confidence * 100, // Convert to percentage
+        imageUrl: URL.createObjectURL(file),
         details: {
-          phase: randomClass,
-          imageType: file.type.split('/')[1].toUpperCase(),
-          abnormalities: [],
+          phase: CLASSES[prediction.prediction],
+          modelDate: prediction.model_date,
+          imageType: prediction.image_format,
           dimensions: {
-            width: 512,
-            height: 512
-          }
-        }
+            width: prediction.image_size[0],
+            height: prediction.image_size[1],
+          },
+        },
       };
-      
       setPredictions(prev => [result, ...prev]);
       setSelectedPrediction(newId);
       setCounter(newId);

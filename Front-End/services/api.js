@@ -1,4 +1,4 @@
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000/api';
+const API_URL = 'http://localhost:8000/api';
 // import.meta.env.VITE_API_URL || 
 // // Fetch Health Status from the API
 // export const fetchHealthStatus = async () => {
@@ -117,4 +117,22 @@ export const verify_token = async () => {
   });
   console.log('DEBUG: Verifying token:', response);
   return response;
+};
+
+export const predict = async (file) => {
+  const formData = new FormData();
+  formData.append("file", file);
+
+  const response = await fetch(`${API_URL}/modeltrial/predict`, {
+    method: "POST",
+    body: formData,
+  });
+
+  if (!response.ok) {
+    const errorData = await response.json();
+    console.error("Prediction failed:", errorData);
+    throw new Error(errorData.detail || "Failed to fetch prediction");
+  }
+
+  return response.json();
 };

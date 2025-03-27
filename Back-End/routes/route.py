@@ -14,19 +14,27 @@ async def get_rounds():
     except Exception as e:
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
 
-# post rounds
-@router.post("/post", response_model=list[TrainingRound])
-async def post_round(rounds: list[TrainingRound]):
+# post a single round
+@router.post("/post", response_model=TrainingRound)
+async def post_round(round: TrainingRound):
     try:
-        rounds_dict = jsonable_encoder(rounds)  # This will recursively convert nested models
+        round_dict = jsonable_encoder(round)  # Convert the Pydantic model to a dictionary
 
-        # Insert the rounds data into the database (insert_many for multiple records)
-        result = await db['Rounds'].insert_many(rounds_dict)
-        
-        # Add the inserted IDs to each round
-        for i, inserted_id in enumerate(result.inserted_ids):
-            rounds_dict[i]["_id"] = str(inserted_id)
-        return rounds_dict
+        # Replace the document with same round number in database, or insert if it doesn't
+        result = await db["Rounds"].replace_one(
+            {"round": round_dict["round"]},  # Match by round number
+            round_dict,  # Replace with this document
+            upsert=True  # Insert if no matching document is found
+        )
+
+        # Add the inserted or updated ID to the response
+        if result.upserted_id:  # If a new document was inserted
+            round_dict["_id"] = str(result.upserted_id)
+        else:  # If an existing document was replaced
+            existing_doc = await db["Rounds"].find_one({"round": round_dict["round"]})
+            round_dict["_id"] = str(existing_doc["_id"])
+
+        return round_dict
     except Exception as e:
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
 
@@ -144,12 +152,16 @@ async def get_client_rounds(client_id: str):
         pipeline = [
             # Match documents where the client_id/Global field exists
             {"$match": {f"{client_id}": {"$exists": True}}},
-            # Project the fields 
-            {"$project": {
-                "round": 1,  # Include the round field
-                "created_at": 1,  # Include the created_at field
-                f"metrics": f"${client_id}",  # Directly access the client_id as a field
-            }},
+            # Sort by round number and _id (newest first)
+            {"$sort": {"round": 1, "_id": -1}},
+            {
+                "$group": {
+                    "_id": "$round",  # Group by round number
+                    "round": {"$first": "$round"},  # Take the first round
+                    "created_at": {"$first": "$created_at"},  # Take the most recent created_at
+                    "metrics": {"$first": f"${client_id}"},  # Take the first metrics
+                }
+             },
 
             # Sort by round number
             {"$sort": {"round": 1}}
