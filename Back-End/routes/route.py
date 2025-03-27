@@ -161,7 +161,7 @@ async def get_client_rounds(client_id: str):
         ]
 
         # Execute the aggregation pipeline
-        rounds = await db['test4'].aggregate(pipeline).to_list(1000)
+        rounds = await db['Rounds'].aggregate(pipeline).to_list(1000)
 
         # Simplify the response format
         simplified_rounds = [
