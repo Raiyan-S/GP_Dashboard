@@ -1,4 +1,4 @@
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000/api';
+const API_URL = 'http://localhost:8000/api';
 // import.meta.env.VITE_API_URL || 
 // // Fetch Health Status from the API
 // export const fetchHealthStatus = async () => {
@@ -41,6 +41,15 @@ export const fetchAveragedMetrics = async () => {
   const response = await fetch(`${API_URL}/latest-rounds/averaged`);
   if (!response.ok) {
     throw new Error("Failed to fetch averaged metrics");
+  }
+  return response.json();
+};
+
+// Fetch Best F1 Global Metrics
+export const fetchBestF1Global = async () => {
+  const response = await fetch(`${API_URL}/best-f1-global`);
+  if (!response.ok) {
+    throw new Error("Failed to fetch best F1 global metrics");
   }
   return response.json();
 };

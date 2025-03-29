@@ -30,12 +30,15 @@ export default function PredictionHistory({ predictions, selectedId, onSelect })
           </div>
           <div className="flex-1 min-w-0">
             <div className="flex items-center justify-between">
-              <p className="font-medium text-gray-900 dark:text-white truncate">
-                {prediction.class}
+              <p className="text-xs font-medium text-gray-900 dark:text-white truncate">
+                {prediction.details.fileName}
               </p>
               <span className="text-xs font-medium text-gray-500 dark:text-gray-400">
                 #{prediction.id}
               </span>
+            </div>
+            <div className="text-xs font-medium text-gray-500 dark:text-gray-400 ">
+              {prediction.class}
             </div>
             <div className="mt-1 flex items-center space-x-2">
               <div className="flex-1 h-1.5 bg-gray-200 dark:bg-gray-600 rounded-full overflow-hidden">

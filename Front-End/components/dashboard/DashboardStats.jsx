@@ -1,96 +1,59 @@
 import React, { useState, useEffect } from 'react';
-import { Users, Target, TrendingDown, Award } from 'lucide-react'; // Icons from Lucide 
-import StatsCard from './StatsCard' // Import StatsCard component
-import { fetchAveragedMetrics } from '../../services/api'; // Import fetchAveragedMetrics
+import { Target, TrendingDown, Award, Hash, CheckCheck, Crosshair, CalendarClock } from 'lucide-react'; // Icons from Lucide 
+import StatsCard from './StatsCard'; // Import StatsCard component
+import { fetchBestF1Global } from '../../services/api'; // Import fetchBestF1Global
 
 // Used in App.jsx
 export default function DashboardStats() {
-  const [averagedMetrics, setAveragedMetrics] = useState(null);
+  const [bestF1Global, setBestF1Global] = useState(null);
 
-  // Fetch averaged metrics data when the component mounts
+  // Fetch best F1 global data when the component mounts
   useEffect(() => {
     const fetchData = async () => {
-      const data = await fetchAveragedMetrics();
-      setAveragedMetrics(data); // Store the averaged metrics data
+      const data = await fetchBestF1Global();
+      setBestF1Global(data); // Store the best F1 global data
     };
     fetchData();
   }, []);
 
-  // Calculate stats from the averaged metrics
-  const calculateStats = () => {
-    // If there's no data or it's loading, return 0 for all values till the data is fetched
-    if (!averagedMetrics) {
-      return {
-        activeClients: 0,
-        avgAccuracy: 0,
-        avgLoss: 0,
-        avgF1Score: 0,
-        trends: {
-          accuracy: 0,
-          loss: 0,
-          f1Score: 0
-        }
-      };
-    }
-
-    const { averaged_metrics, client_count } = averagedMetrics;
-
-    // Example of calculating trends based on last round, can modify if needed
-    const calculateTrend = (current, previous, invert = false) => {
-      const trend = ((current - previous) / previous) * 100;
-      return (invert ? -trend : trend).toFixed(1);
-    };
-
-    return {
-      activeClients: client_count,
-      avgAccuracy: averaged_metrics.accuracy || 0,
-      avgLoss: averaged_metrics.loss || 0,
-      avgF1Score: averaged_metrics.f1_score || 0,
-      trends: {
-        // need to fetch second last round (working later)
-        // accuracy: calculateTrend(lastRound.accuracy, lastRound.accuracy), // Use actual trend calculation if needed
-        // loss: calculateTrend(lastRound.loss, lastRound.loss, true), // Invert for loss
-        // f1Score: calculateTrend(lastRound.f1_score, lastRound.f1_score)
-        accuracy: 0,
-        loss: 0,
-        f1Score: 0
-      }
-    };
-  };
-
-  const stats = calculateStats();
-
-  // Render the component while loading the data (If there's loading)
   return (
     <div className="space-y-6">
-      <h2 className="text-xl font-semibold dark:text-white">Summary</h2>
-      {/* NOTE */}
-      <p className="text-sm text-gray-500 dark:text-gray-400">
-        Note: I will need to update this to maybe global model instead of average of all clients' last round (yes the active clients should be 5 i will fix it)
-      </p>
+      <h2 className="text-xl font-semibold dark:text-white">Global Model Summary</h2>
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
         <StatsCard
-          title="Active Clients"
-          value={stats.activeClients}
-          Icon={Users}
+          title="Round Number"
+          value={`${bestF1Global ? bestF1Global.round : 0}`}
+          Icon={Hash}
         />
         <StatsCard
-          title="Average Accuracy"
-          value={`${stats.avgAccuracy}%`}
+          title="Global Accuracy"
+          value={`${bestF1Global ? (bestF1Global.metrics.accuracy).toFixed(3) : 0}%`}
           Icon={Target}
-          trend={stats.trends.accuracy}
         />
         <StatsCard
-          title="Average Loss"
-          value={stats.avgLoss}
+          title="Global Loss"
+          value={bestF1Global ? (bestF1Global.metrics.avg_loss).toFixed(3) : 0}
           Icon={TrendingDown}
-          trend={stats.trends.loss}
         />
         <StatsCard
-          title="Average F1-Score"
-          value={`${stats.avgF1Score}%`}
+          title="Global F1-Score"
+          value={`${bestF1Global ? (bestF1Global.metrics.f1).toFixed(3) : 0}%`}
           Icon={Award}
-          trend={stats.trends.f1Score}
+        />
+        <StatsCard
+          title="Global Precision"
+          value={`${bestF1Global ? (bestF1Global.metrics.precision).toFixed(3) : 0}%`}
+          Icon={Crosshair}
+        />
+        <StatsCard
+          title="Global Recall"
+          value={`${bestF1Global ? (bestF1Global.metrics.recall).toFixed(3) : 0}%`}
+          Icon={CheckCheck}
+        />
+        <StatsCard
+          title="Time Stamp"
+          value={`${bestF1Global ? new Date(bestF1Global.created_at).toLocaleDateString() : 0}`}
+          Icon={CalendarClock}
         />
       </div>
     </div>

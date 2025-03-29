@@ -9,7 +9,7 @@ router = APIRouter()
 @router.get("/get", response_model=list[TrainingRound])
 async def get_rounds():
     try:
-        rounds = await db['training_rounds'].find({}, {"_id": 0}).to_list(100)
+        rounds = await db['Rounds'].find({}, {"_id": 0}).to_list(None)
         return jsonable_encoder(rounds)
     except Exception as e:
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
@@ -31,81 +31,6 @@ async def post_round(round: list[TrainingRound]):
     except Exception as e:
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
 
-
-# @router.get("/clients", response_model=list[str])
-# async def get_unique_client_ids():
-#     try:
-#         # First, get the clients from the aggregation pipeline
-#         pipeline = [
-#             {"$project": {"clients": {"$objectToArray": "$clients"}}},
-#             {"$unwind": "$clients"},
-#             {"$group": {"_id": "$clients.k"}},
-#             {"$sort": {"_id": 1}}
-#         ]
-        
-#         # Execute the aggregation pipeline
-#         result = await db['test2'].aggregate(pipeline).to_list(1000)
-        
-#         # Get the client IDs from the aggregation result
-#         client_ids = [doc["_id"] for doc in result]
-        
-#         # Add "Global" to the list of client IDs
-#         client_ids.append("Global")
-        
-#         return client_ids
-    
-#     except Exception as e:
-#         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
-
-
-# @router.get("/rounds/{client_id}", response_model=list[dict])
-# async def get_client_rounds(client_id: str):
-#     try:
-#         pipeline = [
-#             {"$project": {
-#                 "round": 1,  # Include the round field
-#                 "clients": 1,  # Include the clients field for each round
-#                 "Global": 1  # Include the Global metrics for each round
-#             }},
-#             {"$unwind": "$clients"},  # Flatten the clients inside each round
-#             {
-#                 "$match": {  # Match either the specific client or the global metrics
-#                     "$or": [
-#                         {f"clients.{client_id}": {"$exists": True}},  # Client-specific match
-#                         {"Global": {"$exists": True}}  # Global match
-#                     ]
-#                 }
-#             },
-#             {"$sort": {"round": 1}},  # Sort by round number
-#             {
-#                 "$project": {  # Select relevant fields for the output
-#                     "round_id": "$round",  # Include the round ID
-#                     "clients": {  # Only include the client metrics for the specific client
-#                         "$ifNull": [f"$clients.{client_id}", None]  # Return client metrics if present
-#                     },
-#                     "Global": 1,  # Include Global metrics if present
-#                     "_id": 0  # Exclude the _id field
-#                 }
-#             }
-#         ]
-        
-#         # Debugging: Check the aggregation results
-#         rounds = await db['test2'].aggregate(pipeline).to_list(1000)
-#         print(f"Found {len(rounds)} rounds matching the query")
-
-#         # Simplify the rounds structure to return the necessary data
-#         simplified_rounds = [
-#             {
-#                 "round_id": round["round_id"],
-#                 "client_metrics": round["clients"],  # Specific client metrics
-#                 "Global": round["Global"],  # Global metrics
-#             }
-#             for round in rounds if round["clients"] or round["Global"]
-#         ]
-#         return simplified_rounds
-#     except Exception as e:
-#         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
-
 # get all unique client IDs
 @router.get("/client", response_model=list[str])
 async def get_unique_client_ids():
@@ -114,11 +39,7 @@ async def get_unique_client_ids():
         first_doc = await db['Rounds'].find_one()
 
         # Get the client field names dynamically (keys of the document excluding _id and other fields)
-        client_fields = [key for key in first_doc.keys() if key.startswith('client_')]
-
-        # Check if "Global" field exists and add it if it does
-        if "Global" in first_doc:
-            client_fields.append("Global")
+        client_fields = [key for key in first_doc.keys() if key.startswith('client_') or key.startswith('Global')]
         
         return client_fields
     except Exception as e:
@@ -128,27 +49,24 @@ async def get_unique_client_ids():
 @router.get("/rounds/{client_id}", response_model=list[dict])
 async def get_client_rounds(client_id: str):
     try:
-        # Aggregate pipeline to retrieve all rounds and check if the client exists
+        # Aggregate pipeline to retrieve all rounds of a specific client
         pipeline = [
-            # Match documents where the client_id/Global field exists
-            {"$match": {f"{client_id}": {"$exists": True}}},
-            # Sort by round number and _id (newest first)
-            {"$sort": {"round": 1, "_id": -1}},
+            # Match documents where the client_id field matches the provided client_id
+            {"$match": {f"{client_id}": {"$exists": True}}}, # Match documents with the client_id field
             {
-                "$group": {
-                    "_id": "$round",  # Group by round number
-                    "round": {"$first": "$round"},  # Take the first round
-                    "created_at": {"$first": "$created_at"},  # Take the most recent created_at
-                    "metrics": {"$first": f"${client_id}"},  # Take the first metrics
+                "$project": {
+                    "_id": 0,  # Exclude the MongoDB _id field
+                    "round": "$round",  
+                    "created_at": "$created_at",  
+                    "metrics": f"${client_id}"
                 }
              },
-
-            # Sort by round number
-            {"$sort": {"round": 1}}
+            # Sort by round number in ascending order
+            {"$sort": {"round": 1}},
         ]
 
         # Execute the aggregation pipeline
-        rounds = await db['Rounds'].aggregate(pipeline).to_list(1000)
+        rounds = await db['Rounds'].aggregate(pipeline).to_list(None)
 
         # Simplify the response format
         simplified_rounds = [
@@ -159,7 +77,6 @@ async def get_client_rounds(client_id: str):
             }
             for round in rounds
         ]
-
         return simplified_rounds
     
     except Exception as e:
@@ -189,51 +106,33 @@ async def get_latest_rounds():
             }
         ]
         
-        latest_rounds = await db["training_rounds"].aggregate(pipeline).to_list(1000)
+        latest_rounds = await db["training_rounds"].aggregate(pipeline).to_list(None)
         return latest_rounds
+    
     except Exception as e:
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
 
-# get the latest round for each client then average the metrics
-@router.get("/latest-rounds/averaged", response_model=dict)
-async def get_averaged_metrics():
+@router.get("/best-f1-global", response_model=dict)
+async def get_best_f1_global():
     try:
         pipeline = [
-            {"$unwind": "$clients"},  # Flatten clients array
-            {"$sort": {"_id": -1}},  # Sort rounds by newest first
-            {
-                "$group": {
-                    "_id": "$clients.client_id",  # Group by client_id
-                    "latest_round": {"$first": "$$ROOT"}  # Get the first (latest) round per client
-                }
-            },
+            {"$match": {"Global": {"$exists": True}}},  # Ensure "Global" field exists
             {
                 "$project": {
-                    "_id": 0,  # Remove MongoDB _id field
-                    "client_id": "$_id", 
-                    "metrics": "$latest_round.clients.metrics"
+                    "_id": 0,  # Exclude MongoDB _id field
+                    "round": 1,
+                    "created_at": 1,
+                    "metrics": "$Global",  # Extract the entire "Global" object
+                    "f1": "$Global.f1"  # Extract only the F1 score
                 }
-            }
+            },
+            {"$sort": {"f1": -1}},  # Sort by F1 score in descending order
+            {"$limit": 1}  # Keep only the document with the highest Global F1
         ]
-        
-        latest_rounds = await db["training_rounds"].aggregate(pipeline).to_list(1000)
 
-        # Aggregate metrics across all latest rounds
-        total_metrics = {}
-        client_count = len(latest_rounds)
+        best_f1_global = await db["Rounds"].aggregate(pipeline).to_list(1) # Get the best F1 score
 
-        for round_data in latest_rounds:
-            metrics = round_data["metrics"]
-            for key, value in metrics.items():
-                total_metrics[key] = total_metrics.get(key, 0) + value  # Sum up metric values
-
-        # Compute averages and round the results at the end
-        if client_count > 0:
-            averaged_metrics = {key: round(value / client_count, 3) for key, value in total_metrics.items()}  # Compute averages
-        else:
-            averaged_metrics = {}
-
-        return {"averaged_metrics": averaged_metrics, "client_count": client_count}
+        return best_f1_global[0]
     
     except Exception as e:
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))

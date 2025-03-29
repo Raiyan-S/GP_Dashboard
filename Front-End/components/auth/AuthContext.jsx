@@ -39,6 +39,8 @@ export const AuthProvider = ({ children }) => {
       await logout();
       setIsAuthenticated(false);
       setUserRole(null);
+      sessionStorage.removeItem("model-predictions");
+      sessionStorage.removeItem("prediction-counter");
       navigate("/login");
     } catch (error) {
       console.error("Failed to logout:", error);
