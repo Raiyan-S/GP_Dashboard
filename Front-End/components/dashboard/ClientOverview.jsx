@@ -9,7 +9,7 @@ import { useClients } from '../../hooks/useClients';
 export default function ClientOverview({onSeeAll}) {
   const clients = useClients();
   const [selectedClient, setSelectedClient] = useState('');
-  const { data } = usePerformanceData(selectedClient);
+  const { data, chartData } = usePerformanceData(selectedClient);
 
   // Load selected client from localStorage or set the first client as default
     useEffect(() => {
@@ -38,7 +38,7 @@ export default function ClientOverview({onSeeAll}) {
       </div>
       <div className="space-y-6">
         <PerformanceTable data={data} onSeeAll={onSeeAll} />
-        <PerformanceChart data={data} />
+        <PerformanceChart data={chartData} />
       </div>
     </div>
   );

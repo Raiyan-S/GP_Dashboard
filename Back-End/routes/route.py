@@ -47,8 +47,11 @@ async def get_unique_client_ids():
 
 # get all rounds for a specific client
 @router.get("/rounds/{client_id}", response_model=list[dict])
-async def get_client_rounds(client_id: str):
+async def get_client_rounds(client_id: str, order: str = "desc"):
     try:
+        # Determine the sort order based on the query parameter
+        sort_order = -1 if order == "desc" else 1
+
         # Aggregate pipeline to retrieve all rounds of a specific client
         pipeline = [
             # Match documents where the client_id field matches the provided client_id
@@ -67,8 +70,7 @@ async def get_client_rounds(client_id: str):
                     "round_as_number": 1  # Include the converted round_as_number field for sorting
                 }
              },
-            # Sort by round number in ascending order
-            {"$sort": {"round_as_number": 1}},
+             {"$sort": {"round_as_number": sort_order}},  # Sort by round number in the specified order
         ]
 
         # Execute the aggregation pipeline
