@@ -54,15 +54,21 @@ async def get_client_rounds(client_id: str):
             # Match documents where the client_id field matches the provided client_id
             {"$match": {f"{client_id}": {"$exists": True}}}, # Match documents with the client_id field
             {
+                "$addFields": {
+                    "round_as_number": {"$toInt": "$round"}  # Convert the round field to an integer
+                }
+            },
+            {
                 "$project": {
                     "_id": 0,  # Exclude the MongoDB _id field
                     "round": "$round",  
                     "created_at": "$created_at",  
-                    "metrics": f"${client_id}"
+                    "metrics": f"${client_id}",
+                    "round_as_number": 1  # Include the converted round_as_number field for sorting
                 }
              },
             # Sort by round number in ascending order
-            {"$sort": {"round": 1}},
+            {"$sort": {"round_as_number": 1}},
         ]
 
         # Execute the aggregation pipeline
