@@ -1,27 +1,47 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { Layout } from 'lucide-react';
 import { login } from "../../services/api";
+import { AuthContext } from './AuthContext';
 
-export default function Login() {
+export default function Login({ setActiveTab }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const { refreshAuthState } = useContext(AuthContext);
+
+  // Set the active tab to "login" when the component is rendered
+  useEffect(() => {
+    setActiveTab('login');
+  }, [setActiveTab]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
-    
+    setLoading(true);
+
     try {
       const response = await login(email, password);
-      if (response.ok) {
-        setTimeout(() => {
-          navigate('/dashboard');
-        }, 1000); // 1000 milliseconds delay to ensure session token is properly set as cookie
+      console.log('DEBUG: Login successful:', response);
+
+      // Refresh authentication state
+      await refreshAuthState();
+
+      if (response.role === 'admin') {
+        console.log('DEBUG: Navigating to /dashboard');
+        setActiveTab('dashboard');
+        navigate('/dashboard');
+      } else if (response.role === 'clinic') {
+        console.log('DEBUG: Navigating to /model-trial');
+        setActiveTab('model-trial');
+        navigate('/model-trial');
       }
     } catch (error) {
       setError(error.message);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -36,7 +56,7 @@ export default function Login() {
 
         {/* NOTE */}
         <p className="text-gray-600 mb-4">
-          admin email: admin123@gmail.com, pass: admin123, when you register it will be clinic role (only model-trial page) also for some reason you have to enter login twice and i will fix it later
+          admin email: admin123@gmail.com, pass: admin123, when you register it will be clinic role (only model-trial page)
         </p>
 
         {error && <p className="text-red-500 mb-4">{error}</p>}
@@ -63,11 +83,8 @@ export default function Login() {
               required
             />
           </div>
-          <button
-            type="submit"
-            className="w-full bg-blue-500 text-white p-2 rounded-md hover:bg-blue-600 transition-colors"
-          >
-            Login
+          <button type="submit" className={"w-full p-2 rounded-md transition-colors bg-blue-500 hover:bg-blue-600 text-white"}>
+            {loading ? 'Logging in...' : 'Login'}
           </button>
         </form>
         <p className="mt-4 text-center text-gray-600">

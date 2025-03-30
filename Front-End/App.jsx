@@ -7,11 +7,11 @@ import DashboardStats from './components/dashboard/DashboardStats';
 import ClientOverview from './components/dashboard/ClientOverview';
 import ModelTrial from './components/model-trial/ModelTrial';
 import ClientsPage from './components/clients/ClientsPage';
-import Setting from './components/settings/Settings';
 import Login from './components/auth/Login';
 import Register from './components/auth/Register';
 import ProtectedRoute from './components/auth/ProtectRoute';
 import Unauthorized from './components/auth/Unauthorized'; 
+import { authDashboard, authModelTrial, authClients } from './services/api'; // Importing the backend authentication
 
 // Main Component
 // Used in main.jsx
@@ -71,12 +71,11 @@ function App() {
         <main className={`flex-1 ${showSidebarAndHeader ? 'px-4 sm:px-6 lg:px-8 py-6' : ''}`}>
           <Routes>
             <Route path="/" element={<Navigate to="/login" />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/register" element={<Register />} />
-            <Route path="/dashboard" element={<ProtectedRoute element={<><DashboardStats /><ClientOverview onSeeAll={handleSeeAll} /></>} allowedRoles={['admin']} />} />
-            <Route path="/clients" element={<ProtectedRoute element={<ClientsPage />} allowedRoles={['admin']} />} />
-            <Route path="/model-trial" element={<ProtectedRoute element={<ModelTrial />} allowedRoles={['admin', 'client']} />} />
-            <Route path="/settings" element={<Setting />} /> {/* NOTE: remove settings page */}
+            <Route path="/login" element={<Login setActiveTab={setActiveTab} />} />
+            <Route path="/register" element={<Register setActiveTab={setActiveTab} />} />
+            <Route path="/dashboard" element={<ProtectedRoute element={<><DashboardStats /><ClientOverview onSeeAll={handleSeeAll} /></>} allowedRoles={['admin']} fetchAuth={authDashboard} />} />
+            <Route path="/clients" element={<ProtectedRoute element={<ClientsPage />} allowedRoles={['admin']} fetchAuth={authClients} />} />
+            <Route path="/model-trial" element={<ProtectedRoute element={<ModelTrial />} allowedRoles={['admin', 'clinic']} fetchAuth={authModelTrial} />} />
             <Route path="/unauthorized" element={<Unauthorized />} /> 
           </Routes>
         </main>

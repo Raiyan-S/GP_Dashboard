@@ -77,7 +77,7 @@ export const login = async (username, password) => {
     throw new Error(errorData.detail || 'Failed to login');
   }
 
-  return response;
+  return response.json();
 };
 
 export const logout = async () => {
@@ -145,3 +145,42 @@ export const predict = async (file) => {
 
   return response.json();
 };
+
+export const authDashboard = async () => {
+  const response = await fetch(`${API_URL}/auth/dashboard`, {
+    method: 'GET',
+    credentials: 'include',
+  });
+
+  if (!response.ok) {
+    throw new Error('Failed to fetch dashboard data');
+  }
+
+  return response.json();
+};
+
+export const authModelTrial = async () => {
+  const response = await fetch(`${API_URL}/auth/modeltrial`, {
+    method: 'GET',
+    credentials: 'include',
+  });
+
+  if (!response.ok) {
+    throw new Error('Failed to fetch model trial data');
+  }
+
+  return response.json();
+};
+
+export const authClients = async () => {
+  const response = await fetch(`${API_URL}/auth/clients`, {
+    method: 'GET',
+    credentials: 'include',
+  });
+
+  if (!response.ok) {
+    throw new Error('Failed to fetch clients data');
+  }
+
+  return response.json();
+}

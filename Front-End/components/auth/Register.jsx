@@ -1,13 +1,18 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { Layout } from 'lucide-react';
 import { register } from "../../services/api";
 
-export default function Register() {
+export default function Register({ setActiveTab }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const navigate = useNavigate();
+
+  // Set the active tab to "register" when the component is rendered
+  useEffect(() => {
+    setActiveTab('register');
+  }, [setActiveTab]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -16,6 +21,7 @@ export default function Register() {
     try {
       const response = await register(email, password);
       if (response.ok) {
+        setActiveTab('login')
         navigate('/login');
       }
     } catch (error) {

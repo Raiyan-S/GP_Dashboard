@@ -1,16 +1,21 @@
-from fastapi import APIRouter, File, UploadFile
+from fastapi import APIRouter, File, UploadFile, Request
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
 import torchvision.transforms as transforms
 from PIL import Image
-from config.db import db
+from config.db import mongodb
 import io
 from motor.motor_asyncio import AsyncIOMotorGridFSBucket  # async GridFS
-
-fs = AsyncIOMotorGridFSBucket(db)
+from rateLimiter import limiter
 
 router = APIRouter()
+
+# Dynamically create the GridFS bucket
+def get_gridfs_bucket():
+    if not mongodb.db:
+        raise RuntimeError("Database connection has not been initialized.")
+    return AsyncIOMotorGridFSBucket(mongodb.db)
 
 # Define the model architecture (same from notebook)
 class ClientModel(nn.Module):
@@ -60,12 +65,13 @@ transform = transforms.Compose([
 
 # Load the latest model from mongoDB GridFS
 async def load_model_from_gridfs(model_name: str):
-    model_metadata = await db.models.find_one({"model_name": model_name}, sort=[("_id", -1)])
+    fs = get_gridfs_bucket()
+    model_metadata = await mongodb.db.models.find_one({"model_name": model_name}, sort=[("_id", -1)])
     if not model_metadata:
         raise ValueError("Model not found in database.")
 
     file_id = model_metadata["file_id"]
-    file_metadata = await db.fs.files.find_one({"_id": file_id})
+    file_metadata = await mongodb.db.fs.files.find_one({"_id": file_id})
     # Retrieve the uploadDate from fs.files metadata
     upload_date = file_metadata["uploadDate"]
     
@@ -80,7 +86,8 @@ async def load_model_from_gridfs(model_name: str):
 
 
 @router.post("/predict")
-async def predict(file: UploadFile = File(...)):
+@limiter.limit("10/minute")
+async def predict(request: Request, file: UploadFile = File(...)):
     image = Image.open(io.BytesIO(await file.read())).convert("RGB")
     image_size = image.size  # Size of the image (width, height)
     image_format = file.filename.split('.')[-1].upper()  # Image format (e.g., JPEG, PNG)

@@ -10,6 +10,11 @@ from config.db import open_connection, close_connection
 from contextlib import asynccontextmanager
 import os
 
+from rateLimiter import limiter
+from slowapi.middleware import SlowAPIMiddleware
+from slowapi.errors import RateLimitExceeded
+from fastapi.responses import JSONResponse
+
 # Database connection context manager
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -36,39 +41,28 @@ app.add_middleware(
     allow_headers=["*"],  
 )
 
+# Rate limiting middleware
+app.state.limiter = limiter
+app.add_middleware(SlowAPIMiddleware)
+
+@app.exception_handler(RateLimitExceeded)
+async def rate_limit_exceeded_handler(request, exc):
+    return JSONResponse(
+        status_code=429,
+        content={"detail": "Rate limit exceeded. Please try again later."},
+    )
+    
 # Include the router
 app.include_router(router, prefix="/api")
 app.include_router(auth_router, prefix="/api/auth")
 app.include_router(predict_router, prefix="/api/modeltrial")
 
-# Path to the built frontend (for deployment on Railway)
-FRONTEND_DIST = os.path.join(os.path.dirname(__file__), "../dist")
-
 # Serve static files from the 'assets' and 'dist' directory built by using 'npm run build'
 app.mount("/assets", StaticFiles(directory="../dist/assets"), name="assets")
 app.mount("/static", StaticFiles(directory="../dist"), name="static")
 
-# Health check endpoint to verify the service is running
-@app.get("/health")
-async def health_check():
-    return {"status": "healthy"}
-
-# ping mongo endpoint
-import motor.motor_asyncio
-# MongoDB connection URI (currently only works on railway not local)
-MONGO_URI = "mongodb://mongo:HiwDMYxRRpgqkefLILYZynRVwRWqImpy@autorack.proxy.rlwy.net:44467"
-
-# Create a MongoDB client
-client = motor.motor_asyncio.AsyncIOMotorClient(MONGO_URI)
-
-# Ping MongoDB to check the connection 
-@app.get("/ping_mongo")
-async def ping_mongo():
-    try:
-        await client.admin.command("ping")
-        return {"status": "MongoDB connection successful"}
-    except Exception as e:
-        return {"status": "MongoDB connection failed", "error": str(e)}
+# Path to the built frontend (for deployment on Railway)
+FRONTEND_DIST = os.path.join(os.path.dirname(__file__), "../dist")
         
 # Serve the frontend application
 @app.get("/{full_path:path}")
