@@ -2,6 +2,7 @@ from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse
 from fastapi.middleware.cors import CORSMiddleware # Cross-Origin Resource Sharing middleware
+
 from routes.route import router as router
 from routes.auth import router as auth_router
 from routes.predict import router as predict_router

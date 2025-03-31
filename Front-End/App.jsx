@@ -1,4 +1,4 @@
-import React, { useState } from 'react'; // useState for managing state
+import React, { useState, useEffect } from 'react'; // useState for managing state
 import { Helmet } from 'react-helmet-async'; // Helmet for changing page title dynamically
 import { Route, Routes, useNavigate, useLocation, Navigate } from 'react-router-dom'; // useNavigate for event handling like onClick while Navigate for redirecting and used inside JSX 
 import Sidebar from './components/layout/Sidebar';
@@ -16,12 +16,19 @@ import { authDashboard, authModelTrial, authClients } from './services/api'; // 
 // Main Component
 // Used in main.jsx
 function App() {
-  // State to manage the active tab
-  const [activeTab, setActiveTab] = useState('dashboard');
+  // Initialize activeTab from localStorage without a default value
+  const [activeTab, setActiveTab] = useState(() => {
+    return localStorage.getItem('activeTab');
+  });
+  
   // State to manage the sidebar
   const [isSidebarOpen, setSidebarOpen] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
+
+  useEffect(() => {
+    localStorage.setItem('activeTab', activeTab);
+  }, [activeTab]);
 
   const getPageTitle = () => {
     switch (activeTab) {

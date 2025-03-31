@@ -8,7 +8,18 @@ from config.db import mongodb
 from rateLimiter import limiter
 
 router = APIRouter()
-logger = logging.getLogger("auth")
+
+# Configure logging for railway
+# This will log to stdout, which is captured by Railway and displayed in the logs
+logging.basicConfig(
+    level=logging.INFO, 
+    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",  # Log format
+    handlers=[
+        logging.StreamHandler() 
+    ]
+)
+
+logger = logging.getLogger("app")
 
 # Dependency to get the Users collection
 def get_users_collection():
@@ -107,11 +118,13 @@ async def register_user(request: Request, username: EmailStr = Form(...), passwo
     # Check if email already exists
     existing_user = await users_collection.find_one({"username": username})
     if existing_user:
+        logger.warning(f"Registration failed: Email {username} is already registered.")
         raise HTTPException(status_code=400, detail="Email already registered")
 
     hashed_password = pwd_context.hash(password)
     user = {"username": username, "password": hashed_password, "role": "clinic"}  # Default role is clinic
     await users_collection.insert_one(user)
+    logger.info(f"User registered successfully: {username}")
     return {"message": "User registered successfully"}
 
 # Login & Create Session
@@ -152,6 +165,8 @@ async def logout(response: Response, request: Request):
     sessions_collection = get_sessions_collection()
     token = request.cookies.get("session_token")
     if token:
+        session = await sessions_collection.find_one({"token": token})
+        logger.info(f"User with ID {session['user_id']} logged out successfully.")
         await sessions_collection.delete_one({"token": token})
 
     response.delete_cookie("session_token")
