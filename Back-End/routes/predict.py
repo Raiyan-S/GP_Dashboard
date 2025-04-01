@@ -13,7 +13,7 @@ router = APIRouter()
 
 # Dynamically create the GridFS bucket
 def get_gridfs_bucket():
-    if not mongodb.db:
+    if mongodb.db is None:  # Explicitly check if the database is None
         raise RuntimeError("Database connection has not been initialized.")
     return AsyncIOMotorGridFSBucket(mongodb.db)
 

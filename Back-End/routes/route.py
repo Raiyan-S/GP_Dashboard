@@ -90,36 +90,6 @@ async def get_client_rounds(client_id: str, order: str = "desc"):
     except Exception as e:
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
 
-# get the latest round for each client (probably will remove)
-@router.get("/latest-rounds", response_model=list[dict]) # just for debugging
-async def get_latest_rounds():
-    try:
-        pipeline = [
-            {"$unwind": "$clients"},  # Flatten clients array
-            {"$sort": {"_id": -1}},  # Sort by newest round first
-            {
-                "$group": {
-                    "_id": "$clients.client_id",  # Group by client_id
-                    "latest_round": {"$first": "$$ROOT"}  # Get the first (latest because we sorted by newest round) round
-                }
-            },
-            {
-                "$project": {
-                    "_id": 0,  # Remove MongoDB _id field
-                    "client_id": "$_id",
-                    "round_id": "$latest_round.round_id",
-                    "metrics": "$latest_round.clients.metrics",
-                    "created_at": "$latest_round.created_at"
-                }
-            }
-        ]
-        
-        latest_rounds = await mongodb.db["training_rounds"].aggregate(pipeline).to_list(None)
-        return latest_rounds
-    
-    except Exception as e:
-        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
-
 @router.get("/best-f1-global", response_model=dict)
 async def get_best_f1_global():
     try:
