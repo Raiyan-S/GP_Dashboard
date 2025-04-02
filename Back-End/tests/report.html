@@ -1,0 +1,1091 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8"/>
+    <title id="head-title">report.html</title>
+      <style type="text/css">body {
+  font-family: Helvetica, Arial, sans-serif;
+  font-size: 12px;
+  /* do not increase min-width as some may use split screens */
+  min-width: 800px;
+  color: #999;
+}
+
+h1 {
+  font-size: 24px;
+  color: black;
+}
+
+h2 {
+  font-size: 16px;
+  color: black;
+}
+
+p {
+  color: black;
+}
+
+a {
+  color: #999;
+}
+
+table {
+  border-collapse: collapse;
+}
+
+/******************************
+ * SUMMARY INFORMATION
+ ******************************/
+#environment td {
+  padding: 5px;
+  border: 1px solid #e6e6e6;
+  vertical-align: top;
+}
+#environment tr:nth-child(odd) {
+  background-color: #f6f6f6;
+}
+#environment ul {
+  margin: 0;
+  padding: 0 20px;
+}
+
+/******************************
+ * TEST RESULT COLORS
+ ******************************/
+span.passed,
+.passed .col-result {
+  color: green;
+}
+
+span.skipped,
+span.xfailed,
+span.rerun,
+.skipped .col-result,
+.xfailed .col-result,
+.rerun .col-result {
+  color: orange;
+}
+
+span.error,
+span.failed,
+span.xpassed,
+.error .col-result,
+.failed .col-result,
+.xpassed .col-result {
+  color: red;
+}
+
+.col-links__extra {
+  margin-right: 3px;
+}
+
+/******************************
+ * RESULTS TABLE
+ *
+ * 1. Table Layout
+ * 2. Extra
+ * 3. Sorting items
+ *
+ ******************************/
+/*------------------
+ * 1. Table Layout
+ *------------------*/
+#results-table {
+  border: 1px solid #e6e6e6;
+  color: #999;
+  font-size: 12px;
+  width: 100%;
+}
+#results-table th,
+#results-table td {
+  padding: 5px;
+  border: 1px solid #e6e6e6;
+  text-align: left;
+}
+#results-table th {
+  font-weight: bold;
+}
+
+/*------------------
+ * 2. Extra
+ *------------------*/
+.logwrapper {
+  max-height: 230px;
+  overflow-y: scroll;
+  background-color: #e6e6e6;
+}
+.logwrapper.expanded {
+  max-height: none;
+}
+.logwrapper.expanded .logexpander:after {
+  content: "collapse [-]";
+}
+.logwrapper .logexpander {
+  z-index: 1;
+  position: sticky;
+  top: 10px;
+  width: max-content;
+  border: 1px solid;
+  border-radius: 3px;
+  padding: 5px 7px;
+  margin: 10px 0 10px calc(100% - 80px);
+  cursor: pointer;
+  background-color: #e6e6e6;
+}
+.logwrapper .logexpander:after {
+  content: "expand [+]";
+}
+.logwrapper .logexpander:hover {
+  color: #000;
+  border-color: #000;
+}
+.logwrapper .log {
+  min-height: 40px;
+  position: relative;
+  top: -50px;
+  height: calc(100% + 50px);
+  border: 1px solid #e6e6e6;
+  color: black;
+  display: block;
+  font-family: "Courier New", Courier, monospace;
+  padding: 5px;
+  padding-right: 80px;
+  white-space: pre-wrap;
+}
+
+div.media {
+  border: 1px solid #e6e6e6;
+  float: right;
+  height: 240px;
+  margin: 0 5px;
+  overflow: hidden;
+  width: 320px;
+}
+
+.media-container {
+  display: grid;
+  grid-template-columns: 25px auto 25px;
+  align-items: center;
+  flex: 1 1;
+  overflow: hidden;
+  height: 200px;
+}
+
+.media-container--fullscreen {
+  grid-template-columns: 0px auto 0px;
+}
+
+.media-container__nav--right,
+.media-container__nav--left {
+  text-align: center;
+  cursor: pointer;
+}
+
+.media-container__viewport {
+  cursor: pointer;
+  text-align: center;
+  height: inherit;
+}
+.media-container__viewport img,
+.media-container__viewport video {
+  object-fit: cover;
+  width: 100%;
+  max-height: 100%;
+}
+
+.media__name,
+.media__counter {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  flex: 0 0 25px;
+  align-items: center;
+}
+
+.collapsible td:not(.col-links) {
+  cursor: pointer;
+}
+.collapsible td:not(.col-links):hover::after {
+  color: #bbb;
+  font-style: italic;
+  cursor: pointer;
+}
+
+.col-result {
+  width: 130px;
+}
+.col-result:hover::after {
+  content: " (hide details)";
+}
+
+.col-result.collapsed:hover::after {
+  content: " (show details)";
+}
+
+#environment-header h2:hover::after {
+  content: " (hide details)";
+  color: #bbb;
+  font-style: italic;
+  cursor: pointer;
+  font-size: 12px;
+}
+
+#environment-header.collapsed h2:hover::after {
+  content: " (show details)";
+  color: #bbb;
+  font-style: italic;
+  cursor: pointer;
+  font-size: 12px;
+}
+
+/*------------------
+ * 3. Sorting items
+ *------------------*/
+.sortable {
+  cursor: pointer;
+}
+.sortable.desc:after {
+  content: " ";
+  position: relative;
+  left: 5px;
+  bottom: -12.5px;
+  border: 10px solid #4caf50;
+  border-bottom: 0;
+  border-left-color: transparent;
+  border-right-color: transparent;
+}
+.sortable.asc:after {
+  content: " ";
+  position: relative;
+  left: 5px;
+  bottom: 12.5px;
+  border: 10px solid #4caf50;
+  border-top: 0;
+  border-left-color: transparent;
+  border-right-color: transparent;
+}
+
+.hidden, .summary__reload__button.hidden {
+  display: none;
+}
+
+.summary__data {
+  flex: 0 0 550px;
+}
+.summary__reload {
+  flex: 1 1;
+  display: flex;
+  justify-content: center;
+}
+.summary__reload__button {
+  flex: 0 0 300px;
+  display: flex;
+  color: white;
+  font-weight: bold;
+  background-color: #4caf50;
+  text-align: center;
+  justify-content: center;
+  align-items: center;
+  border-radius: 3px;
+  cursor: pointer;
+}
+.summary__reload__button:hover {
+  background-color: #46a049;
+}
+.summary__spacer {
+  flex: 0 0 550px;
+}
+
+.controls {
+  display: flex;
+  justify-content: space-between;
+}
+
+.filters,
+.collapse {
+  display: flex;
+  align-items: center;
+}
+.filters button,
+.collapse button {
+  color: #999;
+  border: none;
+  background: none;
+  cursor: pointer;
+  text-decoration: underline;
+}
+.filters button:hover,
+.collapse button:hover {
+  color: #ccc;
+}
+
+.filter__label {
+  margin-right: 10px;
+}
+
+      </style>
+    
+  </head>
+  <body>
+    <h1 id="title">report.html</h1>
+    <p>Report generated on 03-Apr-2025 at 00:58:39 by <a href="https://pypi.python.org/pypi/pytest-html">pytest-html</a>
+        v4.1.1</p>
+    <div id="environment-header">
+      <h2>Environment</h2>
+    </div>
+    <table id="environment"></table>
+    <!-- TEMPLATES -->
+      <template id="template_environment_row">
+      <tr>
+        <td></td>
+        <td></td>
+      </tr>
+    </template>
+    <template id="template_results-table__body--empty">
+      <tbody class="results-table-row">
+        <tr id="not-found-message">
+          <td colspan="4">No results found. Check the filters.</th>
+        </tr>
+    </template>
+    <template id="template_results-table__tbody">
+      <tbody class="results-table-row">
+        <tr class="collapsible">
+        </tr>
+        <tr class="extras-row">
+          <td class="extra" colspan="4">
+            <div class="extraHTML"></div>
+            <div class="media">
+              <div class="media-container">
+                  <div class="media-container__nav--left"><</div>
+                  <div class="media-container__viewport">
+                    <img src="" />
+                    <video controls>
+                      <source src="" type="video/mp4">
+                    </video>
+                  </div>
+                  <div class="media-container__nav--right">></div>
+                </div>
+                <div class="media__name"></div>
+                <div class="media__counter"></div>
+            </div>
+            <div class="logwrapper">
+              <div class="logexpander"></div>
+              <div class="log"></div>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </template>
+    <!-- END TEMPLATES -->
+    <div class="summary">
+      <div class="summary__data">
+        <h2>Summary</h2>
+        <div class="additional-summary prefix">
+        </div>
+        <p class="run-count">22 tests took 00:01:01.</p>
+        <p class="filter">(Un)check the boxes to filter the results.</p>
+        <div class="summary__reload">
+          <div class="summary__reload__button hidden" onclick="location.reload()">
+            <div>There are still tests running. <br />Reload this page to get the latest results!</div>
+          </div>
+        </div>
+        <div class="summary__spacer"></div>
+        <div class="controls">
+          <div class="filters">
+            <input checked="true" class="filter" name="filter_checkbox" type="checkbox" data-test-result="failed" disabled/>
+            <span class="failed">0 Failed,</span>
+            <input checked="true" class="filter" name="filter_checkbox" type="checkbox" data-test-result="passed" />
+            <span class="passed">22 Passed,</span>
+            <input checked="true" class="filter" name="filter_checkbox" type="checkbox" data-test-result="skipped" disabled/>
+            <span class="skipped">0 Skipped,</span>
+            <input checked="true" class="filter" name="filter_checkbox" type="checkbox" data-test-result="xfailed" disabled/>
+            <span class="xfailed">0 Expected failures,</span>
+            <input checked="true" class="filter" name="filter_checkbox" type="checkbox" data-test-result="xpassed" disabled/>
+            <span class="xpassed">0 Unexpected passes,</span>
+            <input checked="true" class="filter" name="filter_checkbox" type="checkbox" data-test-result="error" disabled/>
+            <span class="error">0 Errors,</span>
+            <input checked="true" class="filter" name="filter_checkbox" type="checkbox" data-test-result="rerun" disabled/>
+            <span class="rerun">0 Reruns</span>
+          </div>
+          <div class="collapse">
+            <button id="show_all_details">Show all details</button>&nbsp;/&nbsp;<button id="hide_all_details">Hide all details</button>
+          </div>
+        </div>
+      </div>
+      <div class="additional-summary summary">
+      </div>
+      <div class="additional-summary postfix">
+      </div>
+    </div>
+    <table id="results-table">
+      <thead id="results-table-head">
+        <tr>
+          <th class="sortable" data-column-type="result">Result</th>
+          <th class="sortable" data-column-type="testId">Test</th>
+          <th class="sortable" data-column-type="duration">Duration</th>
+          <th>Links</th>
+        </tr>
+      </thead>
+    </table>
+  </body>
+  <footer>
+    <div id="data-container" data-jsonblob="{&#34;environment&#34;: {&#34;Python&#34;: &#34;3.11.9&#34;, &#34;Platform&#34;: &#34;Windows-10-10.0.19045-SP0&#34;, &#34;Packages&#34;: {&#34;pytest&#34;: &#34;8.3.5&#34;, &#34;pluggy&#34;: &#34;1.5.0&#34;}, &#34;Plugins&#34;: {&#34;anyio&#34;: &#34;4.8.0&#34;, &#34;asyncio&#34;: &#34;0.26.0&#34;, &#34;base-url&#34;: &#34;2.1.0&#34;, &#34;html&#34;: &#34;4.1.1&#34;, &#34;logger&#34;: &#34;1.1.1&#34;, &#34;metadata&#34;: &#34;3.1.1&#34;, &#34;order&#34;: &#34;1.3.0&#34;, &#34;playwright&#34;: &#34;0.7.0&#34;, &#34;rerunfailures&#34;: &#34;15.0&#34;}, &#34;Base URL&#34;: &#34;http://localhost:8000&#34;}, &#34;tests&#34;: {&#34;test_authentication.py::test_multi_user_login&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Passed&#34;, &#34;testId&#34;: &#34;test_authentication.py::test_multi_user_login&#34;, &#34;duration&#34;: &#34;00:00:06&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Passed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;test_authentication.py::test_multi_user_login&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;00:00:06&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;------------------------------ Captured log setup ------------------------------\nDEBUG    asyncio:proactor_events.py:633 Using proactor: IocpProactor\nDEBUG    asyncio:proactor_events.py:633 Using proactor: IocpProactor\n\n------------------------------ Captured log call -------------------------------\nDEBUG    tests.test_authentication:test_authentication.py:181 Starting test_multi_user_login...\nDEBUG    tests.test_authentication:test_authentication.py:184 Browser launched.\nDEBUG    tests.test_authentication:test_authentication.py:265 Running both user workflows concurrently...\nDEBUG    tests.test_authentication:test_authentication.py:187 Starting first_user_workflow...\nDEBUG    tests.test_authentication:test_authentication.py:226 Starting second_user_workflow...\nDEBUG    tests.test_authentication:test_authentication.py:191 First user context and page created.\nDEBUG    tests.test_authentication:test_authentication.py:230 Second user context and page created.\nDEBUG    tests.test_authentication:test_authentication.py:235 Second user navigated to /register.\nDEBUG    tests.test_authentication:test_authentication.py:196 First user navigated to /register.\nDEBUG    tests.test_authentication:test_authentication.py:239 Second user registration form submitted.\nDEBUG    tests.test_authentication:test_authentication.py:200 First user registration form submitted.\nDEBUG    tests.test_authentication:test_authentication.py:241 Second user redirected to /login after registration.\nDEBUG    tests.test_authentication:test_authentication.py:202 First user redirected to /login after registration.\nDEBUG    tests.test_authentication:test_authentication.py:247 Second user login form submitted.\nDEBUG    tests.test_authentication:test_authentication.py:208 First user login form submitted.\nDEBUG    tests.test_authentication:test_authentication.py:251 Second user successfully logged in and verified.\nDEBUG    tests.test_authentication:test_authentication.py:212 First user successfully logged in and verified.\nDEBUG    tests.test_authentication:test_authentication.py:257 Second user logged out and redirected to /login.\nDEBUG    tests.test_authentication:test_authentication.py:262 Second user context and page closed.\nDEBUG    tests.test_authentication:test_authentication.py:218 First user logged out and redirected to /login.\nDEBUG    tests.test_authentication:test_authentication.py:223 First user context and page closed.\nDEBUG    tests.test_authentication:test_authentication.py:270 Browser closed.\n\n&#34;}], &#34;test_auth_endpoints.py::test_register_user&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Passed&#34;, &#34;testId&#34;: &#34;test_auth_endpoints.py::test_register_user&#34;, &#34;duration&#34;: &#34;00:00:03&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Passed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;test_auth_endpoints.py::test_register_user&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;00:00:03&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;------------------------------ Captured log setup ------------------------------\nDEBUG    asyncio:proactor_events.py:633 Using proactor: IocpProactor\nINFO     tests.test_auth_endpoints:test_auth_endpoints.py:11 Opening MongoDB connection for test session.\nDEBUG    pymongo.topology:logger.py:100 {&amp;quot;topologyId&amp;quot;: {&amp;quot;$oid&amp;quot;: &amp;quot;67edb2d75a19ff9b4f46d274&amp;quot;}, &amp;quot;message&amp;quot;: &amp;quot;Starting topology monitoring&amp;quot;}\nDEBUG    pymongo.topology:logger.py:100 {&amp;quot;topologyId&amp;quot;: {&amp;quot;$oid&amp;quot;: &amp;quot;67edb2d75a19ff9b4f46d274&amp;quot;}, &amp;quot;previousDescription&amp;quot;: &amp;quot;&amp;lt;TopologyDescription id: 67edb2d75a19ff9b4f46d274, topology_type: Unknown, servers: []&amp;gt;&amp;quot;, &amp;quot;newDescription&amp;quot;: &amp;quot;&amp;lt;TopologyDescription id: 67edb2d75a19ff9b4f46d274, topology_type: Unknown, servers: [&amp;lt;ServerDescription (&amp;#x27;autorack.proxy.rlwy.net&amp;#x27;, 44467) server_type: Unknown, rtt: None&amp;gt;]&amp;gt;&amp;quot;, &amp;quot;message&amp;quot;: &amp;quot;Topology description changed&amp;quot;}\nDEBUG    pymongo.topology:logger.py:100 {&amp;quot;topologyId&amp;quot;: {&amp;quot;$oid&amp;quot;: &amp;quot;67edb2d75a19ff9b4f46d274&amp;quot;}, &amp;quot;serverHost&amp;quot;: &amp;quot;autorack.proxy.rlwy.net&amp;quot;, &amp;quot;serverPort&amp;quot;: 44467, &amp;quot;message&amp;quot;: &amp;quot;Starting server monitoring&amp;quot;}\nINFO     tests.test_auth_endpoints:test_auth_endpoints.py:20 Creating AsyncClient for testing.\nDEBUG    httpx:_config.py:78 load_ssl_context verify=True cert=None trust_env=True http2=False\nDEBUG    httpx:_config.py:144 load_verify_locations cafile=&amp;#x27;C:\\\\Users\\\\Work\\\\AppData\\\\Local\\\\Packages\\\\PythonSoftwareFoundation.Python.3.11_qbz5n2kfra8p0\\\\LocalCache\\\\local-packages\\\\Python311\\\\site-packages\\\\certifi\\\\cacert.pem&amp;#x27;\n\n------------------------------ Captured log call -------------------------------\nINFO     tests.test_auth_endpoints:test_auth_endpoints.py:30 Starting test: test_register_user\nDEBUG    httpcore.connection:_trace.py:87 connect_tcp.started host=&amp;#x27;localhost&amp;#x27; port=8000 local_address=None timeout=5.0 socket_options=None\nDEBUG    httpcore.connection:_trace.py:87 connect_tcp.complete return_value=&amp;lt;httpcore._backends.anyio.AnyIOStream object at 0x0000023C78BC3E50&amp;gt;\nDEBUG    httpcore.http11:_trace.py:87 send_request_headers.started request=&amp;lt;Request [b&amp;#x27;POST&amp;#x27;]&amp;gt;\nDEBUG    httpcore.http11:_trace.py:87 send_request_headers.complete\nDEBUG    httpcore.http11:_trace.py:87 send_request_body.started request=&amp;lt;Request [b&amp;#x27;POST&amp;#x27;]&amp;gt;\nDEBUG    httpcore.http11:_trace.py:87 send_request_body.complete\nDEBUG    httpcore.http11:_trace.py:87 receive_response_headers.started request=&amp;lt;Request [b&amp;#x27;POST&amp;#x27;]&amp;gt;\nDEBUG    httpcore.http11:_trace.py:87 receive_response_headers.complete return_value=(b&amp;#x27;HTTP/1.1&amp;#x27;, 200, b&amp;#x27;OK&amp;#x27;, [(b&amp;#x27;date&amp;#x27;, b&amp;#x27;Wed, 02 Apr 2025 21:57:43 GMT&amp;#x27;), (b&amp;#x27;server&amp;#x27;, b&amp;#x27;uvicorn&amp;#x27;), (b&amp;#x27;content-length&amp;#x27;, b&amp;#x27;42&amp;#x27;), (b&amp;#x27;content-type&amp;#x27;, b&amp;#x27;application/json&amp;#x27;)])\nINFO     httpx:_client.py:1758 HTTP Request: POST http://localhost:8000/api/auth/register &amp;quot;HTTP/1.1 200 OK&amp;quot;\nDEBUG    httpcore.http11:_trace.py:87 receive_response_body.started request=&amp;lt;Request [b&amp;#x27;POST&amp;#x27;]&amp;gt;\nDEBUG    httpcore.http11:_trace.py:87 receive_response_body.complete\nDEBUG    httpcore.http11:_trace.py:87 response_closed.started\nDEBUG    httpcore.http11:_trace.py:87 response_closed.complete\nINFO     tests.test_auth_endpoints:test_auth_endpoints.py:38 Response status: 200, body: {&amp;quot;message&amp;quot;:&amp;quot;User registered successfully&amp;quot;}\nDEBUG    pymongo.connection:logger.py:100 {&amp;quot;clientId&amp;quot;: {&amp;quot;$oid&amp;quot;: &amp;quot;67edb2d75a19ff9b4f46d274&amp;quot;}, &amp;quot;message&amp;quot;: &amp;quot;Connection pool created&amp;quot;, &amp;quot;serverHost&amp;quot;: &amp;quot;autorack.proxy.rlwy.net&amp;quot;, &amp;quot;serverPort&amp;quot;: 44467}\nDEBUG    pymongo.serverSelection:logger.py:100 {&amp;quot;message&amp;quot;: &amp;quot;Server selection started&amp;quot;, &amp;quot;selector&amp;quot;: &amp;quot;Primary()&amp;quot;, &amp;quot;operation&amp;quot;: &amp;quot;find&amp;quot;, &amp;quot;topologyDescription&amp;quot;: &amp;quot;&amp;lt;TopologyDescription id: 67edb2d75a19ff9b4f46d274, topology_type: Unknown, servers: [&amp;lt;ServerDescription (&amp;#x27;autorack.proxy.rlwy.net&amp;#x27;, 44467) server_type: Unknown, rtt: None&amp;gt;]&amp;gt;&amp;quot;, &amp;quot;clientId&amp;quot;: {&amp;quot;$oid&amp;quot;: &amp;quot;67edb2d75a19ff9b4f46d274&amp;quot;}}\nDEBUG    pymongo.serverSelection:logger.py:100 {&amp;quot;message&amp;quot;: &amp;quot;Waiting for suitable server to become available&amp;quot;, &amp;quot;selector&amp;quot;: &amp;quot;Primary()&amp;quot;, &amp;quot;operation&amp;quot;: &amp;quot;find&amp;quot;, &amp;quot;topologyDescription&amp;quot;: &amp;quot;&amp;lt;TopologyDescription id: 67edb2d75a19ff9b4f46d274, topology_type: Unknown, servers: [&amp;lt;ServerDescription (&amp;#x27;autorack.proxy.rlwy.net&amp;#x27;, 44467) server_type: Unknown, rtt: None&amp;gt;]&amp;gt;&amp;quot;, &amp;quot;clientId&amp;quot;: {&amp;quot;$oid&amp;quot;: &amp;quot;67edb2d75a19ff9b4f46d274&amp;quot;}, &amp;quot;remainingTimeMS&amp;quot;: 30}\nDEBUG    pymongo.topology:logger.py:100 {&amp;quot;topologyId&amp;quot;: {&amp;quot;$oid&amp;quot;: &amp;quot;67edb2d75a19ff9b4f46d274&amp;quot;}, &amp;quot;driverConnectionId&amp;quot;: 1, &amp;quot;serverHost&amp;quot;: &amp;quot;autorack.proxy.rlwy.net&amp;quot;, &amp;quot;serverPort&amp;quot;: 44467, &amp;quot;awaited&amp;quot;: false, &amp;quot;message&amp;quot;: &amp;quot;Server heartbeat started&amp;quot;}\nDEBUG    pymongo.topology:logger.py:100 {&amp;quot;topologyId&amp;quot;: {&amp;quot;$oid&amp;quot;: &amp;quot;67edb2d75a19ff9b4f46d274&amp;quot;}, &amp;quot;driverConnectionId&amp;quot;: 1, &amp;quot;serverConnectionId&amp;quot;: 1339, &amp;quot;serverHost&amp;quot;: &amp;quot;autorack.proxy.rlwy.net&amp;quot;, &amp;quot;serverPort&amp;quot;: 44467, &amp;quot;awaited&amp;quot;: false, &amp;quot;durationMS&amp;quot;: 375.0, &amp;quot;reply&amp;quot;: &amp;quot;{\\&amp;quot;helloOk\\&amp;quot;: true, \\&amp;quot;ismaster\\&amp;quot;: true, \\&amp;quot;topologyVersion\\&amp;quot;: {\\&amp;quot;processId\\&amp;quot;: {\\&amp;quot;$oid\\&amp;quot;: \\&amp;quot;67e69dde62eb67eb8833ab82\\&amp;quot;}}, \\&amp;quot;maxBsonObjectSize\\&amp;quot;: 16777216, \\&amp;quot;maxMessageSizeBytes\\&amp;quot;: 48000000, \\&amp;quot;maxWriteBatchSize\\&amp;quot;: 100000, \\&amp;quot;localTime\\&amp;quot;: {\\&amp;quot;$date\\&amp;quot;: \\&amp;quot;2025-04-02T21:57:45.555Z\\&amp;quot;}, \\&amp;quot;logicalSessionTimeoutMinutes\\&amp;quot;: 30, \\&amp;quot;connectionId\\&amp;quot;: 1339, \\&amp;quot;maxWireVersion\\&amp;quot;: 21, \\&amp;quot;ok\\&amp;quot;: 1.0}&amp;quot;, &amp;quot;message&amp;quot;: &amp;quot;Server heartbeat succeeded&amp;quot;}\nDEBUG    pymongo.connection:logger.py:100 {&amp;quot;clientId&amp;quot;: {&amp;quot;$oid&amp;quot;: &amp;quot;67edb2d75a19ff9b4f46d274&amp;quot;}, &amp;quot;message&amp;quot;: &amp;quot;Connection pool ready&amp;quot;, &amp;quot;serverHost&amp;quot;: &amp;quot;autorack.proxy.rlwy.net&amp;quot;, &amp;quot;serverPort&amp;quot;: 44467}\nDEBUG    pymongo.topology:logger.py:100 {&amp;quot;topologyId&amp;quot;: {&amp;quot;$oid&amp;quot;: &amp;quot;67edb2d75a19ff9b4f46d274&amp;quot;}, &amp;quot;previousDescription&amp;quot;: &amp;quot;&amp;lt;TopologyDescription id: 67edb2d75a19ff9b4f46d274, topology_type: Unknown, servers: [&amp;lt;ServerDescription (&amp;#x27;autorack.proxy.rlwy.net&amp;#x27;, 44467) server_type: Unknown, rtt: None&amp;gt;]&amp;gt;&amp;quot;, &amp;quot;newDescription&amp;quot;: &amp;quot;&amp;lt;TopologyDescription id: 67edb2d75a19ff9b4f46d274, topology_type: Single, servers: [&amp;lt;ServerDescription (&amp;#x27;autorack.proxy.rlwy.net&amp;#x27;, 44467) server_type: Standalone, rtt: 0.375&amp;gt;]&amp;gt;&amp;quot;, &amp;quot;message&amp;quot;: &amp;quot;Topology description changed&amp;quot;}\nDEBUG    pymongo.serverSelection:logger.py:100 {&amp;quot;message&amp;quot;: &amp;quot;Server selection succeeded&amp;quot;, &amp;quot;selector&amp;quot;: &amp;quot;Primary()&amp;quot;, &amp;quot;operation&amp;quot;: &amp;quot;find&amp;quot;, &amp;quot;topologyDescription&amp;quot;: &amp;quot;&amp;lt;TopologyDescription id: 67edb2d75a19ff9b4f46d274, topology_type: Single, servers: [&amp;lt;ServerDescription (&amp;#x27;autorack.proxy.rlwy.net&amp;#x27;, 44467) server_type: Standalone, rtt: 0.375&amp;gt;]&amp;gt;&amp;quot;, &amp;quot;clientId&amp;quot;: {&amp;quot;$oid&amp;quot;: &amp;quot;67edb2d75a19ff9b4f46d274&amp;quot;}, &amp;quot;serverHost&amp;quot;: &amp;quot;autorack.proxy.rlwy.net&amp;quot;, &amp;quot;serverPort&amp;quot;: 44467}\nDEBUG    pymongo.connection:logger.py:100 {&amp;quot;clientId&amp;quot;: {&amp;quot;$oid&amp;quot;: &amp;quot;67edb2d75a19ff9b4f46d274&amp;quot;}, &amp;quot;message&amp;quot;: &amp;quot;Connection checkout started&amp;quot;, &amp;quot;serverHost&amp;quot;: &amp;quot;autorack.proxy.rlwy.net&amp;quot;, &amp;quot;serverPort&amp;quot;: 44467}\nDEBUG    pymongo.topology:logger.py:100 {&amp;quot;topologyId&amp;quot;: {&amp;quot;$oid&amp;quot;: &amp;quot;67edb2d75a19ff9b4f46d274&amp;quot;}, &amp;quot;driverConnectionId&amp;quot;: 1, &amp;quot;serverConnectionId&amp;quot;: 1339, &amp;quot;serverHost&amp;quot;: &amp;quot;autorack.proxy.rlwy.net&amp;quot;, &amp;quot;serverPort&amp;quot;: 44467, &amp;quot;awaited&amp;quot;: true, &amp;quot;message&amp;quot;: &amp;quot;Server heartbeat started&amp;quot;}\nDEBUG    pymongo.connection:logger.py:100 {&amp;quot;clientId&amp;quot;: {&amp;quot;$oid&amp;quot;: &amp;quot;67edb2d75a19ff9b4f46d274&amp;quot;}, &amp;quot;message&amp;quot;: &amp;quot;Connection created&amp;quot;, &amp;quot;serverHost&amp;quot;: &amp;quot;autorack.proxy.rlwy.net&amp;quot;, &amp;quot;serverPort&amp;quot;: 44467, &amp;quot;driverConnectionId&amp;quot;: 1}\nDEBUG    pymongo.connection:logger.py:100 {&amp;quot;clientId&amp;quot;: {&amp;quot;$oid&amp;quot;: &amp;quot;67edb2d75a19ff9b4f46d274&amp;quot;}, &amp;quot;message&amp;quot;: &amp;quot;Connection ready&amp;quot;, &amp;quot;serverHost&amp;quot;: &amp;quot;autorack.proxy.rlwy.net&amp;quot;, &amp;quot;serverPort&amp;quot;: 44467, &amp;quot;driverConnectionId&amp;quot;: 1, &amp;quot;durationMS&amp;quot;: 0.5779999999795109}\nDEBUG    pymongo.connection:logger.py:100 {&amp;quot;clientId&amp;quot;: {&amp;quot;$oid&amp;quot;: &amp;quot;67edb2d75a19ff9b4f46d274&amp;quot;}, &amp;quot;message&amp;quot;: &amp;quot;Connection checked out&amp;quot;, &amp;quot;serverHost&amp;quot;: &amp;quot;autorack.proxy.rlwy.net&amp;quot;, &amp;quot;serverPort&amp;quot;: 44467, &amp;quot;driverConnectionId&amp;quot;: 1, &amp;quot;durationMS&amp;quot;: 0.6569999998901039}\nDEBUG    pymongo.command:logger.py:100 {&amp;quot;clientId&amp;quot;: {&amp;quot;$oid&amp;quot;: &amp;quot;67edb2d75a19ff9b4f46d274&amp;quot;}, &amp;quot;message&amp;quot;: &amp;quot;Command started&amp;quot;, &amp;quot;command&amp;quot;: &amp;quot;{\\&amp;quot;find\\&amp;quot;: \\&amp;quot;Users\\&amp;quot;, \\&amp;quot;filter\\&amp;quot;: {\\&amp;quot;username\\&amp;quot;: \\&amp;quot;testuser@example.com\\&amp;quot;}, \\&amp;quot;limit\\&amp;quot;: 1, \\&amp;quot;singleBatch\\&amp;quot;: true, \\&amp;quot;lsid\\&amp;quot;: {\\&amp;quot;id\\&amp;quot;: {\\&amp;quot;$binary\\&amp;quot;: {\\&amp;quot;base64\\&amp;quot;: \\&amp;quot;ORN9TyaLRL6k23ZTkM6ueA==\\&amp;quot;, \\&amp;quot;subType\\&amp;quot;: \\&amp;quot;04\\&amp;quot;}}}, \\&amp;quot;$db\\&amp;quot;: \\&amp;quot;fl_all\\&amp;quot;}&amp;quot;, &amp;quot;commandName&amp;quot;: &amp;quot;find&amp;quot;, &amp;quot;databaseName&amp;quot;: &amp;quot;fl_all&amp;quot;, &amp;quot;requestId&amp;quot;: 6334, &amp;quot;operationId&amp;quot;: 6334, &amp;quot;driverConnectionId&amp;quot;: 1, &amp;quot;serverConnectionId&amp;quot;: 1340, &amp;quot;serverHost&amp;quot;: &amp;quot;autorack.proxy.rlwy.net&amp;quot;, &amp;quot;serverPort&amp;quot;: 44467}\nDEBUG    pymongo.command:logger.py:100 {&amp;quot;clientId&amp;quot;: {&amp;quot;$oid&amp;quot;: &amp;quot;67edb2d75a19ff9b4f46d274&amp;quot;}, &amp;quot;message&amp;quot;: &amp;quot;Command succeeded&amp;quot;, &amp;quot;durationMS&amp;quot;: 226.14000000000001, &amp;quot;reply&amp;quot;: &amp;quot;{\\&amp;quot;cursor\\&amp;quot;: {\\&amp;quot;firstBatch\\&amp;quot;: [{\\&amp;quot;_id\\&amp;quot;: {\\&amp;quot;$oid\\&amp;quot;: \\&amp;quot;67edb2d8bb5733a8d846303a\\&amp;quot;}, \\&amp;quot;username\\&amp;quot;: \\&amp;quot;testuser@example.com\\&amp;quot;, \\&amp;quot;password\\&amp;quot;: \\&amp;quot;$argon2id$v=19$m=65536,t=3,p=4$xbiX0npvbY1xLiXEGANAaA$jDL9fiG8uAQV4HxhyM7fitdcEhB+Ar0PE8f9uohf0eo\\&amp;quot;, \\&amp;quot;role\\&amp;quot;: \\&amp;quot;clinic\\&amp;quot;}], \\&amp;quot;ns\\&amp;quot;: \\&amp;quot;fl_all.Users\\&amp;quot;}, \\&amp;quot;ok\\&amp;quot;: 1.0}&amp;quot;, &amp;quot;commandName&amp;quot;: &amp;quot;find&amp;quot;, &amp;quot;databaseName&amp;quot;: &amp;quot;fl_all&amp;quot;, &amp;quot;requestId&amp;quot;: 6334, &amp;quot;operationId&amp;quot;: 6334, &amp;quot;driverConnectionId&amp;quot;: 1, &amp;quot;serverConnectionId&amp;quot;: 1340, &amp;quot;serverHost&amp;quot;: &amp;quot;autorack.proxy.rlwy.net&amp;quot;, &amp;quot;serverPort&amp;quot;: 44467}\nDEBUG    pymongo.connection:logger.py:100 {&amp;quot;clientId&amp;quot;: {&amp;quot;$oid&amp;quot;: &amp;quot;67edb2d75a19ff9b4f46d274&amp;quot;}, &amp;quot;message&amp;quot;: &amp;quot;Connection checked in&amp;quot;, &amp;quot;serverHost&amp;quot;: &amp;quot;autorack.proxy.rlwy.net&amp;quot;, &amp;quot;serverPort&amp;quot;: 44467, &amp;quot;driverConnectionId&amp;quot;: 1}\nINFO     tests.test_auth_endpoints:test_auth_endpoints.py:46 User found in database: {&amp;#x27;_id&amp;#x27;: ObjectId(&amp;#x27;67edb2d8bb5733a8d846303a&amp;#x27;), &amp;#x27;username&amp;#x27;: &amp;#x27;testuser@example.com&amp;#x27;, &amp;#x27;password&amp;#x27;: &amp;#x27;$argon2id$v=19$m=65536,t=3,p=4$xbiX0npvbY1xLiXEGANAaA$jDL9fiG8uAQV4HxhyM7fitdcEhB+Ar0PE8f9uohf0eo&amp;#x27;, &amp;#x27;role&amp;#x27;: &amp;#x27;clinic&amp;#x27;}\nDEBUG    pymongo.serverSelection:logger.py:100 {&amp;quot;message&amp;quot;: &amp;quot;Server selection started&amp;quot;, &amp;quot;selector&amp;quot;: &amp;quot;&amp;lt;function writable_server_selector at 0x0000023C77B6E520&amp;gt;&amp;quot;, &amp;quot;operation&amp;quot;: &amp;quot;delete&amp;quot;, &amp;quot;topologyDescription&amp;quot;: &amp;quot;&amp;lt;TopologyDescription id: 67edb2d75a19ff9b4f46d274, topology_type: Single, servers: [&amp;lt;ServerDescription (&amp;#x27;autorack.proxy.rlwy.net&amp;#x27;, 44467) server_type: Standalone, rtt: 0.375&amp;gt;]&amp;gt;&amp;quot;, &amp;quot;clientId&amp;quot;: {&amp;quot;$oid&amp;quot;: &amp;quot;67edb2d75a19ff9b4f46d274&amp;quot;}}\nDEBUG    pymongo.serverSelection:logger.py:100 {&amp;quot;message&amp;quot;: &amp;quot;Server selection succeeded&amp;quot;, &amp;quot;selector&amp;quot;: &amp;quot;&amp;lt;function writable_server_selector at 0x0000023C77B6E520&amp;gt;&amp;quot;, &amp;quot;operation&amp;quot;: &amp;quot;delete&amp;quot;, &amp;quot;topologyDescription&amp;quot;: &amp;quot;&amp;lt;TopologyDescription id: 67edb2d75a19ff9b4f46d274, topology_type: Single, servers: [&amp;lt;ServerDescription (&amp;#x27;autorack.proxy.rlwy.net&amp;#x27;, 44467) server_type: Standalone, rtt: 0.375&amp;gt;]&amp;gt;&amp;quot;, &amp;quot;clientId&amp;quot;: {&amp;quot;$oid&amp;quot;: &amp;quot;67edb2d75a19ff9b4f46d274&amp;quot;}, &amp;quot;serverHost&amp;quot;: &amp;quot;autorack.proxy.rlwy.net&amp;quot;, &amp;quot;serverPort&amp;quot;: 44467}\nDEBUG    pymongo.connection:logger.py:100 {&amp;quot;clientId&amp;quot;: {&amp;quot;$oid&amp;quot;: &amp;quot;67edb2d75a19ff9b4f46d274&amp;quot;}, &amp;quot;message&amp;quot;: &amp;quot;Connection checkout started&amp;quot;, &amp;quot;serverHost&amp;quot;: &amp;quot;autorack.proxy.rlwy.net&amp;quot;, &amp;quot;serverPort&amp;quot;: 44467}\nDEBUG    pymongo.connection:logger.py:100 {&amp;quot;clientId&amp;quot;: {&amp;quot;$oid&amp;quot;: &amp;quot;67edb2d75a19ff9b4f46d274&amp;quot;}, &amp;quot;message&amp;quot;: &amp;quot;Connection checked out&amp;quot;, &amp;quot;serverHost&amp;quot;: &amp;quot;autorack.proxy.rlwy.net&amp;quot;, &amp;quot;serverPort&amp;quot;: 44467, &amp;quot;driverConnectionId&amp;quot;: 1, &amp;quot;durationMS&amp;quot;: 0.0}\nDEBUG    pymongo.command:logger.py:100 {&amp;quot;clientId&amp;quot;: {&amp;quot;$oid&amp;quot;: &amp;quot;67edb2d75a19ff9b4f46d274&amp;quot;}, &amp;quot;message&amp;quot;: &amp;quot;Command started&amp;quot;, &amp;quot;command&amp;quot;: &amp;quot;{\\&amp;quot;delete\\&amp;quot;: \\&amp;quot;Users\\&amp;quot;, \\&amp;quot;ordered\\&amp;quot;: true, \\&amp;quot;lsid\\&amp;quot;: {\\&amp;quot;id\\&amp;quot;: {\\&amp;quot;$binary\\&amp;quot;: {\\&amp;quot;base64\\&amp;quot;: \\&amp;quot;ORN9TyaLRL6k23ZTkM6ueA==\\&amp;quot;, \\&amp;quot;subType\\&amp;quot;: \\&amp;quot;04\\&amp;quot;}}}, \\&amp;quot;$db\\&amp;quot;: \\&amp;quot;fl_all\\&amp;quot;, \\&amp;quot;deletes\\&amp;quot;: [{\\&amp;quot;q\\&amp;quot;: {\\&amp;quot;username\\&amp;quot;: \\&amp;quot;testuser@example.com\\&amp;quot;}, \\&amp;quot;limit\\&amp;quot;: 1}]}&amp;quot;, &amp;quot;commandName&amp;quot;: &amp;quot;delete&amp;quot;, &amp;quot;databaseName&amp;quot;: &amp;quot;fl_all&amp;quot;, &amp;quot;requestId&amp;quot;: 26500, &amp;quot;operationId&amp;quot;: 26500, &amp;quot;driverConnectionId&amp;quot;: 1, &amp;quot;serverConnectionId&amp;quot;: 1340, &amp;quot;serverHost&amp;quot;: &amp;quot;autorack.proxy.rlwy.net&amp;quot;, &amp;quot;serverPort&amp;quot;: 44467}\nDEBUG    pymongo.command:logger.py:100 {&amp;quot;clientId&amp;quot;: {&amp;quot;$oid&amp;quot;: &amp;quot;67edb2d75a19ff9b4f46d274&amp;quot;}, &amp;quot;message&amp;quot;: &amp;quot;Command succeeded&amp;quot;, &amp;quot;durationMS&amp;quot;: 212.537, &amp;quot;reply&amp;quot;: &amp;quot;{\\&amp;quot;n\\&amp;quot;: 1, \\&amp;quot;ok\\&amp;quot;: 1.0}&amp;quot;, &amp;quot;commandName&amp;quot;: &amp;quot;delete&amp;quot;, &amp;quot;databaseName&amp;quot;: &amp;quot;fl_all&amp;quot;, &amp;quot;requestId&amp;quot;: 26500, &amp;quot;operationId&amp;quot;: 26500, &amp;quot;driverConnectionId&amp;quot;: 1, &amp;quot;serverConnectionId&amp;quot;: 1340, &amp;quot;serverHost&amp;quot;: &amp;quot;autorack.proxy.rlwy.net&amp;quot;, &amp;quot;serverPort&amp;quot;: 44467}\nDEBUG    pymongo.connection:logger.py:100 {&amp;quot;clientId&amp;quot;: {&amp;quot;$oid&amp;quot;: &amp;quot;67edb2d75a19ff9b4f46d274&amp;quot;}, &amp;quot;message&amp;quot;: &amp;quot;Connection checked in&amp;quot;, &amp;quot;serverHost&amp;quot;: &amp;quot;autorack.proxy.rlwy.net&amp;quot;, &amp;quot;serverPort&amp;quot;: 44467, &amp;quot;driverConnectionId&amp;quot;: 1}\nINFO     tests.test_auth_endpoints:test_auth_endpoints.py:52 Cleaned up test user from database.\n\n---------------------------- Captured log teardown -----------------------------\nDEBUG    httpcore.connection:_trace.py:87 close.started\nDEBUG    httpcore.connection:_trace.py:87 close.complete\nINFO     tests.test_auth_endpoints:test_auth_endpoints.py:23 AsyncClient closed.&#34;}], &#34;test_auth_endpoints.py::test_register_duplicate_user&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Passed&#34;, &#34;testId&#34;: &#34;test_auth_endpoints.py::test_register_duplicate_user&#34;, &#34;duration&#34;: &#34;00:00:01&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Passed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;test_auth_endpoints.py::test_register_duplicate_user&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;00:00:01&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;------------------------------ Captured log setup ------------------------------\nINFO     tests.test_auth_endpoints:test_auth_endpoints.py:20 Creating AsyncClient for testing.\nDEBUG    httpx:_config.py:78 load_ssl_context verify=True cert=None trust_env=True http2=False\nDEBUG    httpx:_config.py:144 load_verify_locations cafile=&amp;#x27;C:\\\\Users\\\\Work\\\\AppData\\\\Local\\\\Packages\\\\PythonSoftwareFoundation.Python.3.11_qbz5n2kfra8p0\\\\LocalCache\\\\local-packages\\\\Python311\\\\site-packages\\\\certifi\\\\cacert.pem&amp;#x27;\n\n------------------------------ Captured log call -------------------------------\nINFO     tests.test_auth_endpoints:test_auth_endpoints.py:59 Starting test: test_register_duplicate_user\nDEBUG    httpcore.connection:_trace.py:87 connect_tcp.started host=&amp;#x27;localhost&amp;#x27; port=8000 local_address=None timeout=5.0 socket_options=None\nDEBUG    httpcore.connection:_trace.py:87 connect_tcp.complete return_value=&amp;lt;httpcore._backends.anyio.AnyIOStream object at 0x0000023C77B0A790&amp;gt;\nDEBUG    httpcore.http11:_trace.py:87 send_request_headers.started request=&amp;lt;Request [b&amp;#x27;POST&amp;#x27;]&amp;gt;\nDEBUG    httpcore.http11:_trace.py:87 send_request_headers.complete\nDEBUG    httpcore.http11:_trace.py:87 send_request_body.started request=&amp;lt;Request [b&amp;#x27;POST&amp;#x27;]&amp;gt;\nDEBUG    httpcore.http11:_trace.py:87 send_request_body.complete\nDEBUG    httpcore.http11:_trace.py:87 receive_response_headers.started request=&amp;lt;Request [b&amp;#x27;POST&amp;#x27;]&amp;gt;\nDEBUG    httpcore.http11:_trace.py:87 receive_response_headers.complete return_value=(b&amp;#x27;HTTP/1.1&amp;#x27;, 200, b&amp;#x27;OK&amp;#x27;, [(b&amp;#x27;date&amp;#x27;, b&amp;#x27;Wed, 02 Apr 2025 21:57:46 GMT&amp;#x27;), (b&amp;#x27;server&amp;#x27;, b&amp;#x27;uvicorn&amp;#x27;), (b&amp;#x27;content-length&amp;#x27;, b&amp;#x27;42&amp;#x27;), (b&amp;#x27;content-type&amp;#x27;, b&amp;#x27;application/json&amp;#x27;)])\nINFO     httpx:_client.py:1758 HTTP Request: POST http://localhost:8000/api/auth/register &amp;quot;HTTP/1.1 200 OK&amp;quot;\nDEBUG    httpcore.http11:_trace.py:87 receive_response_body.started request=&amp;lt;Request [b&amp;#x27;POST&amp;#x27;]&amp;gt;\nDEBUG    httpcore.http11:_trace.py:87 receive_response_body.complete\nDEBUG    httpcore.http11:_trace.py:87 response_closed.started\nDEBUG    httpcore.http11:_trace.py:87 response_closed.complete\nINFO     tests.test_auth_endpoints:test_auth_endpoints.py:66 Registered user for duplicate test.\nDEBUG    httpcore.http11:_trace.py:87 send_request_headers.started request=&amp;lt;Request [b&amp;#x27;POST&amp;#x27;]&amp;gt;\nDEBUG    httpcore.http11:_trace.py:87 send_request_headers.complete\nDEBUG    httpcore.http11:_trace.py:87 send_request_body.started request=&amp;lt;Request [b&amp;#x27;POST&amp;#x27;]&amp;gt;\nDEBUG    httpcore.http11:_trace.py:87 send_request_body.complete\nDEBUG    httpcore.http11:_trace.py:87 receive_response_headers.started request=&amp;lt;Request [b&amp;#x27;POST&amp;#x27;]&amp;gt;\nDEBUG    httpcore.http11:_trace.py:87 receive_response_headers.complete return_value=(b&amp;#x27;HTTP/1.1&amp;#x27;, 400, b&amp;#x27;Bad Request&amp;#x27;, [(b&amp;#x27;date&amp;#x27;, b&amp;#x27;Wed, 02 Apr 2025 21:57:46 GMT&amp;#x27;), (b&amp;#x27;server&amp;#x27;, b&amp;#x27;uvicorn&amp;#x27;), (b&amp;#x27;content-length&amp;#x27;, b&amp;#x27;37&amp;#x27;), (b&amp;#x27;content-type&amp;#x27;, b&amp;#x27;application/json&amp;#x27;)])\nINFO     httpx:_client.py:1758 HTTP Request: POST http://localhost:8000/api/auth/register &amp;quot;HTTP/1.1 400 Bad Request&amp;quot;\nDEBUG    httpcore.http11:_trace.py:87 receive_response_body.started request=&amp;lt;Request [b&amp;#x27;POST&amp;#x27;]&amp;gt;\nDEBUG    httpcore.http11:_trace.py:87 receive_response_body.complete\nDEBUG    httpcore.http11:_trace.py:87 response_closed.started\nDEBUG    httpcore.http11:_trace.py:87 response_closed.complete\nINFO     tests.test_auth_endpoints:test_auth_endpoints.py:74 Response status: 400, body: {&amp;quot;detail&amp;quot;:&amp;quot;Email already registered&amp;quot;}\nDEBUG    pymongo.serverSelection:logger.py:100 {&amp;quot;message&amp;quot;: &amp;quot;Server selection started&amp;quot;, &amp;quot;selector&amp;quot;: &amp;quot;&amp;lt;function writable_server_selector at 0x0000023C77B6E520&amp;gt;&amp;quot;, &amp;quot;operation&amp;quot;: &amp;quot;delete&amp;quot;, &amp;quot;topologyDescription&amp;quot;: &amp;quot;&amp;lt;TopologyDescription id: 67edb2d75a19ff9b4f46d274, topology_type: Single, servers: [&amp;lt;ServerDescription (&amp;#x27;autorack.proxy.rlwy.net&amp;#x27;, 44467) server_type: Standalone, rtt: 0.375&amp;gt;]&amp;gt;&amp;quot;, &amp;quot;clientId&amp;quot;: {&amp;quot;$oid&amp;quot;: &amp;quot;67edb2d75a19ff9b4f46d274&amp;quot;}}\nDEBUG    pymongo.serverSelection:logger.py:100 {&amp;quot;message&amp;quot;: &amp;quot;Server selection succeeded&amp;quot;, &amp;quot;selector&amp;quot;: &amp;quot;&amp;lt;function writable_server_selector at 0x0000023C77B6E520&amp;gt;&amp;quot;, &amp;quot;operation&amp;quot;: &amp;quot;delete&amp;quot;, &amp;quot;topologyDescription&amp;quot;: &amp;quot;&amp;lt;TopologyDescription id: 67edb2d75a19ff9b4f46d274, topology_type: Single, servers: [&amp;lt;ServerDescription (&amp;#x27;autorack.proxy.rlwy.net&amp;#x27;, 44467) server_type: Standalone, rtt: 0.375&amp;gt;]&amp;gt;&amp;quot;, &amp;quot;clientId&amp;quot;: {&amp;quot;$oid&amp;quot;: &amp;quot;67edb2d75a19ff9b4f46d274&amp;quot;}, &amp;quot;serverHost&amp;quot;: &amp;quot;autorack.proxy.rlwy.net&amp;quot;, &amp;quot;serverPort&amp;quot;: 44467}\nDEBUG    pymongo.connection:logger.py:100 {&amp;quot;clientId&amp;quot;: {&amp;quot;$oid&amp;quot;: &amp;quot;67edb2d75a19ff9b4f46d274&amp;quot;}, &amp;quot;message&amp;quot;: &amp;quot;Connection checkout started&amp;quot;, &amp;quot;serverHost&amp;quot;: &amp;quot;autorack.proxy.rlwy.net&amp;quot;, &amp;quot;serverPort&amp;quot;: 44467}\nDEBUG    pymongo.connection:logger.py:100 {&amp;quot;clientId&amp;quot;: {&amp;quot;$oid&amp;quot;: &amp;quot;67edb2d75a19ff9b4f46d274&amp;quot;}, &amp;quot;message&amp;quot;: &amp;quot;Connection checked out&amp;quot;, &amp;quot;serverHost&amp;quot;: &amp;quot;autorack.proxy.rlwy.net&amp;quot;, &amp;quot;serverPort&amp;quot;: 44467, &amp;quot;driverConnectionId&amp;quot;: 1, &amp;quot;durationMS&amp;quot;: 0.0}\nDEBUG    pymongo.command:logger.py:100 {&amp;quot;clientId&amp;quot;: {&amp;quot;$oid&amp;quot;: &amp;quot;67edb2d75a19ff9b4f46d274&amp;quot;}, &amp;quot;message&amp;quot;: &amp;quot;Command started&amp;quot;, &amp;quot;command&amp;quot;: &amp;quot;{\\&amp;quot;delete\\&amp;quot;: \\&amp;quot;Users\\&amp;quot;, \\&amp;quot;ordered\\&amp;quot;: true, \\&amp;quot;lsid\\&amp;quot;: {\\&amp;quot;id\\&amp;quot;: {\\&amp;quot;$binary\\&amp;quot;: {\\&amp;quot;base64\\&amp;quot;: \\&amp;quot;ORN9TyaLRL6k23ZTkM6ueA==\\&amp;quot;, \\&amp;quot;subType\\&amp;quot;: \\&amp;quot;04\\&amp;quot;}}}, \\&amp;quot;$db\\&amp;quot;: \\&amp;quot;fl_all\\&amp;quot;, \\&amp;quot;deletes\\&amp;quot;: [{\\&amp;quot;q\\&amp;quot;: {\\&amp;quot;username\\&amp;quot;: \\&amp;quot;testuser@example.com\\&amp;quot;}, \\&amp;quot;limit\\&amp;quot;: 1}]}&amp;quot;, &amp;quot;commandName&amp;quot;: &amp;quot;delete&amp;quot;, &amp;quot;databaseName&amp;quot;: &amp;quot;fl_all&amp;quot;, &amp;quot;requestId&amp;quot;: 19169, &amp;quot;operationId&amp;quot;: 19169, &amp;quot;driverConnectionId&amp;quot;: 1, &amp;quot;serverConnectionId&amp;quot;: 1340, &amp;quot;serverHost&amp;quot;: &amp;quot;autorack.proxy.rlwy.net&amp;quot;, &amp;quot;serverPort&amp;quot;: 44467}\nDEBUG    pymongo.command:logger.py:100 {&amp;quot;clientId&amp;quot;: {&amp;quot;$oid&amp;quot;: &amp;quot;67edb2d75a19ff9b4f46d274&amp;quot;}, &amp;quot;message&amp;quot;: &amp;quot;Command succeeded&amp;quot;, &amp;quot;durationMS&amp;quot;: 213.81, &amp;quot;reply&amp;quot;: &amp;quot;{\\&amp;quot;n\\&amp;quot;: 1, \\&amp;quot;ok\\&amp;quot;: 1.0}&amp;quot;, &amp;quot;commandName&amp;quot;: &amp;quot;delete&amp;quot;, &amp;quot;databaseName&amp;quot;: &amp;quot;fl_all&amp;quot;, &amp;quot;requestId&amp;quot;: 19169, &amp;quot;operationId&amp;quot;: 19169, &amp;quot;driverConnectionId&amp;quot;: 1, &amp;quot;serverConnectionId&amp;quot;: 1340, &amp;quot;serverHost&amp;quot;: &amp;quot;autorack.proxy.rlwy.net&amp;quot;, &amp;quot;serverPort&amp;quot;: 44467}\nDEBUG    pymongo.connection:logger.py:100 {&amp;quot;clientId&amp;quot;: {&amp;quot;$oid&amp;quot;: &amp;quot;67edb2d75a19ff9b4f46d274&amp;quot;}, &amp;quot;message&amp;quot;: &amp;quot;Connection checked in&amp;quot;, &amp;quot;serverHost&amp;quot;: &amp;quot;autorack.proxy.rlwy.net&amp;quot;, &amp;quot;serverPort&amp;quot;: 44467, &amp;quot;driverConnectionId&amp;quot;: 1}\nINFO     tests.test_auth_endpoints:test_auth_endpoints.py:82 Cleaned up test user from database.\n\n---------------------------- Captured log teardown -----------------------------\nDEBUG    httpcore.connection:_trace.py:87 close.started\nDEBUG    httpcore.connection:_trace.py:87 close.complete\nINFO     tests.test_auth_endpoints:test_auth_endpoints.py:23 AsyncClient closed.&#34;}], &#34;test_auth_endpoints.py::test_login_user&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Passed&#34;, &#34;testId&#34;: &#34;test_auth_endpoints.py::test_login_user&#34;, &#34;duration&#34;: &#34;00:00:02&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Passed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;test_auth_endpoints.py::test_login_user&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;00:00:02&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;------------------------------ Captured log setup ------------------------------\nINFO     tests.test_auth_endpoints:test_auth_endpoints.py:20 Creating AsyncClient for testing.\nDEBUG    httpx:_config.py:78 load_ssl_context verify=True cert=None trust_env=True http2=False\nDEBUG    httpx:_config.py:144 load_verify_locations cafile=&amp;#x27;C:\\\\Users\\\\Work\\\\AppData\\\\Local\\\\Packages\\\\PythonSoftwareFoundation.Python.3.11_qbz5n2kfra8p0\\\\LocalCache\\\\local-packages\\\\Python311\\\\site-packages\\\\certifi\\\\cacert.pem&amp;#x27;\n\n------------------------------ Captured log call -------------------------------\nINFO     tests.test_auth_endpoints:test_auth_endpoints.py:89 Starting test: test_login_user\nDEBUG    httpcore.connection:_trace.py:87 connect_tcp.started host=&amp;#x27;localhost&amp;#x27; port=8000 local_address=None timeout=5.0 socket_options=None\nDEBUG    httpcore.connection:_trace.py:87 connect_tcp.complete return_value=&amp;lt;httpcore._backends.anyio.AnyIOStream object at 0x0000023C78C1A090&amp;gt;\nDEBUG    httpcore.http11:_trace.py:87 send_request_headers.started request=&amp;lt;Request [b&amp;#x27;POST&amp;#x27;]&amp;gt;\nDEBUG    httpcore.http11:_trace.py:87 send_request_headers.complete\nDEBUG    httpcore.http11:_trace.py:87 send_request_body.started request=&amp;lt;Request [b&amp;#x27;POST&amp;#x27;]&amp;gt;\nDEBUG    httpcore.http11:_trace.py:87 send_request_body.complete\nDEBUG    httpcore.http11:_trace.py:87 receive_response_headers.started request=&amp;lt;Request [b&amp;#x27;POST&amp;#x27;]&amp;gt;\nDEBUG    httpcore.http11:_trace.py:87 receive_response_headers.complete return_value=(b&amp;#x27;HTTP/1.1&amp;#x27;, 200, b&amp;#x27;OK&amp;#x27;, [(b&amp;#x27;date&amp;#x27;, b&amp;#x27;Wed, 02 Apr 2025 21:57:48 GMT&amp;#x27;), (b&amp;#x27;server&amp;#x27;, b&amp;#x27;uvicorn&amp;#x27;), (b&amp;#x27;content-length&amp;#x27;, b&amp;#x27;42&amp;#x27;), (b&amp;#x27;content-type&amp;#x27;, b&amp;#x27;application/json&amp;#x27;)])\nINFO     httpx:_client.py:1758 HTTP Request: POST http://localhost:8000/api/auth/register &amp;quot;HTTP/1.1 200 OK&amp;quot;\nDEBUG    httpcore.http11:_trace.py:87 receive_response_body.started request=&amp;lt;Request [b&amp;#x27;POST&amp;#x27;]&amp;gt;\nDEBUG    httpcore.http11:_trace.py:87 receive_response_body.complete\nDEBUG    httpcore.http11:_trace.py:87 response_closed.started\nDEBUG    httpcore.http11:_trace.py:87 response_closed.complete\nINFO     tests.test_auth_endpoints:test_auth_endpoints.py:96 Registration response: 200, body: {&amp;quot;message&amp;quot;:&amp;quot;User registered successfully&amp;quot;}\nDEBUG    httpcore.http11:_trace.py:87 send_request_headers.started request=&amp;lt;Request [b&amp;#x27;POST&amp;#x27;]&amp;gt;\nDEBUG    httpcore.http11:_trace.py:87 send_request_headers.complete\nDEBUG    httpcore.http11:_trace.py:87 send_request_body.started request=&amp;lt;Request [b&amp;#x27;POST&amp;#x27;]&amp;gt;\nDEBUG    httpcore.http11:_trace.py:87 send_request_body.complete\nDEBUG    httpcore.http11:_trace.py:87 receive_response_headers.started request=&amp;lt;Request [b&amp;#x27;POST&amp;#x27;]&amp;gt;\nDEBUG    httpcore.http11:_trace.py:87 receive_response_headers.complete return_value=(b&amp;#x27;HTTP/1.1&amp;#x27;, 200, b&amp;#x27;OK&amp;#x27;, [(b&amp;#x27;date&amp;#x27;, b&amp;#x27;Wed, 02 Apr 2025 21:57:48 GMT&amp;#x27;), (b&amp;#x27;server&amp;#x27;, b&amp;#x27;uvicorn&amp;#x27;), (b&amp;#x27;content-length&amp;#x27;, b&amp;#x27;46&amp;#x27;), (b&amp;#x27;content-type&amp;#x27;, b&amp;#x27;application/json&amp;#x27;), (b&amp;#x27;set-cookie&amp;#x27;, b&amp;#x27;session_token=e5f6d43c660f6adc0a7c62ab59a4f4d9da75747c6f3a0828dfe6f2d4f9cf50d6; HttpOnly; Path=/; SameSite=strict; Secure&amp;#x27;)])\nINFO     httpx:_client.py:1758 HTTP Request: POST http://localhost:8000/api/auth/login &amp;quot;HTTP/1.1 200 OK&amp;quot;\nDEBUG    httpcore.http11:_trace.py:87 receive_response_body.started request=&amp;lt;Request [b&amp;#x27;POST&amp;#x27;]&amp;gt;\nDEBUG    httpcore.http11:_trace.py:87 receive_response_body.complete\nDEBUG    httpcore.http11:_trace.py:87 response_closed.started\nDEBUG    httpcore.http11:_trace.py:87 response_closed.complete\nINFO     tests.test_auth_endpoints:test_auth_endpoints.py:104 Login response: 200, body: {&amp;quot;message&amp;quot;:&amp;quot;Login successful&amp;quot;,&amp;quot;role&amp;quot;:&amp;quot;clinic&amp;quot;}\nDEBUG    pymongo.serverSelection:logger.py:100 {&amp;quot;message&amp;quot;: &amp;quot;Server selection started&amp;quot;, &amp;quot;selector&amp;quot;: &amp;quot;&amp;lt;function writable_server_selector at 0x0000023C77B6E520&amp;gt;&amp;quot;, &amp;quot;operation&amp;quot;: &amp;quot;delete&amp;quot;, &amp;quot;topologyDescription&amp;quot;: &amp;quot;&amp;lt;TopologyDescription id: 67edb2d75a19ff9b4f46d274, topology_type: Single, servers: [&amp;lt;ServerDescription (&amp;#x27;autorack.proxy.rlwy.net&amp;#x27;, 44467) server_type: Standalone, rtt: 0.375&amp;gt;]&amp;gt;&amp;quot;, &amp;quot;clientId&amp;quot;: {&amp;quot;$oid&amp;quot;: &amp;quot;67edb2d75a19ff9b4f46d274&amp;quot;}}\nDEBUG    pymongo.serverSelection:logger.py:100 {&amp;quot;message&amp;quot;: &amp;quot;Server selection succeeded&amp;quot;, &amp;quot;selector&amp;quot;: &amp;quot;&amp;lt;function writable_server_selector at 0x0000023C77B6E520&amp;gt;&amp;quot;, &amp;quot;operation&amp;quot;: &amp;quot;delete&amp;quot;, &amp;quot;topologyDescription&amp;quot;: &amp;quot;&amp;lt;TopologyDescription id: 67edb2d75a19ff9b4f46d274, topology_type: Single, servers: [&amp;lt;ServerDescription (&amp;#x27;autorack.proxy.rlwy.net&amp;#x27;, 44467) server_type: Standalone, rtt: 0.375&amp;gt;]&amp;gt;&amp;quot;, &amp;quot;clientId&amp;quot;: {&amp;quot;$oid&amp;quot;: &amp;quot;67edb2d75a19ff9b4f46d274&amp;quot;}, &amp;quot;serverHost&amp;quot;: &amp;quot;autorack.proxy.rlwy.net&amp;quot;, &amp;quot;serverPort&amp;quot;: 44467}\nDEBUG    pymongo.connection:logger.py:100 {&amp;quot;clientId&amp;quot;: {&amp;quot;$oid&amp;quot;: &amp;quot;67edb2d75a19ff9b4f46d274&amp;quot;}, &amp;quot;message&amp;quot;: &amp;quot;Connection checkout started&amp;quot;, &amp;quot;serverHost&amp;quot;: &amp;quot;autorack.proxy.rlwy.net&amp;quot;, &amp;quot;serverPort&amp;quot;: 44467}\nDEBUG    pymongo.connection:logger.py:100 {&amp;quot;clientId&amp;quot;: {&amp;quot;$oid&amp;quot;: &amp;quot;67edb2d75a19ff9b4f46d274&amp;quot;}, &amp;quot;message&amp;quot;: &amp;quot;Connection checked out&amp;quot;, &amp;quot;serverHost&amp;quot;: &amp;quot;autorack.proxy.rlwy.net&amp;quot;, &amp;quot;serverPort&amp;quot;: 44467, &amp;quot;driverConnectionId&amp;quot;: 1, &amp;quot;durationMS&amp;quot;: 0.0}\nDEBUG    pymongo.command:logger.py:100 {&amp;quot;clientId&amp;quot;: {&amp;quot;$oid&amp;quot;: &amp;quot;67edb2d75a19ff9b4f46d274&amp;quot;}, &amp;quot;message&amp;quot;: &amp;quot;Command started&amp;quot;, &amp;quot;command&amp;quot;: &amp;quot;{\\&amp;quot;delete\\&amp;quot;: \\&amp;quot;Users\\&amp;quot;, \\&amp;quot;ordered\\&amp;quot;: true, \\&amp;quot;lsid\\&amp;quot;: {\\&amp;quot;id\\&amp;quot;: {\\&amp;quot;$binary\\&amp;quot;: {\\&amp;quot;base64\\&amp;quot;: \\&amp;quot;ORN9TyaLRL6k23ZTkM6ueA==\\&amp;quot;, \\&amp;quot;subType\\&amp;quot;: \\&amp;quot;04\\&amp;quot;}}}, \\&amp;quot;$db\\&amp;quot;: \\&amp;quot;fl_all\\&amp;quot;, \\&amp;quot;deletes\\&amp;quot;: [{\\&amp;quot;q\\&amp;quot;: {\\&amp;quot;username\\&amp;quot;: \\&amp;quot;testuser@example.com\\&amp;quot;}, \\&amp;quot;limit\\&amp;quot;: 1}]}&amp;quot;, &amp;quot;commandName&amp;quot;: &amp;quot;delete&amp;quot;, &amp;quot;databaseName&amp;quot;: &amp;quot;fl_all&amp;quot;, &amp;quot;requestId&amp;quot;: 15724, &amp;quot;operationId&amp;quot;: 15724, &amp;quot;driverConnectionId&amp;quot;: 1, &amp;quot;serverConnectionId&amp;quot;: 1340, &amp;quot;serverHost&amp;quot;: &amp;quot;autorack.proxy.rlwy.net&amp;quot;, &amp;quot;serverPort&amp;quot;: 44467}\nDEBUG    pymongo.command:logger.py:100 {&amp;quot;clientId&amp;quot;: {&amp;quot;$oid&amp;quot;: &amp;quot;67edb2d75a19ff9b4f46d274&amp;quot;}, &amp;quot;message&amp;quot;: &amp;quot;Command succeeded&amp;quot;, &amp;quot;durationMS&amp;quot;: 212.571, &amp;quot;reply&amp;quot;: &amp;quot;{\\&amp;quot;n\\&amp;quot;: 1, \\&amp;quot;ok\\&amp;quot;: 1.0}&amp;quot;, &amp;quot;commandName&amp;quot;: &amp;quot;delete&amp;quot;, &amp;quot;databaseName&amp;quot;: &amp;quot;fl_all&amp;quot;, &amp;quot;requestId&amp;quot;: 15724, &amp;quot;operationId&amp;quot;: 15724, &amp;quot;driverConnectionId&amp;quot;: 1, &amp;quot;serverConnectionId&amp;quot;: 1340, &amp;quot;serverHost&amp;quot;: &amp;quot;autorack.proxy.rlwy.net&amp;quot;, &amp;quot;serverPort&amp;quot;: 44467}\nDEBUG    pymongo.connection:logger.py:100 {&amp;quot;clientId&amp;quot;: {&amp;quot;$oid&amp;quot;: &amp;quot;67edb2d75a19ff9b4f46d274&amp;quot;}, &amp;quot;message&amp;quot;: &amp;quot;Connection checked in&amp;quot;, &amp;quot;serverHost&amp;quot;: &amp;quot;autorack.proxy.rlwy.net&amp;quot;, &amp;quot;serverPort&amp;quot;: 44467, &amp;quot;driverConnectionId&amp;quot;: 1}\nINFO     tests.test_auth_endpoints:test_auth_endpoints.py:112 Cleaned up test user from database.\nDEBUG    pymongo.serverSelection:logger.py:100 {&amp;quot;message&amp;quot;: &amp;quot;Server selection started&amp;quot;, &amp;quot;selector&amp;quot;: &amp;quot;&amp;lt;function writable_server_selector at 0x0000023C77B6E520&amp;gt;&amp;quot;, &amp;quot;operation&amp;quot;: &amp;quot;delete&amp;quot;, &amp;quot;topologyDescription&amp;quot;: &amp;quot;&amp;lt;TopologyDescription id: 67edb2d75a19ff9b4f46d274, topology_type: Single, servers: [&amp;lt;ServerDescription (&amp;#x27;autorack.proxy.rlwy.net&amp;#x27;, 44467) server_type: Standalone, rtt: 0.375&amp;gt;]&amp;gt;&amp;quot;, &amp;quot;clientId&amp;quot;: {&amp;quot;$oid&amp;quot;: &amp;quot;67edb2d75a19ff9b4f46d274&amp;quot;}}\nDEBUG    pymongo.serverSelection:logger.py:100 {&amp;quot;message&amp;quot;: &amp;quot;Server selection succeeded&amp;quot;, &amp;quot;selector&amp;quot;: &amp;quot;&amp;lt;function writable_server_selector at 0x0000023C77B6E520&amp;gt;&amp;quot;, &amp;quot;operation&amp;quot;: &amp;quot;delete&amp;quot;, &amp;quot;topologyDescription&amp;quot;: &amp;quot;&amp;lt;TopologyDescription id: 67edb2d75a19ff9b4f46d274, topology_type: Single, servers: [&amp;lt;ServerDescription (&amp;#x27;autorack.proxy.rlwy.net&amp;#x27;, 44467) server_type: Standalone, rtt: 0.375&amp;gt;]&amp;gt;&amp;quot;, &amp;quot;clientId&amp;quot;: {&amp;quot;$oid&amp;quot;: &amp;quot;67edb2d75a19ff9b4f46d274&amp;quot;}, &amp;quot;serverHost&amp;quot;: &amp;quot;autorack.proxy.rlwy.net&amp;quot;, &amp;quot;serverPort&amp;quot;: 44467}\nDEBUG    pymongo.connection:logger.py:100 {&amp;quot;clientId&amp;quot;: {&amp;quot;$oid&amp;quot;: &amp;quot;67edb2d75a19ff9b4f46d274&amp;quot;}, &amp;quot;message&amp;quot;: &amp;quot;Connection checkout started&amp;quot;, &amp;quot;serverHost&amp;quot;: &amp;quot;autorack.proxy.rlwy.net&amp;quot;, &amp;quot;serverPort&amp;quot;: 44467}\nDEBUG    pymongo.connection:logger.py:100 {&amp;quot;clientId&amp;quot;: {&amp;quot;$oid&amp;quot;: &amp;quot;67edb2d75a19ff9b4f46d274&amp;quot;}, &amp;quot;message&amp;quot;: &amp;quot;Connection checked out&amp;quot;, &amp;quot;serverHost&amp;quot;: &amp;quot;autorack.proxy.rlwy.net&amp;quot;, &amp;quot;serverPort&amp;quot;: 44467, &amp;quot;driverConnectionId&amp;quot;: 1, &amp;quot;durationMS&amp;quot;: 0.0}\nDEBUG    pymongo.command:logger.py:100 {&amp;quot;clientId&amp;quot;: {&amp;quot;$oid&amp;quot;: &amp;quot;67edb2d75a19ff9b4f46d274&amp;quot;}, &amp;quot;message&amp;quot;: &amp;quot;Command started&amp;quot;, &amp;quot;command&amp;quot;: &amp;quot;{\\&amp;quot;delete\\&amp;quot;: \\&amp;quot;Sessions\\&amp;quot;, \\&amp;quot;ordered\\&amp;quot;: true, \\&amp;quot;lsid\\&amp;quot;: {\\&amp;quot;id\\&amp;quot;: {\\&amp;quot;$binary\\&amp;quot;: {\\&amp;quot;base64\\&amp;quot;: \\&amp;quot;ORN9TyaLRL6k23ZTkM6ueA==\\&amp;quot;, \\&amp;quot;subType\\&amp;quot;: \\&amp;quot;04\\&amp;quot;}}}, \\&amp;quot;$db\\&amp;quot;: \\&amp;quot;fl_all\\&amp;quot;, \\&amp;quot;deletes\\&amp;quot;: [{\\&amp;quot;q\\&amp;quot;: {\\&amp;quot;token\\&amp;quot;: \\&amp;quot;e5f6d43c660f6adc0a7c62ab59a4f4d9da75747c6f3a0828dfe6f2d4f9cf50d6\\&amp;quot;}, \\&amp;quot;limit\\&amp;quot;: 1}]}&amp;quot;, &amp;quot;commandName&amp;quot;: &amp;quot;delete&amp;quot;, &amp;quot;databaseName&amp;quot;: &amp;quot;fl_all&amp;quot;, &amp;quot;requestId&amp;quot;: 11478, &amp;quot;operationId&amp;quot;: 11478, &amp;quot;driverConnectionId&amp;quot;: 1, &amp;quot;serverConnectionId&amp;quot;: 1340, &amp;quot;serverHost&amp;quot;: &amp;quot;autorack.proxy.rlwy.net&amp;quot;, &amp;quot;serverPort&amp;quot;: 44467}\nDEBUG    pymongo.command:logger.py:100 {&amp;quot;clientId&amp;quot;: {&amp;quot;$oid&amp;quot;: &amp;quot;67edb2d75a19ff9b4f46d274&amp;quot;}, &amp;quot;message&amp;quot;: &amp;quot;Command succeeded&amp;quot;, &amp;quot;durationMS&amp;quot;: 215.489, &amp;quot;reply&amp;quot;: &amp;quot;{\\&amp;quot;n\\&amp;quot;: 1, \\&amp;quot;ok\\&amp;quot;: 1.0}&amp;quot;, &amp;quot;commandName&amp;quot;: &amp;quot;delete&amp;quot;, &amp;quot;databaseName&amp;quot;: &amp;quot;fl_all&amp;quot;, &amp;quot;requestId&amp;quot;: 11478, &amp;quot;operationId&amp;quot;: 11478, &amp;quot;driverConnectionId&amp;quot;: 1, &amp;quot;serverConnectionId&amp;quot;: 1340, &amp;quot;serverHost&amp;quot;: &amp;quot;autorack.proxy.rlwy.net&amp;quot;, &amp;quot;serverPort&amp;quot;: 44467}\nDEBUG    pymongo.connection:logger.py:100 {&amp;quot;clientId&amp;quot;: {&amp;quot;$oid&amp;quot;: &amp;quot;67edb2d75a19ff9b4f46d274&amp;quot;}, &amp;quot;message&amp;quot;: &amp;quot;Connection checked in&amp;quot;, &amp;quot;serverHost&amp;quot;: &amp;quot;autorack.proxy.rlwy.net&amp;quot;, &amp;quot;serverPort&amp;quot;: 44467, &amp;quot;driverConnectionId&amp;quot;: 1}\nINFO     tests.test_auth_endpoints:test_auth_endpoints.py:115 Cleaned up session token from database.\n\n---------------------------- Captured log teardown -----------------------------\nDEBUG    httpcore.connection:_trace.py:87 close.started\nDEBUG    httpcore.connection:_trace.py:87 close.complete\nINFO     tests.test_auth_endpoints:test_auth_endpoints.py:23 AsyncClient closed.&#34;}], &#34;test_auth_endpoints.py::test_login_invalid_credentials&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Passed&#34;, &#34;testId&#34;: &#34;test_auth_endpoints.py::test_login_invalid_credentials&#34;, &#34;duration&#34;: &#34;786 ms&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Passed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;test_auth_endpoints.py::test_login_invalid_credentials&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;786 ms&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;------------------------------ Captured log setup ------------------------------\nINFO     tests.test_auth_endpoints:test_auth_endpoints.py:20 Creating AsyncClient for testing.\nDEBUG    httpx:_config.py:78 load_ssl_context verify=True cert=None trust_env=True http2=False\nDEBUG    httpx:_config.py:144 load_verify_locations cafile=&amp;#x27;C:\\\\Users\\\\Work\\\\AppData\\\\Local\\\\Packages\\\\PythonSoftwareFoundation.Python.3.11_qbz5n2kfra8p0\\\\LocalCache\\\\local-packages\\\\Python311\\\\site-packages\\\\certifi\\\\cacert.pem&amp;#x27;\n\n------------------------------ Captured log call -------------------------------\nINFO     tests.test_auth_endpoints:test_auth_endpoints.py:121 Starting test: test_login_invalid_credentials\nDEBUG    httpcore.connection:_trace.py:87 connect_tcp.started host=&amp;#x27;localhost&amp;#x27; port=8000 local_address=None timeout=5.0 socket_options=None\nDEBUG    httpcore.connection:_trace.py:87 connect_tcp.complete return_value=&amp;lt;httpcore._backends.anyio.AnyIOStream object at 0x0000023C78C29F90&amp;gt;\nDEBUG    httpcore.http11:_trace.py:87 send_request_headers.started request=&amp;lt;Request [b&amp;#x27;POST&amp;#x27;]&amp;gt;\nDEBUG    httpcore.http11:_trace.py:87 send_request_headers.complete\nDEBUG    httpcore.http11:_trace.py:87 send_request_body.started request=&amp;lt;Request [b&amp;#x27;POST&amp;#x27;]&amp;gt;\nDEBUG    httpcore.http11:_trace.py:87 send_request_body.complete\nDEBUG    httpcore.http11:_trace.py:87 receive_response_headers.started request=&amp;lt;Request [b&amp;#x27;POST&amp;#x27;]&amp;gt;\nDEBUG    httpcore.http11:_trace.py:87 receive_response_headers.complete return_value=(b&amp;#x27;HTTP/1.1&amp;#x27;, 401, b&amp;#x27;Unauthorized&amp;#x27;, [(b&amp;#x27;date&amp;#x27;, b&amp;#x27;Wed, 02 Apr 2025 21:57:50 GMT&amp;#x27;), (b&amp;#x27;server&amp;#x27;, b&amp;#x27;uvicorn&amp;#x27;), (b&amp;#x27;content-length&amp;#x27;, b&amp;#x27;32&amp;#x27;), (b&amp;#x27;content-type&amp;#x27;, b&amp;#x27;application/json&amp;#x27;)])\nINFO     httpx:_client.py:1758 HTTP Request: POST http://localhost:8000/api/auth/login &amp;quot;HTTP/1.1 401 Unauthorized&amp;quot;\nDEBUG    httpcore.http11:_trace.py:87 receive_response_body.started request=&amp;lt;Request [b&amp;#x27;POST&amp;#x27;]&amp;gt;\nDEBUG    httpcore.http11:_trace.py:87 receive_response_body.complete\nDEBUG    httpcore.http11:_trace.py:87 response_closed.started\nDEBUG    httpcore.http11:_trace.py:87 response_closed.complete\nINFO     tests.test_auth_endpoints:test_auth_endpoints.py:129 Response status: 401, body: {&amp;#x27;detail&amp;#x27;: &amp;#x27;Invalid credentials&amp;#x27;}\n\n---------------------------- Captured log teardown -----------------------------\nDEBUG    httpcore.connection:_trace.py:87 close.started\nDEBUG    httpcore.connection:_trace.py:87 close.complete\nINFO     tests.test_auth_endpoints:test_auth_endpoints.py:23 AsyncClient closed.&#34;}], &#34;test_auth_endpoints.py::test_register_missing_fields&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Passed&#34;, &#34;testId&#34;: &#34;test_auth_endpoints.py::test_register_missing_fields&#34;, &#34;duration&#34;: &#34;542 ms&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Passed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;test_auth_endpoints.py::test_register_missing_fields&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;542 ms&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;------------------------------ Captured log setup ------------------------------\nINFO     tests.test_auth_endpoints:test_auth_endpoints.py:20 Creating AsyncClient for testing.\nDEBUG    httpx:_config.py:78 load_ssl_context verify=True cert=None trust_env=True http2=False\nDEBUG    httpx:_config.py:144 load_verify_locations cafile=&amp;#x27;C:\\\\Users\\\\Work\\\\AppData\\\\Local\\\\Packages\\\\PythonSoftwareFoundation.Python.3.11_qbz5n2kfra8p0\\\\LocalCache\\\\local-packages\\\\Python311\\\\site-packages\\\\certifi\\\\cacert.pem&amp;#x27;\n\n------------------------------ Captured log call -------------------------------\nINFO     tests.test_auth_endpoints:test_auth_endpoints.py:139 Starting test: test_register_missing_fields\nDEBUG    httpcore.connection:_trace.py:87 connect_tcp.started host=&amp;#x27;localhost&amp;#x27; port=8000 local_address=None timeout=5.0 socket_options=None\nDEBUG    httpcore.connection:_trace.py:87 connect_tcp.complete return_value=&amp;lt;httpcore._backends.anyio.AnyIOStream object at 0x0000023C78B213D0&amp;gt;\nDEBUG    httpcore.http11:_trace.py:87 send_request_headers.started request=&amp;lt;Request [b&amp;#x27;POST&amp;#x27;]&amp;gt;\nDEBUG    httpcore.http11:_trace.py:87 send_request_headers.complete\nDEBUG    httpcore.http11:_trace.py:87 send_request_body.started request=&amp;lt;Request [b&amp;#x27;POST&amp;#x27;]&amp;gt;\nDEBUG    httpcore.http11:_trace.py:87 send_request_body.complete\nDEBUG    httpcore.http11:_trace.py:87 receive_response_headers.started request=&amp;lt;Request [b&amp;#x27;POST&amp;#x27;]&amp;gt;\nDEBUG    httpcore.http11:_trace.py:87 receive_response_headers.complete return_value=(b&amp;#x27;HTTP/1.1&amp;#x27;, 422, b&amp;#x27;Unprocessable Entity&amp;#x27;, [(b&amp;#x27;date&amp;#x27;, b&amp;#x27;Wed, 02 Apr 2025 21:57:51 GMT&amp;#x27;), (b&amp;#x27;server&amp;#x27;, b&amp;#x27;uvicorn&amp;#x27;), (b&amp;#x27;content-length&amp;#x27;, b&amp;#x27;93&amp;#x27;), (b&amp;#x27;content-type&amp;#x27;, b&amp;#x27;application/json&amp;#x27;)])\nINFO     httpx:_client.py:1758 HTTP Request: POST http://localhost:8000/api/auth/register &amp;quot;HTTP/1.1 422 Unprocessable Entity&amp;quot;\nDEBUG    httpcore.http11:_trace.py:87 receive_response_body.started request=&amp;lt;Request [b&amp;#x27;POST&amp;#x27;]&amp;gt;\nDEBUG    httpcore.http11:_trace.py:87 receive_response_body.complete\nDEBUG    httpcore.http11:_trace.py:87 response_closed.started\nDEBUG    httpcore.http11:_trace.py:87 response_closed.complete\nINFO     tests.test_auth_endpoints:test_auth_endpoints.py:146 Response for missing password: 422, body: {&amp;#x27;detail&amp;#x27;: [{&amp;#x27;type&amp;#x27;: &amp;#x27;missing&amp;#x27;, &amp;#x27;loc&amp;#x27;: [&amp;#x27;body&amp;#x27;, &amp;#x27;password&amp;#x27;], &amp;#x27;msg&amp;#x27;: &amp;#x27;Field required&amp;#x27;, &amp;#x27;input&amp;#x27;: None}]}\nDEBUG    httpcore.http11:_trace.py:87 send_request_headers.started request=&amp;lt;Request [b&amp;#x27;POST&amp;#x27;]&amp;gt;\nDEBUG    httpcore.http11:_trace.py:87 send_request_headers.complete\nDEBUG    httpcore.http11:_trace.py:87 send_request_body.started request=&amp;lt;Request [b&amp;#x27;POST&amp;#x27;]&amp;gt;\nDEBUG    httpcore.http11:_trace.py:87 send_request_body.complete\nDEBUG    httpcore.http11:_trace.py:87 receive_response_headers.started request=&amp;lt;Request [b&amp;#x27;POST&amp;#x27;]&amp;gt;\nDEBUG    httpcore.http11:_trace.py:87 receive_response_headers.complete return_value=(b&amp;#x27;HTTP/1.1&amp;#x27;, 422, b&amp;#x27;Unprocessable Entity&amp;#x27;, [(b&amp;#x27;date&amp;#x27;, b&amp;#x27;Wed, 02 Apr 2025 21:57:51 GMT&amp;#x27;), (b&amp;#x27;server&amp;#x27;, b&amp;#x27;uvicorn&amp;#x27;), (b&amp;#x27;content-length&amp;#x27;, b&amp;#x27;93&amp;#x27;), (b&amp;#x27;content-type&amp;#x27;, b&amp;#x27;application/json&amp;#x27;)])\nINFO     httpx:_client.py:1758 HTTP Request: POST http://localhost:8000/api/auth/register &amp;quot;HTTP/1.1 422 Unprocessable Entity&amp;quot;\nDEBUG    httpcore.http11:_trace.py:87 receive_response_body.started request=&amp;lt;Request [b&amp;#x27;POST&amp;#x27;]&amp;gt;\nDEBUG    httpcore.http11:_trace.py:87 receive_response_body.complete\nDEBUG    httpcore.http11:_trace.py:87 response_closed.started\nDEBUG    httpcore.http11:_trace.py:87 response_closed.complete\nINFO     tests.test_auth_endpoints:test_auth_endpoints.py:157 Response for missing username: 422, body: {&amp;#x27;detail&amp;#x27;: [{&amp;#x27;type&amp;#x27;: &amp;#x27;missing&amp;#x27;, &amp;#x27;loc&amp;#x27;: [&amp;#x27;body&amp;#x27;, &amp;#x27;username&amp;#x27;], &amp;#x27;msg&amp;#x27;: &amp;#x27;Field required&amp;#x27;, &amp;#x27;input&amp;#x27;: None}]}\n\n---------------------------- Captured log teardown -----------------------------\nDEBUG    httpcore.connection:_trace.py:87 close.started\nDEBUG    httpcore.connection:_trace.py:87 close.complete\nINFO     tests.test_auth_endpoints:test_auth_endpoints.py:23 AsyncClient closed.&#34;}], &#34;test_auth_endpoints.py::test_register_weak_password&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Passed&#34;, &#34;testId&#34;: &#34;test_auth_endpoints.py::test_register_weak_password&#34;, &#34;duration&#34;: &#34;539 ms&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Passed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;test_auth_endpoints.py::test_register_weak_password&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;539 ms&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;------------------------------ Captured log setup ------------------------------\nINFO     tests.test_auth_endpoints:test_auth_endpoints.py:20 Creating AsyncClient for testing.\nDEBUG    httpx:_config.py:78 load_ssl_context verify=True cert=None trust_env=True http2=False\nDEBUG    httpx:_config.py:144 load_verify_locations cafile=&amp;#x27;C:\\\\Users\\\\Work\\\\AppData\\\\Local\\\\Packages\\\\PythonSoftwareFoundation.Python.3.11_qbz5n2kfra8p0\\\\LocalCache\\\\local-packages\\\\Python311\\\\site-packages\\\\certifi\\\\cacert.pem&amp;#x27;\n\n------------------------------ Captured log call -------------------------------\nINFO     tests.test_auth_endpoints:test_auth_endpoints.py:167 Starting test: test_register_weak_password\nDEBUG    httpcore.connection:_trace.py:87 connect_tcp.started host=&amp;#x27;localhost&amp;#x27; port=8000 local_address=None timeout=5.0 socket_options=None\nDEBUG    httpcore.connection:_trace.py:87 connect_tcp.complete return_value=&amp;lt;httpcore._backends.anyio.AnyIOStream object at 0x0000023C78C2AB90&amp;gt;\nDEBUG    httpcore.http11:_trace.py:87 send_request_headers.started request=&amp;lt;Request [b&amp;#x27;POST&amp;#x27;]&amp;gt;\nDEBUG    httpcore.http11:_trace.py:87 send_request_headers.complete\nDEBUG    httpcore.http11:_trace.py:87 send_request_body.started request=&amp;lt;Request [b&amp;#x27;POST&amp;#x27;]&amp;gt;\nDEBUG    httpcore.http11:_trace.py:87 send_request_body.complete\nDEBUG    httpcore.http11:_trace.py:87 receive_response_headers.started request=&amp;lt;Request [b&amp;#x27;POST&amp;#x27;]&amp;gt;\nDEBUG    httpcore.http11:_trace.py:87 receive_response_headers.complete return_value=(b&amp;#x27;HTTP/1.1&amp;#x27;, 400, b&amp;#x27;Bad Request&amp;#x27;, [(b&amp;#x27;date&amp;#x27;, b&amp;#x27;Wed, 02 Apr 2025 21:57:51 GMT&amp;#x27;), (b&amp;#x27;server&amp;#x27;, b&amp;#x27;uvicorn&amp;#x27;), (b&amp;#x27;content-length&amp;#x27;, b&amp;#x27;56&amp;#x27;), (b&amp;#x27;content-type&amp;#x27;, b&amp;#x27;application/json&amp;#x27;)])\nINFO     httpx:_client.py:1758 HTTP Request: POST http://localhost:8000/api/auth/register &amp;quot;HTTP/1.1 400 Bad Request&amp;quot;\nDEBUG    httpcore.http11:_trace.py:87 receive_response_body.started request=&amp;lt;Request [b&amp;#x27;POST&amp;#x27;]&amp;gt;\nDEBUG    httpcore.http11:_trace.py:87 receive_response_body.complete\nDEBUG    httpcore.http11:_trace.py:87 response_closed.started\nDEBUG    httpcore.http11:_trace.py:87 response_closed.complete\nINFO     tests.test_auth_endpoints:test_auth_endpoints.py:174 Response for weak password: 400, body: {&amp;#x27;detail&amp;#x27;: &amp;#x27;Password must be at least 8 characters long&amp;#x27;}\n\n---------------------------- Captured log teardown -----------------------------\nDEBUG    httpcore.connection:_trace.py:87 close.started\nDEBUG    httpcore.connection:_trace.py:87 close.complete\nINFO     tests.test_auth_endpoints:test_auth_endpoints.py:23 AsyncClient closed.&#34;}], &#34;test_auth_endpoints.py::test_logout_user&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Passed&#34;, &#34;testId&#34;: &#34;test_auth_endpoints.py::test_logout_user&#34;, &#34;duration&#34;: &#34;00:00:03&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Passed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;test_auth_endpoints.py::test_logout_user&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;00:00:03&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;------------------------------ Captured log setup ------------------------------\nINFO     tests.test_auth_endpoints:test_auth_endpoints.py:20 Creating AsyncClient for testing.\nDEBUG    httpx:_config.py:78 load_ssl_context verify=True cert=None trust_env=True http2=False\nDEBUG    httpx:_config.py:144 load_verify_locations cafile=&amp;#x27;C:\\\\Users\\\\Work\\\\AppData\\\\Local\\\\Packages\\\\PythonSoftwareFoundation.Python.3.11_qbz5n2kfra8p0\\\\LocalCache\\\\local-packages\\\\Python311\\\\site-packages\\\\certifi\\\\cacert.pem&amp;#x27;\n\n------------------------------ Captured log call -------------------------------\nINFO     tests.test_auth_endpoints:test_auth_endpoints.py:184 Starting test: test_logout_user\nDEBUG    httpcore.connection:_trace.py:87 connect_tcp.started host=&amp;#x27;localhost&amp;#x27; port=8000 local_address=None timeout=5.0 socket_options=None\nDEBUG    httpcore.connection:_trace.py:87 connect_tcp.complete return_value=&amp;lt;httpcore._backends.anyio.AnyIOStream object at 0x0000023C78C18490&amp;gt;\nDEBUG    httpcore.http11:_trace.py:87 send_request_headers.started request=&amp;lt;Request [b&amp;#x27;POST&amp;#x27;]&amp;gt;\nDEBUG    httpcore.http11:_trace.py:87 send_request_headers.complete\nDEBUG    httpcore.http11:_trace.py:87 send_request_body.started request=&amp;lt;Request [b&amp;#x27;POST&amp;#x27;]&amp;gt;\nDEBUG    httpcore.http11:_trace.py:87 send_request_body.complete\nDEBUG    httpcore.http11:_trace.py:87 receive_response_headers.started request=&amp;lt;Request [b&amp;#x27;POST&amp;#x27;]&amp;gt;\nDEBUG    httpcore.http11:_trace.py:87 receive_response_headers.complete return_value=(b&amp;#x27;HTTP/1.1&amp;#x27;, 200, b&amp;#x27;OK&amp;#x27;, [(b&amp;#x27;date&amp;#x27;, b&amp;#x27;Wed, 02 Apr 2025 21:57:52 GMT&amp;#x27;), (b&amp;#x27;server&amp;#x27;, b&amp;#x27;uvicorn&amp;#x27;), (b&amp;#x27;content-length&amp;#x27;, b&amp;#x27;42&amp;#x27;), (b&amp;#x27;content-type&amp;#x27;, b&amp;#x27;application/json&amp;#x27;)])\nINFO     httpx:_client.py:1758 HTTP Request: POST http://localhost:8000/api/auth/register &amp;quot;HTTP/1.1 200 OK&amp;quot;\nDEBUG    httpcore.http11:_trace.py:87 receive_response_body.started request=&amp;lt;Request [b&amp;#x27;POST&amp;#x27;]&amp;gt;\nDEBUG    httpcore.http11:_trace.py:87 receive_response_body.complete\nDEBUG    httpcore.http11:_trace.py:87 response_closed.started\nDEBUG    httpcore.http11:_trace.py:87 response_closed.complete\nINFO     tests.test_auth_endpoints:test_auth_endpoints.py:191 Registered user for logout test.\nDEBUG    httpcore.http11:_trace.py:87 send_request_headers.started request=&amp;lt;Request [b&amp;#x27;POST&amp;#x27;]&amp;gt;\nDEBUG    httpcore.http11:_trace.py:87 send_request_headers.complete\nDEBUG    httpcore.http11:_trace.py:87 send_request_body.started request=&amp;lt;Request [b&amp;#x27;POST&amp;#x27;]&amp;gt;\nDEBUG    httpcore.http11:_trace.py:87 send_request_body.complete\nDEBUG    httpcore.http11:_trace.py:87 receive_response_headers.started request=&amp;lt;Request [b&amp;#x27;POST&amp;#x27;]&amp;gt;\nDEBUG    httpcore.http11:_trace.py:87 receive_response_headers.complete return_value=(b&amp;#x27;HTTP/1.1&amp;#x27;, 200, b&amp;#x27;OK&amp;#x27;, [(b&amp;#x27;date&amp;#x27;, b&amp;#x27;Wed, 02 Apr 2025 21:57:52 GMT&amp;#x27;), (b&amp;#x27;server&amp;#x27;, b&amp;#x27;uvicorn&amp;#x27;), (b&amp;#x27;content-length&amp;#x27;, b&amp;#x27;46&amp;#x27;), (b&amp;#x27;content-type&amp;#x27;, b&amp;#x27;application/json&amp;#x27;), (b&amp;#x27;set-cookie&amp;#x27;, b&amp;#x27;session_token=4be49701ec01b881a49de656bea5dffd98b1e48c237b32ecf146d68986b22abb; HttpOnly; Path=/; SameSite=strict; Secure&amp;#x27;)])\nINFO     httpx:_client.py:1758 HTTP Request: POST http://localhost:8000/api/auth/login &amp;quot;HTTP/1.1 200 OK&amp;quot;\nDEBUG    httpcore.http11:_trace.py:87 receive_response_body.started request=&amp;lt;Request [b&amp;#x27;POST&amp;#x27;]&amp;gt;\nDEBUG    httpcore.http11:_trace.py:87 receive_response_body.complete\nDEBUG    httpcore.http11:_trace.py:87 response_closed.started\nDEBUG    httpcore.http11:_trace.py:87 response_closed.complete\nINFO     tests.test_auth_endpoints:test_auth_endpoints.py:198 Login response: 200, body: {&amp;quot;message&amp;quot;:&amp;quot;Login successful&amp;quot;,&amp;quot;role&amp;quot;:&amp;quot;clinic&amp;quot;}\nDEBUG    httpcore.http11:_trace.py:87 send_request_headers.started request=&amp;lt;Request [b&amp;#x27;POST&amp;#x27;]&amp;gt;\nDEBUG    httpcore.http11:_trace.py:87 send_request_headers.complete\nDEBUG    httpcore.http11:_trace.py:87 send_request_body.started request=&amp;lt;Request [b&amp;#x27;POST&amp;#x27;]&amp;gt;\nDEBUG    httpcore.http11:_trace.py:87 send_request_body.complete\nDEBUG    httpcore.http11:_trace.py:87 receive_response_headers.started request=&amp;lt;Request [b&amp;#x27;POST&amp;#x27;]&amp;gt;\nDEBUG    httpcore.http11:_trace.py:87 receive_response_headers.complete return_value=(b&amp;#x27;HTTP/1.1&amp;#x27;, 200, b&amp;#x27;OK&amp;#x27;, [(b&amp;#x27;date&amp;#x27;, b&amp;#x27;Wed, 02 Apr 2025 21:57:53 GMT&amp;#x27;), (b&amp;#x27;server&amp;#x27;, b&amp;#x27;uvicorn&amp;#x27;), (b&amp;#x27;content-length&amp;#x27;, b&amp;#x27;24&amp;#x27;), (b&amp;#x27;content-type&amp;#x27;, b&amp;#x27;application/json&amp;#x27;), (b&amp;#x27;set-cookie&amp;#x27;, b&amp;#x27;session_token=&amp;quot;&amp;quot;; expires=Wed, 02 Apr 2025 21:57:54 GMT; Max-Age=0; Path=/; SameSite=lax&amp;#x27;)])\nINFO     httpx:_client.py:1758 HTTP Request: POST http://localhost:8000/api/auth/logout &amp;quot;HTTP/1.1 200 OK&amp;quot;\nDEBUG    httpcore.http11:_trace.py:87 receive_response_body.started request=&amp;lt;Request [b&amp;#x27;POST&amp;#x27;]&amp;gt;\nDEBUG    httpcore.http11:_trace.py:87 receive_response_body.complete\nDEBUG    httpcore.http11:_trace.py:87 response_closed.started\nDEBUG    httpcore.http11:_trace.py:87 response_closed.complete\nINFO     tests.test_auth_endpoints:test_auth_endpoints.py:209 Logout response: 200, body: {&amp;quot;message&amp;quot;:&amp;quot;Logged out&amp;quot;}\nDEBUG    pymongo.serverSelection:logger.py:100 {&amp;quot;message&amp;quot;: &amp;quot;Server selection started&amp;quot;, &amp;quot;selector&amp;quot;: &amp;quot;Primary()&amp;quot;, &amp;quot;operation&amp;quot;: &amp;quot;find&amp;quot;, &amp;quot;topologyDescription&amp;quot;: &amp;quot;&amp;lt;TopologyDescription id: 67edb2d75a19ff9b4f46d274, topology_type: Single, servers: [&amp;lt;ServerDescription (&amp;#x27;autorack.proxy.rlwy.net&amp;#x27;, 44467) server_type: Standalone, rtt: 0.375&amp;gt;]&amp;gt;&amp;quot;, &amp;quot;clientId&amp;quot;: {&amp;quot;$oid&amp;quot;: &amp;quot;67edb2d75a19ff9b4f46d274&amp;quot;}}\nDEBUG    pymongo.serverSelection:logger.py:100 {&amp;quot;message&amp;quot;: &amp;quot;Server selection succeeded&amp;quot;, &amp;quot;selector&amp;quot;: &amp;quot;Primary()&amp;quot;, &amp;quot;operation&amp;quot;: &amp;quot;find&amp;quot;, &amp;quot;topologyDescription&amp;quot;: &amp;quot;&amp;lt;TopologyDescription id: 67edb2d75a19ff9b4f46d274, topology_type: Single, servers: [&amp;lt;ServerDescription (&amp;#x27;autorack.proxy.rlwy.net&amp;#x27;, 44467) server_type: Standalone, rtt: 0.375&amp;gt;]&amp;gt;&amp;quot;, &amp;quot;clientId&amp;quot;: {&amp;quot;$oid&amp;quot;: &amp;quot;67edb2d75a19ff9b4f46d274&amp;quot;}, &amp;quot;serverHost&amp;quot;: &amp;quot;autorack.proxy.rlwy.net&amp;quot;, &amp;quot;serverPort&amp;quot;: 44467}\nDEBUG    pymongo.connection:logger.py:100 {&amp;quot;clientId&amp;quot;: {&amp;quot;$oid&amp;quot;: &amp;quot;67edb2d75a19ff9b4f46d274&amp;quot;}, &amp;quot;message&amp;quot;: &amp;quot;Connection checkout started&amp;quot;, &amp;quot;serverHost&amp;quot;: &amp;quot;autorack.proxy.rlwy.net&amp;quot;, &amp;quot;serverPort&amp;quot;: 44467}\nDEBUG    pymongo.connection:logger.py:100 {&amp;quot;clientId&amp;quot;: {&amp;quot;$oid&amp;quot;: &amp;quot;67edb2d75a19ff9b4f46d274&amp;quot;}, &amp;quot;message&amp;quot;: &amp;quot;Connection checked out&amp;quot;, &amp;quot;serverHost&amp;quot;: &amp;quot;autorack.proxy.rlwy.net&amp;quot;, &amp;quot;serverPort&amp;quot;: 44467, &amp;quot;driverConnectionId&amp;quot;: 1, &amp;quot;durationMS&amp;quot;: 0.0}\nDEBUG    pymongo.command:logger.py:100 {&amp;quot;clientId&amp;quot;: {&amp;quot;$oid&amp;quot;: &amp;quot;67edb2d75a19ff9b4f46d274&amp;quot;}, &amp;quot;message&amp;quot;: &amp;quot;Command started&amp;quot;, &amp;quot;command&amp;quot;: &amp;quot;{\\&amp;quot;find\\&amp;quot;: \\&amp;quot;Sessions\\&amp;quot;, \\&amp;quot;filter\\&amp;quot;: {\\&amp;quot;token\\&amp;quot;: \\&amp;quot;4be49701ec01b881a49de656bea5dffd98b1e48c237b32ecf146d68986b22abb\\&amp;quot;}, \\&amp;quot;limit\\&amp;quot;: 1, \\&amp;quot;singleBatch\\&amp;quot;: true, \\&amp;quot;lsid\\&amp;quot;: {\\&amp;quot;id\\&amp;quot;: {\\&amp;quot;$binary\\&amp;quot;: {\\&amp;quot;base64\\&amp;quot;: \\&amp;quot;ORN9TyaLRL6k23ZTkM6ueA==\\&amp;quot;, \\&amp;quot;subType\\&amp;quot;: \\&amp;quot;04\\&amp;quot;}}}, \\&amp;quot;$db\\&amp;quot;: \\&amp;quot;fl_all\\&amp;quot;}&amp;quot;, &amp;quot;commandName&amp;quot;: &amp;quot;find&amp;quot;, &amp;quot;databaseName&amp;quot;: &amp;quot;fl_all&amp;quot;, &amp;quot;requestId&amp;quot;: 29358, &amp;quot;operationId&amp;quot;: 29358, &amp;quot;driverConnectionId&amp;quot;: 1, &amp;quot;serverConnectionId&amp;quot;: 1340, &amp;quot;serverHost&amp;quot;: &amp;quot;autorack.proxy.rlwy.net&amp;quot;, &amp;quot;serverPort&amp;quot;: 44467}\nDEBUG    pymongo.command:logger.py:100 {&amp;quot;clientId&amp;quot;: {&amp;quot;$oid&amp;quot;: &amp;quot;67edb2d75a19ff9b4f46d274&amp;quot;}, &amp;quot;message&amp;quot;: &amp;quot;Command succeeded&amp;quot;, &amp;quot;durationMS&amp;quot;: 212.762, &amp;quot;reply&amp;quot;: &amp;quot;{\\&amp;quot;cursor\\&amp;quot;: {\\&amp;quot;ns\\&amp;quot;: \\&amp;quot;fl_all.Sessions\\&amp;quot;}, \\&amp;quot;ok\\&amp;quot;: 1.0}&amp;quot;, &amp;quot;commandName&amp;quot;: &amp;quot;find&amp;quot;, &amp;quot;databaseName&amp;quot;: &amp;quot;fl_all&amp;quot;, &amp;quot;requestId&amp;quot;: 29358, &amp;quot;operationId&amp;quot;: 29358, &amp;quot;driverConnectionId&amp;quot;: 1, &amp;quot;serverConnectionId&amp;quot;: 1340, &amp;quot;serverHost&amp;quot;: &amp;quot;autorack.proxy.rlwy.net&amp;quot;, &amp;quot;serverPort&amp;quot;: 44467}\nDEBUG    pymongo.connection:logger.py:100 {&amp;quot;clientId&amp;quot;: {&amp;quot;$oid&amp;quot;: &amp;quot;67edb2d75a19ff9b4f46d274&amp;quot;}, &amp;quot;message&amp;quot;: &amp;quot;Connection checked in&amp;quot;, &amp;quot;serverHost&amp;quot;: &amp;quot;autorack.proxy.rlwy.net&amp;quot;, &amp;quot;serverPort&amp;quot;: 44467, &amp;quot;driverConnectionId&amp;quot;: 1}\nINFO     tests.test_auth_endpoints:test_auth_endpoints.py:218 Session token after logout: None\nDEBUG    pymongo.serverSelection:logger.py:100 {&amp;quot;message&amp;quot;: &amp;quot;Server selection started&amp;quot;, &amp;quot;selector&amp;quot;: &amp;quot;&amp;lt;function writable_server_selector at 0x0000023C77B6E520&amp;gt;&amp;quot;, &amp;quot;operation&amp;quot;: &amp;quot;delete&amp;quot;, &amp;quot;topologyDescription&amp;quot;: &amp;quot;&amp;lt;TopologyDescription id: 67edb2d75a19ff9b4f46d274, topology_type: Single, servers: [&amp;lt;ServerDescription (&amp;#x27;autorack.proxy.rlwy.net&amp;#x27;, 44467) server_type: Standalone, rtt: 0.375&amp;gt;]&amp;gt;&amp;quot;, &amp;quot;clientId&amp;quot;: {&amp;quot;$oid&amp;quot;: &amp;quot;67edb2d75a19ff9b4f46d274&amp;quot;}}\nDEBUG    pymongo.serverSelection:logger.py:100 {&amp;quot;message&amp;quot;: &amp;quot;Server selection succeeded&amp;quot;, &amp;quot;selector&amp;quot;: &amp;quot;&amp;lt;function writable_server_selector at 0x0000023C77B6E520&amp;gt;&amp;quot;, &amp;quot;operation&amp;quot;: &amp;quot;delete&amp;quot;, &amp;quot;topologyDescription&amp;quot;: &amp;quot;&amp;lt;TopologyDescription id: 67edb2d75a19ff9b4f46d274, topology_type: Single, servers: [&amp;lt;ServerDescription (&amp;#x27;autorack.proxy.rlwy.net&amp;#x27;, 44467) server_type: Standalone, rtt: 0.375&amp;gt;]&amp;gt;&amp;quot;, &amp;quot;clientId&amp;quot;: {&amp;quot;$oid&amp;quot;: &amp;quot;67edb2d75a19ff9b4f46d274&amp;quot;}, &amp;quot;serverHost&amp;quot;: &amp;quot;autorack.proxy.rlwy.net&amp;quot;, &amp;quot;serverPort&amp;quot;: 44467}\nDEBUG    pymongo.connection:logger.py:100 {&amp;quot;clientId&amp;quot;: {&amp;quot;$oid&amp;quot;: &amp;quot;67edb2d75a19ff9b4f46d274&amp;quot;}, &amp;quot;message&amp;quot;: &amp;quot;Connection checkout started&amp;quot;, &amp;quot;serverHost&amp;quot;: &amp;quot;autorack.proxy.rlwy.net&amp;quot;, &amp;quot;serverPort&amp;quot;: 44467}\nDEBUG    pymongo.connection:logger.py:100 {&amp;quot;clientId&amp;quot;: {&amp;quot;$oid&amp;quot;: &amp;quot;67edb2d75a19ff9b4f46d274&amp;quot;}, &amp;quot;message&amp;quot;: &amp;quot;Connection checked out&amp;quot;, &amp;quot;serverHost&amp;quot;: &amp;quot;autorack.proxy.rlwy.net&amp;quot;, &amp;quot;serverPort&amp;quot;: 44467, &amp;quot;driverConnectionId&amp;quot;: 1, &amp;quot;durationMS&amp;quot;: 0.0}\nDEBUG    pymongo.command:logger.py:100 {&amp;quot;clientId&amp;quot;: {&amp;quot;$oid&amp;quot;: &amp;quot;67edb2d75a19ff9b4f46d274&amp;quot;}, &amp;quot;message&amp;quot;: &amp;quot;Command started&amp;quot;, &amp;quot;command&amp;quot;: &amp;quot;{\\&amp;quot;delete\\&amp;quot;: \\&amp;quot;Users\\&amp;quot;, \\&amp;quot;ordered\\&amp;quot;: true, \\&amp;quot;lsid\\&amp;quot;: {\\&amp;quot;id\\&amp;quot;: {\\&amp;quot;$binary\\&amp;quot;: {\\&amp;quot;base64\\&amp;quot;: \\&amp;quot;ORN9TyaLRL6k23ZTkM6ueA==\\&amp;quot;, \\&amp;quot;subType\\&amp;quot;: \\&amp;quot;04\\&amp;quot;}}}, \\&amp;quot;$db\\&amp;quot;: \\&amp;quot;fl_all\\&amp;quot;, \\&amp;quot;deletes\\&amp;quot;: [{\\&amp;quot;q\\&amp;quot;: {\\&amp;quot;username\\&amp;quot;: \\&amp;quot;testuser@example.com\\&amp;quot;}, \\&amp;quot;limit\\&amp;quot;: 1}]}&amp;quot;, &amp;quot;commandName&amp;quot;: &amp;quot;delete&amp;quot;, &amp;quot;databaseName&amp;quot;: &amp;quot;fl_all&amp;quot;, &amp;quot;requestId&amp;quot;: 26962, &amp;quot;operationId&amp;quot;: 26962, &amp;quot;driverConnectionId&amp;quot;: 1, &amp;quot;serverConnectionId&amp;quot;: 1340, &amp;quot;serverHost&amp;quot;: &amp;quot;autorack.proxy.rlwy.net&amp;quot;, &amp;quot;serverPort&amp;quot;: 44467}\nDEBUG    pymongo.command:logger.py:100 {&amp;quot;clientId&amp;quot;: {&amp;quot;$oid&amp;quot;: &amp;quot;67edb2d75a19ff9b4f46d274&amp;quot;}, &amp;quot;message&amp;quot;: &amp;quot;Command succeeded&amp;quot;, &amp;quot;durationMS&amp;quot;: 212.179, &amp;quot;reply&amp;quot;: &amp;quot;{\\&amp;quot;n\\&amp;quot;: 1, \\&amp;quot;ok\\&amp;quot;: 1.0}&amp;quot;, &amp;quot;commandName&amp;quot;: &amp;quot;delete&amp;quot;, &amp;quot;databaseName&amp;quot;: &amp;quot;fl_all&amp;quot;, &amp;quot;requestId&amp;quot;: 26962, &amp;quot;operationId&amp;quot;: 26962, &amp;quot;driverConnectionId&amp;quot;: 1, &amp;quot;serverConnectionId&amp;quot;: 1340, &amp;quot;serverHost&amp;quot;: &amp;quot;autorack.proxy.rlwy.net&amp;quot;, &amp;quot;serverPort&amp;quot;: 44467}\nDEBUG    pymongo.connection:logger.py:100 {&amp;quot;clientId&amp;quot;: {&amp;quot;$oid&amp;quot;: &amp;quot;67edb2d75a19ff9b4f46d274&amp;quot;}, &amp;quot;message&amp;quot;: &amp;quot;Connection checked in&amp;quot;, &amp;quot;serverHost&amp;quot;: &amp;quot;autorack.proxy.rlwy.net&amp;quot;, &amp;quot;serverPort&amp;quot;: 44467, &amp;quot;driverConnectionId&amp;quot;: 1}\nINFO     tests.test_auth_endpoints:test_auth_endpoints.py:223 Cleaned up test user from database.\n\n---------------------------- Captured log teardown -----------------------------\nDEBUG    httpcore.connection:_trace.py:87 close.started\nDEBUG    httpcore.connection:_trace.py:87 close.complete\nINFO     tests.test_auth_endpoints:test_auth_endpoints.py:23 AsyncClient closed.&#34;}], &#34;test_auth_endpoints.py::test_verify_token&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Passed&#34;, &#34;testId&#34;: &#34;test_auth_endpoints.py::test_verify_token&#34;, &#34;duration&#34;: &#34;00:00:03&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Passed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;test_auth_endpoints.py::test_verify_token&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;00:00:03&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;------------------------------ Captured log setup ------------------------------\nINFO     tests.test_auth_endpoints:test_auth_endpoints.py:20 Creating AsyncClient for testing.\nDEBUG    httpx:_config.py:78 load_ssl_context verify=True cert=None trust_env=True http2=False\nDEBUG    httpx:_config.py:144 load_verify_locations cafile=&amp;#x27;C:\\\\Users\\\\Work\\\\AppData\\\\Local\\\\Packages\\\\PythonSoftwareFoundation.Python.3.11_qbz5n2kfra8p0\\\\LocalCache\\\\local-packages\\\\Python311\\\\site-packages\\\\certifi\\\\cacert.pem&amp;#x27;\n\n------------------------------ Captured log call -------------------------------\nINFO     tests.test_auth_endpoints:test_auth_endpoints.py:230 Starting test: test_verify_token\nDEBUG    httpcore.connection:_trace.py:87 connect_tcp.started host=&amp;#x27;localhost&amp;#x27; port=8000 local_address=None timeout=5.0 socket_options=None\nDEBUG    httpcore.connection:_trace.py:87 connect_tcp.complete return_value=&amp;lt;httpcore._backends.anyio.AnyIOStream object at 0x0000023C78A66750&amp;gt;\nDEBUG    httpcore.http11:_trace.py:87 send_request_headers.started request=&amp;lt;Request [b&amp;#x27;POST&amp;#x27;]&amp;gt;\nDEBUG    httpcore.http11:_trace.py:87 send_request_headers.complete\nDEBUG    httpcore.http11:_trace.py:87 send_request_body.started request=&amp;lt;Request [b&amp;#x27;POST&amp;#x27;]&amp;gt;\nDEBUG    httpcore.http11:_trace.py:87 send_request_body.complete\nDEBUG    httpcore.http11:_trace.py:87 receive_response_headers.started request=&amp;lt;Request [b&amp;#x27;POST&amp;#x27;]&amp;gt;\nDEBUG    pymongo.topology:logger.py:100 {&amp;quot;topologyId&amp;quot;: {&amp;quot;$oid&amp;quot;: &amp;quot;67edb2d75a19ff9b4f46d274&amp;quot;}, &amp;quot;driverConnectionId&amp;quot;: 1, &amp;quot;serverConnectionId&amp;quot;: 1339, &amp;quot;serverHost&amp;quot;: &amp;quot;autorack.proxy.rlwy.net&amp;quot;, &amp;quot;serverPort&amp;quot;: 44467, &amp;quot;awaited&amp;quot;: true, &amp;quot;durationMS&amp;quot;: 10234.999999869615, &amp;quot;reply&amp;quot;: &amp;quot;{\\&amp;quot;isWritablePrimary\\&amp;quot;: true, \\&amp;quot;topologyVersion\\&amp;quot;: {\\&amp;quot;processId\\&amp;quot;: {\\&amp;quot;$oid\\&amp;quot;: \\&amp;quot;67e69dde62eb67eb8833ab82\\&amp;quot;}}, \\&amp;quot;maxBsonObjectSize\\&amp;quot;: 16777216, \\&amp;quot;maxMessageSizeBytes\\&amp;quot;: 48000000, \\&amp;quot;maxWriteBatchSize\\&amp;quot;: 100000, \\&amp;quot;localTime\\&amp;quot;: {\\&amp;quot;$date\\&amp;quot;: \\&amp;quot;2025-04-02T21:57:55.793Z\\&amp;quot;}, \\&amp;quot;logicalSessionTimeoutMinutes\\&amp;quot;: 30, \\&amp;quot;connectionId\\&amp;quot;: 1339, \\&amp;quot;maxWireVersion\\&amp;quot;: 21, \\&amp;quot;ok\\&amp;quot;: 1.0}&amp;quot;, &amp;quot;message&amp;quot;: &amp;quot;Server heartbeat succeeded&amp;quot;}\nDEBUG    pymongo.topology:logger.py:100 {&amp;quot;topologyId&amp;quot;: {&amp;quot;$oid&amp;quot;: &amp;quot;67edb2d75a19ff9b4f46d274&amp;quot;}, &amp;quot;driverConnectionId&amp;quot;: 1, &amp;quot;serverConnectionId&amp;quot;: 1339, &amp;quot;serverHost&amp;quot;: &amp;quot;autorack.proxy.rlwy.net&amp;quot;, &amp;quot;serverPort&amp;quot;: 44467, &amp;quot;awaited&amp;quot;: true, &amp;quot;message&amp;quot;: &amp;quot;Server heartbeat started&amp;quot;}\nDEBUG    httpcore.http11:_trace.py:87 receive_response_headers.complete return_value=(b&amp;#x27;HTTP/1.1&amp;#x27;, 200, b&amp;#x27;OK&amp;#x27;, [(b&amp;#x27;date&amp;#x27;, b&amp;#x27;Wed, 02 Apr 2025 21:57:54 GMT&amp;#x27;), (b&amp;#x27;server&amp;#x27;, b&amp;#x27;uvicorn&amp;#x27;), (b&amp;#x27;content-length&amp;#x27;, b&amp;#x27;42&amp;#x27;), (b&amp;#x27;content-type&amp;#x27;, b&amp;#x27;application/json&amp;#x27;)])\nINFO     httpx:_client.py:1758 HTTP Request: POST http://localhost:8000/api/auth/register &amp;quot;HTTP/1.1 200 OK&amp;quot;\nDEBUG    httpcore.http11:_trace.py:87 receive_response_body.started request=&amp;lt;Request [b&amp;#x27;POST&amp;#x27;]&amp;gt;\nDEBUG    httpcore.http11:_trace.py:87 receive_response_body.complete\nDEBUG    httpcore.http11:_trace.py:87 response_closed.started\nDEBUG    httpcore.http11:_trace.py:87 response_closed.complete\nINFO     tests.test_auth_endpoints:test_auth_endpoints.py:237 Registered user for token verification test.\nDEBUG    httpcore.http11:_trace.py:87 send_request_headers.started request=&amp;lt;Request [b&amp;#x27;POST&amp;#x27;]&amp;gt;\nDEBUG    httpcore.http11:_trace.py:87 send_request_headers.complete\nDEBUG    httpcore.http11:_trace.py:87 send_request_body.started request=&amp;lt;Request [b&amp;#x27;POST&amp;#x27;]&amp;gt;\nDEBUG    httpcore.http11:_trace.py:87 send_request_body.complete\nDEBUG    httpcore.http11:_trace.py:87 receive_response_headers.started request=&amp;lt;Request [b&amp;#x27;POST&amp;#x27;]&amp;gt;\nDEBUG    httpcore.http11:_trace.py:87 receive_response_headers.complete return_value=(b&amp;#x27;HTTP/1.1&amp;#x27;, 200, b&amp;#x27;OK&amp;#x27;, [(b&amp;#x27;date&amp;#x27;, b&amp;#x27;Wed, 02 Apr 2025 21:57:55 GMT&amp;#x27;), (b&amp;#x27;server&amp;#x27;, b&amp;#x27;uvicorn&amp;#x27;), (b&amp;#x27;content-length&amp;#x27;, b&amp;#x27;46&amp;#x27;), (b&amp;#x27;content-type&amp;#x27;, b&amp;#x27;application/json&amp;#x27;), (b&amp;#x27;set-cookie&amp;#x27;, b&amp;#x27;session_token=2023a46d7a8e83335f0f8b0b0fd1282d67ccac21564e11a4b4a6125eac16c560; HttpOnly; Path=/; SameSite=strict; Secure&amp;#x27;)])\nINFO     httpx:_client.py:1758 HTTP Request: POST http://localhost:8000/api/auth/login &amp;quot;HTTP/1.1 200 OK&amp;quot;\nDEBUG    httpcore.http11:_trace.py:87 receive_response_body.started request=&amp;lt;Request [b&amp;#x27;POST&amp;#x27;]&amp;gt;\nDEBUG    httpcore.http11:_trace.py:87 receive_response_body.complete\nDEBUG    httpcore.http11:_trace.py:87 response_closed.started\nDEBUG    httpcore.http11:_trace.py:87 response_closed.complete\nINFO     tests.test_auth_endpoints:test_auth_endpoints.py:244 Login response: 200, body: {&amp;quot;message&amp;quot;:&amp;quot;Login successful&amp;quot;,&amp;quot;role&amp;quot;:&amp;quot;clinic&amp;quot;}\nDEBUG    httpcore.http11:_trace.py:87 send_request_headers.started request=&amp;lt;Request [b&amp;#x27;GET&amp;#x27;]&amp;gt;\nDEBUG    httpcore.http11:_trace.py:87 send_request_headers.complete\nDEBUG    httpcore.http11:_trace.py:87 send_request_body.started request=&amp;lt;Request [b&amp;#x27;GET&amp;#x27;]&amp;gt;\nDEBUG    httpcore.http11:_trace.py:87 send_request_body.complete\nDEBUG    httpcore.http11:_trace.py:87 receive_response_headers.started request=&amp;lt;Request [b&amp;#x27;GET&amp;#x27;]&amp;gt;\nDEBUG    httpcore.http11:_trace.py:87 receive_response_headers.complete return_value=(b&amp;#x27;HTTP/1.1&amp;#x27;, 200, b&amp;#x27;OK&amp;#x27;, [(b&amp;#x27;date&amp;#x27;, b&amp;#x27;Wed, 02 Apr 2025 21:57:55 GMT&amp;#x27;), (b&amp;#x27;server&amp;#x27;, b&amp;#x27;uvicorn&amp;#x27;), (b&amp;#x27;content-length&amp;#x27;, b&amp;#x27;81&amp;#x27;), (b&amp;#x27;content-type&amp;#x27;, b&amp;#x27;application/json&amp;#x27;)])\nINFO     httpx:_client.py:1758 HTTP Request: GET http://localhost:8000/api/auth/verify-token &amp;quot;HTTP/1.1 200 OK&amp;quot;\nDEBUG    httpcore.http11:_trace.py:87 receive_response_body.started request=&amp;lt;Request [b&amp;#x27;GET&amp;#x27;]&amp;gt;\nDEBUG    httpcore.http11:_trace.py:87 receive_response_body.complete\nDEBUG    httpcore.http11:_trace.py:87 response_closed.started\nDEBUG    httpcore.http11:_trace.py:87 response_closed.complete\nINFO     tests.test_auth_endpoints:test_auth_endpoints.py:254 Verify response: 200, body: {&amp;quot;message&amp;quot;:&amp;quot;Session is valid.&amp;quot;,&amp;quot;username&amp;quot;:&amp;quot;testuser@example.com&amp;quot;,&amp;quot;role&amp;quot;:&amp;quot;clinic&amp;quot;}\nDEBUG    pymongo.serverSelection:logger.py:100 {&amp;quot;message&amp;quot;: &amp;quot;Server selection started&amp;quot;, &amp;quot;selector&amp;quot;: &amp;quot;&amp;lt;function writable_server_selector at 0x0000023C77B6E520&amp;gt;&amp;quot;, &amp;quot;operation&amp;quot;: &amp;quot;delete&amp;quot;, &amp;quot;topologyDescription&amp;quot;: &amp;quot;&amp;lt;TopologyDescription id: 67edb2d75a19ff9b4f46d274, topology_type: Single, servers: [&amp;lt;ServerDescription (&amp;#x27;autorack.proxy.rlwy.net&amp;#x27;, 44467) server_type: Standalone, rtt: 0.3717999999877066&amp;gt;]&amp;gt;&amp;quot;, &amp;quot;clientId&amp;quot;: {&amp;quot;$oid&amp;quot;: &amp;quot;67edb2d75a19ff9b4f46d274&amp;quot;}}\nDEBUG    pymongo.serverSelection:logger.py:100 {&amp;quot;message&amp;quot;: &amp;quot;Server selection succeeded&amp;quot;, &amp;quot;selector&amp;quot;: &amp;quot;&amp;lt;function writable_server_selector at 0x0000023C77B6E520&amp;gt;&amp;quot;, &amp;quot;operation&amp;quot;: &amp;quot;delete&amp;quot;, &amp;quot;topologyDescription&amp;quot;: &amp;quot;&amp;lt;TopologyDescription id: 67edb2d75a19ff9b4f46d274, topology_type: Single, servers: [&amp;lt;ServerDescription (&amp;#x27;autorack.proxy.rlwy.net&amp;#x27;, 44467) server_type: Standalone, rtt: 0.3717999999877066&amp;gt;]&amp;gt;&amp;quot;, &amp;quot;clientId&amp;quot;: {&amp;quot;$oid&amp;quot;: &amp;quot;67edb2d75a19ff9b4f46d274&amp;quot;}, &amp;quot;serverHost&amp;quot;: &amp;quot;autorack.proxy.rlwy.net&amp;quot;, &amp;quot;serverPort&amp;quot;: 44467}\nDEBUG    pymongo.connection:logger.py:100 {&amp;quot;clientId&amp;quot;: {&amp;quot;$oid&amp;quot;: &amp;quot;67edb2d75a19ff9b4f46d274&amp;quot;}, &amp;quot;message&amp;quot;: &amp;quot;Connection checkout started&amp;quot;, &amp;quot;serverHost&amp;quot;: &amp;quot;autorack.proxy.rlwy.net&amp;quot;, &amp;quot;serverPort&amp;quot;: 44467}\nDEBUG    pymongo.connection:logger.py:100 {&amp;quot;clientId&amp;quot;: {&amp;quot;$oid&amp;quot;: &amp;quot;67edb2d75a19ff9b4f46d274&amp;quot;}, &amp;quot;message&amp;quot;: &amp;quot;Connection checked out&amp;quot;, &amp;quot;serverHost&amp;quot;: &amp;quot;autorack.proxy.rlwy.net&amp;quot;, &amp;quot;serverPort&amp;quot;: 44467, &amp;quot;driverConnectionId&amp;quot;: 1, &amp;quot;durationMS&amp;quot;: 0.0}\nDEBUG    pymongo.command:logger.py:100 {&amp;quot;clientId&amp;quot;: {&amp;quot;$oid&amp;quot;: &amp;quot;67edb2d75a19ff9b4f46d274&amp;quot;}, &amp;quot;message&amp;quot;: &amp;quot;Command started&amp;quot;, &amp;quot;command&amp;quot;: &amp;quot;{\\&amp;quot;delete\\&amp;quot;: \\&amp;quot;Users\\&amp;quot;, \\&amp;quot;ordered\\&amp;quot;: true, \\&amp;quot;lsid\\&amp;quot;: {\\&amp;quot;id\\&amp;quot;: {\\&amp;quot;$binary\\&amp;quot;: {\\&amp;quot;base64\\&amp;quot;: \\&amp;quot;ORN9TyaLRL6k23ZTkM6ueA==\\&amp;quot;, \\&amp;quot;subType\\&amp;quot;: \\&amp;quot;04\\&amp;quot;}}}, \\&amp;quot;$db\\&amp;quot;: \\&amp;quot;fl_all\\&amp;quot;, \\&amp;quot;deletes\\&amp;quot;: [{\\&amp;quot;q\\&amp;quot;: {\\&amp;quot;username\\&amp;quot;: \\&amp;quot;testuser@example.com\\&amp;quot;}, \\&amp;quot;limit\\&amp;quot;: 1}]}&amp;quot;, &amp;quot;commandName&amp;quot;: &amp;quot;delete&amp;quot;, &amp;quot;databaseName&amp;quot;: &amp;quot;fl_all&amp;quot;, &amp;quot;requestId&amp;quot;: 24464, &amp;quot;operationId&amp;quot;: 24464, &amp;quot;driverConnectionId&amp;quot;: 1, &amp;quot;serverConnectionId&amp;quot;: 1340, &amp;quot;serverHost&amp;quot;: &amp;quot;autorack.proxy.rlwy.net&amp;quot;, &amp;quot;serverPort&amp;quot;: 44467}\nDEBUG    pymongo.command:logger.py:100 {&amp;quot;clientId&amp;quot;: {&amp;quot;$oid&amp;quot;: &amp;quot;67edb2d75a19ff9b4f46d274&amp;quot;}, &amp;quot;message&amp;quot;: &amp;quot;Command succeeded&amp;quot;, &amp;quot;durationMS&amp;quot;: 213.611, &amp;quot;reply&amp;quot;: &amp;quot;{\\&amp;quot;n\\&amp;quot;: 1, \\&amp;quot;ok\\&amp;quot;: 1.0}&amp;quot;, &amp;quot;commandName&amp;quot;: &amp;quot;delete&amp;quot;, &amp;quot;databaseName&amp;quot;: &amp;quot;fl_all&amp;quot;, &amp;quot;requestId&amp;quot;: 24464, &amp;quot;operationId&amp;quot;: 24464, &amp;quot;driverConnectionId&amp;quot;: 1, &amp;quot;serverConnectionId&amp;quot;: 1340, &amp;quot;serverHost&amp;quot;: &amp;quot;autorack.proxy.rlwy.net&amp;quot;, &amp;quot;serverPort&amp;quot;: 44467}\nDEBUG    pymongo.connection:logger.py:100 {&amp;quot;clientId&amp;quot;: {&amp;quot;$oid&amp;quot;: &amp;quot;67edb2d75a19ff9b4f46d274&amp;quot;}, &amp;quot;message&amp;quot;: &amp;quot;Connection checked in&amp;quot;, &amp;quot;serverHost&amp;quot;: &amp;quot;autorack.proxy.rlwy.net&amp;quot;, &amp;quot;serverPort&amp;quot;: 44467, &amp;quot;driverConnectionId&amp;quot;: 1}\nINFO     tests.test_auth_endpoints:test_auth_endpoints.py:262 Cleaned up test user from database.\nDEBUG    pymongo.serverSelection:logger.py:100 {&amp;quot;message&amp;quot;: &amp;quot;Server selection started&amp;quot;, &amp;quot;selector&amp;quot;: &amp;quot;&amp;lt;function writable_server_selector at 0x0000023C77B6E520&amp;gt;&amp;quot;, &amp;quot;operation&amp;quot;: &amp;quot;delete&amp;quot;, &amp;quot;topologyDescription&amp;quot;: &amp;quot;&amp;lt;TopologyDescription id: 67edb2d75a19ff9b4f46d274, topology_type: Single, servers: [&amp;lt;ServerDescription (&amp;#x27;autorack.proxy.rlwy.net&amp;#x27;, 44467) server_type: Standalone, rtt: 0.3717999999877066&amp;gt;]&amp;gt;&amp;quot;, &amp;quot;clientId&amp;quot;: {&amp;quot;$oid&amp;quot;: &amp;quot;67edb2d75a19ff9b4f46d274&amp;quot;}}\nDEBUG    pymongo.serverSelection:logger.py:100 {&amp;quot;message&amp;quot;: &amp;quot;Server selection succeeded&amp;quot;, &amp;quot;selector&amp;quot;: &amp;quot;&amp;lt;function writable_server_selector at 0x0000023C77B6E520&amp;gt;&amp;quot;, &amp;quot;operation&amp;quot;: &amp;quot;delete&amp;quot;, &amp;quot;topologyDescription&amp;quot;: &amp;quot;&amp;lt;TopologyDescription id: 67edb2d75a19ff9b4f46d274, topology_type: Single, servers: [&amp;lt;ServerDescription (&amp;#x27;autorack.proxy.rlwy.net&amp;#x27;, 44467) server_type: Standalone, rtt: 0.3717999999877066&amp;gt;]&amp;gt;&amp;quot;, &amp;quot;clientId&amp;quot;: {&amp;quot;$oid&amp;quot;: &amp;quot;67edb2d75a19ff9b4f46d274&amp;quot;}, &amp;quot;serverHost&amp;quot;: &amp;quot;autorack.proxy.rlwy.net&amp;quot;, &amp;quot;serverPort&amp;quot;: 44467}\nDEBUG    pymongo.connection:logger.py:100 {&amp;quot;clientId&amp;quot;: {&amp;quot;$oid&amp;quot;: &amp;quot;67edb2d75a19ff9b4f46d274&amp;quot;}, &amp;quot;message&amp;quot;: &amp;quot;Connection checkout started&amp;quot;, &amp;quot;serverHost&amp;quot;: &amp;quot;autorack.proxy.rlwy.net&amp;quot;, &amp;quot;serverPort&amp;quot;: 44467}\nDEBUG    pymongo.connection:logger.py:100 {&amp;quot;clientId&amp;quot;: {&amp;quot;$oid&amp;quot;: &amp;quot;67edb2d75a19ff9b4f46d274&amp;quot;}, &amp;quot;message&amp;quot;: &amp;quot;Connection checked out&amp;quot;, &amp;quot;serverHost&amp;quot;: &amp;quot;autorack.proxy.rlwy.net&amp;quot;, &amp;quot;serverPort&amp;quot;: 44467, &amp;quot;driverConnectionId&amp;quot;: 1, &amp;quot;durationMS&amp;quot;: 0.0}\nDEBUG    pymongo.command:logger.py:100 {&amp;quot;clientId&amp;quot;: {&amp;quot;$oid&amp;quot;: &amp;quot;67edb2d75a19ff9b4f46d274&amp;quot;}, &amp;quot;message&amp;quot;: &amp;quot;Command started&amp;quot;, &amp;quot;command&amp;quot;: &amp;quot;{\\&amp;quot;delete\\&amp;quot;: \\&amp;quot;Sessions\\&amp;quot;, \\&amp;quot;ordered\\&amp;quot;: true, \\&amp;quot;lsid\\&amp;quot;: {\\&amp;quot;id\\&amp;quot;: {\\&amp;quot;$binary\\&amp;quot;: {\\&amp;quot;base64\\&amp;quot;: \\&amp;quot;ORN9TyaLRL6k23ZTkM6ueA==\\&amp;quot;, \\&amp;quot;subType\\&amp;quot;: \\&amp;quot;04\\&amp;quot;}}}, \\&amp;quot;$db\\&amp;quot;: \\&amp;quot;fl_all\\&amp;quot;, \\&amp;quot;deletes\\&amp;quot;: [{\\&amp;quot;q\\&amp;quot;: {\\&amp;quot;token\\&amp;quot;: \\&amp;quot;2023a46d7a8e83335f0f8b0b0fd1282d67ccac21564e11a4b4a6125eac16c560\\&amp;quot;}, \\&amp;quot;limit\\&amp;quot;: 1}]}&amp;quot;, &amp;quot;commandName&amp;quot;: &amp;quot;delete&amp;quot;, &amp;quot;databaseName&amp;quot;: &amp;quot;fl_all&amp;quot;, &amp;quot;requestId&amp;quot;: 5705, &amp;quot;operationId&amp;quot;: 5705, &amp;quot;driverConnectionId&amp;quot;: 1, &amp;quot;serverConnectionId&amp;quot;: 1340, &amp;quot;serverHost&amp;quot;: &amp;quot;autorack.proxy.rlwy.net&amp;quot;, &amp;quot;serverPort&amp;quot;: 44467}\nDEBUG    pymongo.command:logger.py:100 {&amp;quot;clientId&amp;quot;: {&amp;quot;$oid&amp;quot;: &amp;quot;67edb2d75a19ff9b4f46d274&amp;quot;}, &amp;quot;message&amp;quot;: &amp;quot;Command succeeded&amp;quot;, &amp;quot;durationMS&amp;quot;: 211.94199999999998, &amp;quot;reply&amp;quot;: &amp;quot;{\\&amp;quot;n\\&amp;quot;: 1, \\&amp;quot;ok\\&amp;quot;: 1.0}&amp;quot;, &amp;quot;commandName&amp;quot;: &amp;quot;delete&amp;quot;, &amp;quot;databaseName&amp;quot;: &amp;quot;fl_all&amp;quot;, &amp;quot;requestId&amp;quot;: 5705, &amp;quot;operationId&amp;quot;: 5705, &amp;quot;driverConnectionId&amp;quot;: 1, &amp;quot;serverConnectionId&amp;quot;: 1340, &amp;quot;serverHost&amp;quot;: &amp;quot;autorack.proxy.rlwy.net&amp;quot;, &amp;quot;serverPort&amp;quot;: 44467}\nDEBUG    pymongo.connection:logger.py:100 {&amp;quot;clientId&amp;quot;: {&amp;quot;$oid&amp;quot;: &amp;quot;67edb2d75a19ff9b4f46d274&amp;quot;}, &amp;quot;message&amp;quot;: &amp;quot;Connection checked in&amp;quot;, &amp;quot;serverHost&amp;quot;: &amp;quot;autorack.proxy.rlwy.net&amp;quot;, &amp;quot;serverPort&amp;quot;: 44467, &amp;quot;driverConnectionId&amp;quot;: 1}\nINFO     tests.test_auth_endpoints:test_auth_endpoints.py:265 Cleaned up session token from database.\n\n---------------------------- Captured log teardown -----------------------------\nDEBUG    httpcore.connection:_trace.py:87 close.started\nDEBUG    httpcore.connection:_trace.py:87 close.complete\nINFO     tests.test_auth_endpoints:test_auth_endpoints.py:23 AsyncClient closed.&#34;}], &#34;test_auth_endpoints.py::test_verify_expired_token&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Passed&#34;, &#34;testId&#34;: &#34;test_auth_endpoints.py::test_verify_expired_token&#34;, &#34;duration&#34;: &#34;00:00:02&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Passed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;test_auth_endpoints.py::test_verify_expired_token&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;00:00:02&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;------------------------------ Captured log setup ------------------------------\nINFO     tests.test_auth_endpoints:test_auth_endpoints.py:20 Creating AsyncClient for testing.\nDEBUG    httpx:_config.py:78 load_ssl_context verify=True cert=None trust_env=True http2=False\nDEBUG    httpx:_config.py:144 load_verify_locations cafile=&amp;#x27;C:\\\\Users\\\\Work\\\\AppData\\\\Local\\\\Packages\\\\PythonSoftwareFoundation.Python.3.11_qbz5n2kfra8p0\\\\LocalCache\\\\local-packages\\\\Python311\\\\site-packages\\\\certifi\\\\cacert.pem&amp;#x27;\n\n------------------------------ Captured log call -------------------------------\nINFO     tests.test_auth_endpoints:test_auth_endpoints.py:273 Starting test: test_verify_expired_token\nDEBUG    httpcore.connection:_trace.py:87 connect_tcp.started host=&amp;#x27;localhost&amp;#x27; port=8000 local_address=None timeout=5.0 socket_options=None\nDEBUG    httpcore.connection:_trace.py:87 connect_tcp.complete return_value=&amp;lt;httpcore._backends.anyio.AnyIOStream object at 0x0000023C78AD7690&amp;gt;\nDEBUG    httpcore.http11:_trace.py:87 send_request_headers.started request=&amp;lt;Request [b&amp;#x27;POST&amp;#x27;]&amp;gt;\nDEBUG    httpcore.http11:_trace.py:87 send_request_headers.complete\nDEBUG    httpcore.http11:_trace.py:87 send_request_body.started request=&amp;lt;Request [b&amp;#x27;POST&amp;#x27;]&amp;gt;\nDEBUG    httpcore.http11:_trace.py:87 send_request_body.complete\nDEBUG    httpcore.http11:_trace.py:87 receive_response_headers.started request=&amp;lt;Request [b&amp;#x27;POST&amp;#x27;]&amp;gt;\nDEBUG    httpcore.http11:_trace.py:87 receive_response_headers.complete return_value=(b&amp;#x27;HTTP/1.1&amp;#x27;, 200, b&amp;#x27;OK&amp;#x27;, [(b&amp;#x27;date&amp;#x27;, b&amp;#x27;Wed, 02 Apr 2025 21:57:57 GMT&amp;#x27;), (b&amp;#x27;server&amp;#x27;, b&amp;#x27;uvicorn&amp;#x27;), (b&amp;#x27;content-length&amp;#x27;, b&amp;#x27;42&amp;#x27;), (b&amp;#x27;content-type&amp;#x27;, b&amp;#x27;application/json&amp;#x27;)])\nINFO     httpx:_client.py:1758 HTTP Request: POST http://localhost:8000/api/auth/register &amp;quot;HTTP/1.1 200 OK&amp;quot;\nDEBUG    httpcore.http11:_trace.py:87 receive_response_body.started request=&amp;lt;Request [b&amp;#x27;POST&amp;#x27;]&amp;gt;\nDEBUG    httpcore.http11:_trace.py:87 receive_response_body.complete\nDEBUG    httpcore.http11:_trace.py:87 response_closed.started\nDEBUG    httpcore.http11:_trace.py:87 response_closed.complete\nINFO     tests.test_auth_endpoints:test_auth_endpoints.py:280 Registered user for expired token test.\nDEBUG    httpcore.http11:_trace.py:87 send_request_headers.started request=&amp;lt;Request [b&amp;#x27;POST&amp;#x27;]&amp;gt;\nDEBUG    httpcore.http11:_trace.py:87 send_request_headers.complete\nDEBUG    httpcore.http11:_trace.py:87 send_request_body.started request=&amp;lt;Request [b&amp;#x27;POST&amp;#x27;]&amp;gt;\nDEBUG    httpcore.http11:_trace.py:87 send_request_body.complete\nDEBUG    httpcore.http11:_trace.py:87 receive_response_headers.started request=&amp;lt;Request [b&amp;#x27;POST&amp;#x27;]&amp;gt;\nDEBUG    httpcore.http11:_trace.py:87 receive_response_headers.complete return_value=(b&amp;#x27;HTTP/1.1&amp;#x27;, 200, b&amp;#x27;OK&amp;#x27;, [(b&amp;#x27;date&amp;#x27;, b&amp;#x27;Wed, 02 Apr 2025 21:57:57 GMT&amp;#x27;), (b&amp;#x27;server&amp;#x27;, b&amp;#x27;uvicorn&amp;#x27;), (b&amp;#x27;content-length&amp;#x27;, b&amp;#x27;46&amp;#x27;), (b&amp;#x27;content-type&amp;#x27;, b&amp;#x27;application/json&amp;#x27;), (b&amp;#x27;set-cookie&amp;#x27;, b&amp;#x27;session_token=02d8af44c27fa5212c32ff527a5695ee8a9ecb016e953a51dd976c2ad8ef3ca7; HttpOnly; Path=/; SameSite=strict; Secure&amp;#x27;)])\nINFO     httpx:_client.py:1758 HTTP Request: POST http://localhost:8000/api/auth/login &amp;quot;HTTP/1.1 200 OK&amp;quot;\nDEBUG    httpcore.http11:_trace.py:87 receive_response_body.started request=&amp;lt;Request [b&amp;#x27;POST&amp;#x27;]&amp;gt;\nDEBUG    httpcore.http11:_trace.py:87 receive_response_body.complete\nDEBUG    httpcore.http11:_trace.py:87 response_closed.started\nDEBUG    httpcore.http11:_trace.py:87 response_closed.complete\nINFO     tests.test_auth_endpoints:test_auth_endpoints.py:287 Login response: 200, body: {&amp;quot;message&amp;quot;:&amp;quot;Login successful&amp;quot;,&amp;quot;role&amp;quot;:&amp;quot;clinic&amp;quot;}\nDEBUG    pymongo.serverSelection:logger.py:100 {&amp;quot;message&amp;quot;: &amp;quot;Server selection started&amp;quot;, &amp;quot;selector&amp;quot;: &amp;quot;&amp;lt;function writable_server_selector at 0x0000023C77B6E520&amp;gt;&amp;quot;, &amp;quot;operation&amp;quot;: &amp;quot;delete&amp;quot;, &amp;quot;topologyDescription&amp;quot;: &amp;quot;&amp;lt;TopologyDescription id: 67edb2d75a19ff9b4f46d274, topology_type: Single, servers: [&amp;lt;ServerDescription (&amp;#x27;autorack.proxy.rlwy.net&amp;#x27;, 44467) server_type: Standalone, rtt: 0.3717999999877066&amp;gt;]&amp;gt;&amp;quot;, &amp;quot;clientId&amp;quot;: {&amp;quot;$oid&amp;quot;: &amp;quot;67edb2d75a19ff9b4f46d274&amp;quot;}}\nDEBUG    pymongo.serverSelection:logger.py:100 {&amp;quot;message&amp;quot;: &amp;quot;Server selection succeeded&amp;quot;, &amp;quot;selector&amp;quot;: &amp;quot;&amp;lt;function writable_server_selector at 0x0000023C77B6E520&amp;gt;&amp;quot;, &amp;quot;operation&amp;quot;: &amp;quot;delete&amp;quot;, &amp;quot;topologyDescription&amp;quot;: &amp;quot;&amp;lt;TopologyDescription id: 67edb2d75a19ff9b4f46d274, topology_type: Single, servers: [&amp;lt;ServerDescription (&amp;#x27;autorack.proxy.rlwy.net&amp;#x27;, 44467) server_type: Standalone, rtt: 0.3717999999877066&amp;gt;]&amp;gt;&amp;quot;, &amp;quot;clientId&amp;quot;: {&amp;quot;$oid&amp;quot;: &amp;quot;67edb2d75a19ff9b4f46d274&amp;quot;}, &amp;quot;serverHost&amp;quot;: &amp;quot;autorack.proxy.rlwy.net&amp;quot;, &amp;quot;serverPort&amp;quot;: 44467}\nDEBUG    pymongo.connection:logger.py:100 {&amp;quot;clientId&amp;quot;: {&amp;quot;$oid&amp;quot;: &amp;quot;67edb2d75a19ff9b4f46d274&amp;quot;}, &amp;quot;message&amp;quot;: &amp;quot;Connection checkout started&amp;quot;, &amp;quot;serverHost&amp;quot;: &amp;quot;autorack.proxy.rlwy.net&amp;quot;, &amp;quot;serverPort&amp;quot;: 44467}\nDEBUG    pymongo.connection:logger.py:100 {&amp;quot;clientId&amp;quot;: {&amp;quot;$oid&amp;quot;: &amp;quot;67edb2d75a19ff9b4f46d274&amp;quot;}, &amp;quot;message&amp;quot;: &amp;quot;Connection checked out&amp;quot;, &amp;quot;serverHost&amp;quot;: &amp;quot;autorack.proxy.rlwy.net&amp;quot;, &amp;quot;serverPort&amp;quot;: 44467, &amp;quot;driverConnectionId&amp;quot;: 1, &amp;quot;durationMS&amp;quot;: 0.0}\nDEBUG    pymongo.command:logger.py:100 {&amp;quot;clientId&amp;quot;: {&amp;quot;$oid&amp;quot;: &amp;quot;67edb2d75a19ff9b4f46d274&amp;quot;}, &amp;quot;message&amp;quot;: &amp;quot;Command started&amp;quot;, &amp;quot;command&amp;quot;: &amp;quot;{\\&amp;quot;delete\\&amp;quot;: \\&amp;quot;Sessions\\&amp;quot;, \\&amp;quot;ordered\\&amp;quot;: true, \\&amp;quot;lsid\\&amp;quot;: {\\&amp;quot;id\\&amp;quot;: {\\&amp;quot;$binary\\&amp;quot;: {\\&amp;quot;base64\\&amp;quot;: \\&amp;quot;ORN9TyaLRL6k23ZTkM6ueA==\\&amp;quot;, \\&amp;quot;subType\\&amp;quot;: \\&amp;quot;04\\&amp;quot;}}}, \\&amp;quot;$db\\&amp;quot;: \\&amp;quot;fl_all\\&amp;quot;, \\&amp;quot;deletes\\&amp;quot;: [{\\&amp;quot;q\\&amp;quot;: {\\&amp;quot;token\\&amp;quot;: \\&amp;quot;02d8af44c27fa5212c32ff527a5695ee8a9ecb016e953a51dd976c2ad8ef3ca7\\&amp;quot;}, \\&amp;quot;limit\\&amp;quot;: 1}]}&amp;quot;, &amp;quot;commandName&amp;quot;: &amp;quot;delete&amp;quot;, &amp;quot;databaseName&amp;quot;: &amp;quot;fl_all&amp;quot;, &amp;quot;requestId&amp;quot;: 28145, &amp;quot;operationId&amp;quot;: 28145, &amp;quot;driverConnectionId&amp;quot;: 1, &amp;quot;serverConnectionId&amp;quot;: 1340, &amp;quot;serverHost&amp;quot;: &amp;quot;autorack.proxy.rlwy.net&amp;quot;, &amp;quot;serverPort&amp;quot;: 44467}\nDEBUG    pymongo.command:logger.py:100 {&amp;quot;clientId&amp;quot;: {&amp;quot;$oid&amp;quot;: &amp;quot;67edb2d75a19ff9b4f46d274&amp;quot;}, &amp;quot;message&amp;quot;: &amp;quot;Command succeeded&amp;quot;, &amp;quot;durationMS&amp;quot;: 221.414, &amp;quot;reply&amp;quot;: &amp;quot;{\\&amp;quot;n\\&amp;quot;: 1, \\&amp;quot;ok\\&amp;quot;: 1.0}&amp;quot;, &amp;quot;commandName&amp;quot;: &amp;quot;delete&amp;quot;, &amp;quot;databaseName&amp;quot;: &amp;quot;fl_all&amp;quot;, &amp;quot;requestId&amp;quot;: 28145, &amp;quot;operationId&amp;quot;: 28145, &amp;quot;driverConnectionId&amp;quot;: 1, &amp;quot;serverConnectionId&amp;quot;: 1340, &amp;quot;serverHost&amp;quot;: &amp;quot;autorack.proxy.rlwy.net&amp;quot;, &amp;quot;serverPort&amp;quot;: 44467}\nDEBUG    pymongo.connection:logger.py:100 {&amp;quot;clientId&amp;quot;: {&amp;quot;$oid&amp;quot;: &amp;quot;67edb2d75a19ff9b4f46d274&amp;quot;}, &amp;quot;message&amp;quot;: &amp;quot;Connection checked in&amp;quot;, &amp;quot;serverHost&amp;quot;: &amp;quot;autorack.proxy.rlwy.net&amp;quot;, &amp;quot;serverPort&amp;quot;: 44467, &amp;quot;driverConnectionId&amp;quot;: 1}\nINFO     tests.test_auth_endpoints:test_auth_endpoints.py:293 Simulated token expiration by removing it from the database.\nDEBUG    httpcore.http11:_trace.py:87 send_request_headers.started request=&amp;lt;Request [b&amp;#x27;GET&amp;#x27;]&amp;gt;\nDEBUG    httpcore.http11:_trace.py:87 send_request_headers.complete\nDEBUG    httpcore.http11:_trace.py:87 send_request_body.started request=&amp;lt;Request [b&amp;#x27;GET&amp;#x27;]&amp;gt;\nDEBUG    httpcore.http11:_trace.py:87 send_request_body.complete\nDEBUG    httpcore.http11:_trace.py:87 receive_response_headers.started request=&amp;lt;Request [b&amp;#x27;GET&amp;#x27;]&amp;gt;\nDEBUG    httpcore.http11:_trace.py:87 receive_response_headers.complete return_value=(b&amp;#x27;HTTP/1.1&amp;#x27;, 401, b&amp;#x27;Unauthorized&amp;#x27;, [(b&amp;#x27;date&amp;#x27;, b&amp;#x27;Wed, 02 Apr 2025 21:57:58 GMT&amp;#x27;), (b&amp;#x27;server&amp;#x27;, b&amp;#x27;uvicorn&amp;#x27;), (b&amp;#x27;content-length&amp;#x27;, b&amp;#x27;39&amp;#x27;), (b&amp;#x27;content-type&amp;#x27;, b&amp;#x27;application/json&amp;#x27;)])\nINFO     httpx:_client.py:1758 HTTP Request: GET http://localhost:8000/api/auth/verify-token &amp;quot;HTTP/1.1 401 Unauthorized&amp;quot;\nDEBUG    httpcore.http11:_trace.py:87 receive_response_body.started request=&amp;lt;Request [b&amp;#x27;GET&amp;#x27;]&amp;gt;\nDEBUG    httpcore.http11:_trace.py:87 receive_response_body.complete\nDEBUG    httpcore.http11:_trace.py:87 response_closed.started\nDEBUG    httpcore.http11:_trace.py:87 response_closed.complete\nINFO     tests.test_auth_endpoints:test_auth_endpoints.py:300 Verify response: 401, body: {&amp;quot;detail&amp;quot;:&amp;quot;Session expired or invalid&amp;quot;}\nDEBUG    pymongo.serverSelection:logger.py:100 {&amp;quot;message&amp;quot;: &amp;quot;Server selection started&amp;quot;, &amp;quot;selector&amp;quot;: &amp;quot;&amp;lt;function writable_server_selector at 0x0000023C77B6E520&amp;gt;&amp;quot;, &amp;quot;operation&amp;quot;: &amp;quot;delete&amp;quot;, &amp;quot;topologyDescription&amp;quot;: &amp;quot;&amp;lt;TopologyDescription id: 67edb2d75a19ff9b4f46d274, topology_type: Single, servers: [&amp;lt;ServerDescription (&amp;#x27;autorack.proxy.rlwy.net&amp;#x27;, 44467) server_type: Standalone, rtt: 0.3717999999877066&amp;gt;]&amp;gt;&amp;quot;, &amp;quot;clientId&amp;quot;: {&amp;quot;$oid&amp;quot;: &amp;quot;67edb2d75a19ff9b4f46d274&amp;quot;}}\nDEBUG    pymongo.serverSelection:logger.py:100 {&amp;quot;message&amp;quot;: &amp;quot;Server selection succeeded&amp;quot;, &amp;quot;selector&amp;quot;: &amp;quot;&amp;lt;function writable_server_selector at 0x0000023C77B6E520&amp;gt;&amp;quot;, &amp;quot;operation&amp;quot;: &amp;quot;delete&amp;quot;, &amp;quot;topologyDescription&amp;quot;: &amp;quot;&amp;lt;TopologyDescription id: 67edb2d75a19ff9b4f46d274, topology_type: Single, servers: [&amp;lt;ServerDescription (&amp;#x27;autorack.proxy.rlwy.net&amp;#x27;, 44467) server_type: Standalone, rtt: 0.3717999999877066&amp;gt;]&amp;gt;&amp;quot;, &amp;quot;clientId&amp;quot;: {&amp;quot;$oid&amp;quot;: &amp;quot;67edb2d75a19ff9b4f46d274&amp;quot;}, &amp;quot;serverHost&amp;quot;: &amp;quot;autorack.proxy.rlwy.net&amp;quot;, &amp;quot;serverPort&amp;quot;: 44467}\nDEBUG    pymongo.connection:logger.py:100 {&amp;quot;clientId&amp;quot;: {&amp;quot;$oid&amp;quot;: &amp;quot;67edb2d75a19ff9b4f46d274&amp;quot;}, &amp;quot;message&amp;quot;: &amp;quot;Connection checkout started&amp;quot;, &amp;quot;serverHost&amp;quot;: &amp;quot;autorack.proxy.rlwy.net&amp;quot;, &amp;quot;serverPort&amp;quot;: 44467}\nDEBUG    pymongo.connection:logger.py:100 {&amp;quot;clientId&amp;quot;: {&amp;quot;$oid&amp;quot;: &amp;quot;67edb2d75a19ff9b4f46d274&amp;quot;}, &amp;quot;message&amp;quot;: &amp;quot;Connection checked out&amp;quot;, &amp;quot;serverHost&amp;quot;: &amp;quot;autorack.proxy.rlwy.net&amp;quot;, &amp;quot;serverPort&amp;quot;: 44467, &amp;quot;driverConnectionId&amp;quot;: 1, &amp;quot;durationMS&amp;quot;: 0.0}\nDEBUG    pymongo.command:logger.py:100 {&amp;quot;clientId&amp;quot;: {&amp;quot;$oid&amp;quot;: &amp;quot;67edb2d75a19ff9b4f46d274&amp;quot;}, &amp;quot;message&amp;quot;: &amp;quot;Command started&amp;quot;, &amp;quot;command&amp;quot;: &amp;quot;{\\&amp;quot;delete\\&amp;quot;: \\&amp;quot;Users\\&amp;quot;, \\&amp;quot;ordered\\&amp;quot;: true, \\&amp;quot;lsid\\&amp;quot;: {\\&amp;quot;id\\&amp;quot;: {\\&amp;quot;$binary\\&amp;quot;: {\\&amp;quot;base64\\&amp;quot;: \\&amp;quot;ORN9TyaLRL6k23ZTkM6ueA==\\&amp;quot;, \\&amp;quot;subType\\&amp;quot;: \\&amp;quot;04\\&amp;quot;}}}, \\&amp;quot;$db\\&amp;quot;: \\&amp;quot;fl_all\\&amp;quot;, \\&amp;quot;deletes\\&amp;quot;: [{\\&amp;quot;q\\&amp;quot;: {\\&amp;quot;username\\&amp;quot;: \\&amp;quot;testuser@example.com\\&amp;quot;}, \\&amp;quot;limit\\&amp;quot;: 1}]}&amp;quot;, &amp;quot;commandName&amp;quot;: &amp;quot;delete&amp;quot;, &amp;quot;databaseName&amp;quot;: &amp;quot;fl_all&amp;quot;, &amp;quot;requestId&amp;quot;: 23281, &amp;quot;operationId&amp;quot;: 23281, &amp;quot;driverConnectionId&amp;quot;: 1, &amp;quot;serverConnectionId&amp;quot;: 1340, &amp;quot;serverHost&amp;quot;: &amp;quot;autorack.proxy.rlwy.net&amp;quot;, &amp;quot;serverPort&amp;quot;: 44467}\nDEBUG    pymongo.command:logger.py:100 {&amp;quot;clientId&amp;quot;: {&amp;quot;$oid&amp;quot;: &amp;quot;67edb2d75a19ff9b4f46d274&amp;quot;}, &amp;quot;message&amp;quot;: &amp;quot;Command succeeded&amp;quot;, &amp;quot;durationMS&amp;quot;: 211.083, &amp;quot;reply&amp;quot;: &amp;quot;{\\&amp;quot;n\\&amp;quot;: 1, \\&amp;quot;ok\\&amp;quot;: 1.0}&amp;quot;, &amp;quot;commandName&amp;quot;: &amp;quot;delete&amp;quot;, &amp;quot;databaseName&amp;quot;: &amp;quot;fl_all&amp;quot;, &amp;quot;requestId&amp;quot;: 23281, &amp;quot;operationId&amp;quot;: 23281, &amp;quot;driverConnectionId&amp;quot;: 1, &amp;quot;serverConnectionId&amp;quot;: 1340, &amp;quot;serverHost&amp;quot;: &amp;quot;autorack.proxy.rlwy.net&amp;quot;, &amp;quot;serverPort&amp;quot;: 44467}\nDEBUG    pymongo.connection:logger.py:100 {&amp;quot;clientId&amp;quot;: {&amp;quot;$oid&amp;quot;: &amp;quot;67edb2d75a19ff9b4f46d274&amp;quot;}, &amp;quot;message&amp;quot;: &amp;quot;Connection checked in&amp;quot;, &amp;quot;serverHost&amp;quot;: &amp;quot;autorack.proxy.rlwy.net&amp;quot;, &amp;quot;serverPort&amp;quot;: 44467, &amp;quot;driverConnectionId&amp;quot;: 1}\nINFO     tests.test_auth_endpoints:test_auth_endpoints.py:308 Cleaned up test user from database.\n\n---------------------------- Captured log teardown -----------------------------\nDEBUG    httpcore.connection:_trace.py:87 close.started\nDEBUG    httpcore.connection:_trace.py:87 close.complete\nINFO     tests.test_auth_endpoints:test_auth_endpoints.py:23 AsyncClient closed.&#34;}], &#34;test_auth_endpoints.py::test_multiple_login_same_user&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Passed&#34;, &#34;testId&#34;: &#34;test_auth_endpoints.py::test_multiple_login_same_user&#34;, &#34;duration&#34;: &#34;00:00:03&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Passed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;test_auth_endpoints.py::test_multiple_login_same_user&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;00:00:03&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;------------------------------ Captured log setup ------------------------------\nINFO     tests.test_auth_endpoints:test_auth_endpoints.py:20 Creating AsyncClient for testing.\nDEBUG    httpx:_config.py:78 load_ssl_context verify=True cert=None trust_env=True http2=False\nDEBUG    httpx:_config.py:144 load_verify_locations cafile=&amp;#x27;C:\\\\Users\\\\Work\\\\AppData\\\\Local\\\\Packages\\\\PythonSoftwareFoundation.Python.3.11_qbz5n2kfra8p0\\\\LocalCache\\\\local-packages\\\\Python311\\\\site-packages\\\\certifi\\\\cacert.pem&amp;#x27;\n\n------------------------------ Captured log call -------------------------------\nINFO     tests.test_auth_endpoints:test_auth_endpoints.py:316 Starting test: test_multiple_login_same_user\nDEBUG    httpcore.connection:_trace.py:87 connect_tcp.started host=&amp;#x27;localhost&amp;#x27; port=8000 local_address=None timeout=5.0 socket_options=None\nDEBUG    httpcore.connection:_trace.py:87 connect_tcp.complete return_value=&amp;lt;httpcore._backends.anyio.AnyIOStream object at 0x0000023C7826A4D0&amp;gt;\nDEBUG    httpcore.http11:_trace.py:87 send_request_headers.started request=&amp;lt;Request [b&amp;#x27;POST&amp;#x27;]&amp;gt;\nDEBUG    httpcore.http11:_trace.py:87 send_request_headers.complete\nDEBUG    httpcore.http11:_trace.py:87 send_request_body.started request=&amp;lt;Request [b&amp;#x27;POST&amp;#x27;]&amp;gt;\nDEBUG    httpcore.http11:_trace.py:87 send_request_body.complete\nDEBUG    httpcore.http11:_trace.py:87 receive_response_headers.started request=&amp;lt;Request [b&amp;#x27;POST&amp;#x27;]&amp;gt;\nDEBUG    httpcore.http11:_trace.py:87 receive_response_headers.complete return_value=(b&amp;#x27;HTTP/1.1&amp;#x27;, 200, b&amp;#x27;OK&amp;#x27;, [(b&amp;#x27;date&amp;#x27;, b&amp;#x27;Wed, 02 Apr 2025 21:57:59 GMT&amp;#x27;), (b&amp;#x27;server&amp;#x27;, b&amp;#x27;uvicorn&amp;#x27;), (b&amp;#x27;content-length&amp;#x27;, b&amp;#x27;42&amp;#x27;), (b&amp;#x27;content-type&amp;#x27;, b&amp;#x27;application/json&amp;#x27;)])\nINFO     httpx:_client.py:1758 HTTP Request: POST http://localhost:8000/api/auth/register &amp;quot;HTTP/1.1 200 OK&amp;quot;\nDEBUG    httpcore.http11:_trace.py:87 receive_response_body.started request=&amp;lt;Request [b&amp;#x27;POST&amp;#x27;]&amp;gt;\nDEBUG    httpcore.http11:_trace.py:87 receive_response_body.complete\nDEBUG    httpcore.http11:_trace.py:87 response_closed.started\nDEBUG    httpcore.http11:_trace.py:87 response_closed.complete\nINFO     tests.test_auth_endpoints:test_auth_endpoints.py:323 Registered user for multiple login test.\nDEBUG    httpcore.http11:_trace.py:87 send_request_headers.started request=&amp;lt;Request [b&amp;#x27;POST&amp;#x27;]&amp;gt;\nDEBUG    httpcore.http11:_trace.py:87 send_request_headers.complete\nDEBUG    httpcore.http11:_trace.py:87 send_request_body.started request=&amp;lt;Request [b&amp;#x27;POST&amp;#x27;]&amp;gt;\nDEBUG    httpcore.http11:_trace.py:87 send_request_body.complete\nDEBUG    httpcore.http11:_trace.py:87 receive_response_headers.started request=&amp;lt;Request [b&amp;#x27;POST&amp;#x27;]&amp;gt;\nDEBUG    httpcore.http11:_trace.py:87 receive_response_headers.complete return_value=(b&amp;#x27;HTTP/1.1&amp;#x27;, 200, b&amp;#x27;OK&amp;#x27;, [(b&amp;#x27;date&amp;#x27;, b&amp;#x27;Wed, 02 Apr 2025 21:58:00 GMT&amp;#x27;), (b&amp;#x27;server&amp;#x27;, b&amp;#x27;uvicorn&amp;#x27;), (b&amp;#x27;content-length&amp;#x27;, b&amp;#x27;46&amp;#x27;), (b&amp;#x27;content-type&amp;#x27;, b&amp;#x27;application/json&amp;#x27;), (b&amp;#x27;set-cookie&amp;#x27;, b&amp;#x27;session_token=f8eebb9fc239524886c9feb8af976de33e6d590d28eb04a47d716cc906693267; HttpOnly; Path=/; SameSite=strict; Secure&amp;#x27;)])\nINFO     httpx:_client.py:1758 HTTP Request: POST http://localhost:8000/api/auth/login &amp;quot;HTTP/1.1 200 OK&amp;quot;\nDEBUG    httpcore.http11:_trace.py:87 receive_response_body.started request=&amp;lt;Request [b&amp;#x27;POST&amp;#x27;]&amp;gt;\nDEBUG    httpcore.http11:_trace.py:87 receive_response_body.complete\nDEBUG    httpcore.http11:_trace.py:87 response_closed.started\nDEBUG    httpcore.http11:_trace.py:87 response_closed.complete\nINFO     tests.test_auth_endpoints:test_auth_endpoints.py:328 First login response: 200, body: {&amp;quot;message&amp;quot;:&amp;quot;Login successful&amp;quot;,&amp;quot;role&amp;quot;:&amp;quot;clinic&amp;quot;}\nDEBUG    httpcore.http11:_trace.py:87 send_request_headers.started request=&amp;lt;Request [b&amp;#x27;POST&amp;#x27;]&amp;gt;\nDEBUG    httpcore.http11:_trace.py:87 send_request_headers.complete\nDEBUG    httpcore.http11:_trace.py:87 send_request_body.started request=&amp;lt;Request [b&amp;#x27;POST&amp;#x27;]&amp;gt;\nDEBUG    httpcore.http11:_trace.py:87 send_request_body.complete\nDEBUG    httpcore.http11:_trace.py:87 receive_response_headers.started request=&amp;lt;Request [b&amp;#x27;POST&amp;#x27;]&amp;gt;\nDEBUG    httpcore.http11:_trace.py:87 receive_response_headers.complete return_value=(b&amp;#x27;HTTP/1.1&amp;#x27;, 200, b&amp;#x27;OK&amp;#x27;, [(b&amp;#x27;date&amp;#x27;, b&amp;#x27;Wed, 02 Apr 2025 21:58:00 GMT&amp;#x27;), (b&amp;#x27;server&amp;#x27;, b&amp;#x27;uvicorn&amp;#x27;), (b&amp;#x27;content-length&amp;#x27;, b&amp;#x27;46&amp;#x27;), (b&amp;#x27;content-type&amp;#x27;, b&amp;#x27;application/json&amp;#x27;), (b&amp;#x27;set-cookie&amp;#x27;, b&amp;#x27;session_token=ffe6aeadfb3655e4074020926bb9040fb2ad19b4a547aa09f71bdba2ea190219; HttpOnly; Path=/; SameSite=strict; Secure&amp;#x27;)])\nINFO     httpx:_client.py:1758 HTTP Request: POST http://localhost:8000/api/auth/login &amp;quot;HTTP/1.1 200 OK&amp;quot;\nDEBUG    httpcore.http11:_trace.py:87 receive_response_body.started request=&amp;lt;Request [b&amp;#x27;POST&amp;#x27;]&amp;gt;\nDEBUG    httpcore.http11:_trace.py:87 receive_response_body.complete\nDEBUG    httpcore.http11:_trace.py:87 response_closed.started\nDEBUG    httpcore.http11:_trace.py:87 response_closed.complete\nINFO     tests.test_auth_endpoints:test_auth_endpoints.py:336 Second login response: 200, body: {&amp;quot;message&amp;quot;:&amp;quot;Login successful&amp;quot;,&amp;quot;role&amp;quot;:&amp;quot;clinic&amp;quot;}\nINFO     tests.test_auth_endpoints:test_auth_endpoints.py:341 Verified that session tokens from multiple logins are unique.\nDEBUG    pymongo.serverSelection:logger.py:100 {&amp;quot;message&amp;quot;: &amp;quot;Server selection started&amp;quot;, &amp;quot;selector&amp;quot;: &amp;quot;&amp;lt;function writable_server_selector at 0x0000023C77B6E520&amp;gt;&amp;quot;, &amp;quot;operation&amp;quot;: &amp;quot;delete&amp;quot;, &amp;quot;topologyDescription&amp;quot;: &amp;quot;&amp;lt;TopologyDescription id: 67edb2d75a19ff9b4f46d274, topology_type: Single, servers: [&amp;lt;ServerDescription (&amp;#x27;autorack.proxy.rlwy.net&amp;#x27;, 44467) server_type: Standalone, rtt: 0.3717999999877066&amp;gt;]&amp;gt;&amp;quot;, &amp;quot;clientId&amp;quot;: {&amp;quot;$oid&amp;quot;: &amp;quot;67edb2d75a19ff9b4f46d274&amp;quot;}}\nDEBUG    pymongo.serverSelection:logger.py:100 {&amp;quot;message&amp;quot;: &amp;quot;Server selection succeeded&amp;quot;, &amp;quot;selector&amp;quot;: &amp;quot;&amp;lt;function writable_server_selector at 0x0000023C77B6E520&amp;gt;&amp;quot;, &amp;quot;operation&amp;quot;: &amp;quot;delete&amp;quot;, &amp;quot;topologyDescription&amp;quot;: &amp;quot;&amp;lt;TopologyDescription id: 67edb2d75a19ff9b4f46d274, topology_type: Single, servers: [&amp;lt;ServerDescription (&amp;#x27;autorack.proxy.rlwy.net&amp;#x27;, 44467) server_type: Standalone, rtt: 0.3717999999877066&amp;gt;]&amp;gt;&amp;quot;, &amp;quot;clientId&amp;quot;: {&amp;quot;$oid&amp;quot;: &amp;quot;67edb2d75a19ff9b4f46d274&amp;quot;}, &amp;quot;serverHost&amp;quot;: &amp;quot;autorack.proxy.rlwy.net&amp;quot;, &amp;quot;serverPort&amp;quot;: 44467}\nDEBUG    pymongo.connection:logger.py:100 {&amp;quot;clientId&amp;quot;: {&amp;quot;$oid&amp;quot;: &amp;quot;67edb2d75a19ff9b4f46d274&amp;quot;}, &amp;quot;message&amp;quot;: &amp;quot;Connection checkout started&amp;quot;, &amp;quot;serverHost&amp;quot;: &amp;quot;autorack.proxy.rlwy.net&amp;quot;, &amp;quot;serverPort&amp;quot;: 44467}\nDEBUG    pymongo.connection:logger.py:100 {&amp;quot;clientId&amp;quot;: {&amp;quot;$oid&amp;quot;: &amp;quot;67edb2d75a19ff9b4f46d274&amp;quot;}, &amp;quot;message&amp;quot;: &amp;quot;Connection checked out&amp;quot;, &amp;quot;serverHost&amp;quot;: &amp;quot;autorack.proxy.rlwy.net&amp;quot;, &amp;quot;serverPort&amp;quot;: 44467, &amp;quot;driverConnectionId&amp;quot;: 1, &amp;quot;durationMS&amp;quot;: 0.0}\nDEBUG    pymongo.command:logger.py:100 {&amp;quot;clientId&amp;quot;: {&amp;quot;$oid&amp;quot;: &amp;quot;67edb2d75a19ff9b4f46d274&amp;quot;}, &amp;quot;message&amp;quot;: &amp;quot;Command started&amp;quot;, &amp;quot;command&amp;quot;: &amp;quot;{\\&amp;quot;delete\\&amp;quot;: \\&amp;quot;Users\\&amp;quot;, \\&amp;quot;ordered\\&amp;quot;: true, \\&amp;quot;lsid\\&amp;quot;: {\\&amp;quot;id\\&amp;quot;: {\\&amp;quot;$binary\\&amp;quot;: {\\&amp;quot;base64\\&amp;quot;: \\&amp;quot;ORN9TyaLRL6k23ZTkM6ueA==\\&amp;quot;, \\&amp;quot;subType\\&amp;quot;: \\&amp;quot;04\\&amp;quot;}}}, \\&amp;quot;$db\\&amp;quot;: \\&amp;quot;fl_all\\&amp;quot;, \\&amp;quot;deletes\\&amp;quot;: [{\\&amp;quot;q\\&amp;quot;: {\\&amp;quot;username\\&amp;quot;: \\&amp;quot;testuser@example.com\\&amp;quot;}, \\&amp;quot;limit\\&amp;quot;: 1}]}&amp;quot;, &amp;quot;commandName&amp;quot;: &amp;quot;delete&amp;quot;, &amp;quot;databaseName&amp;quot;: &amp;quot;fl_all&amp;quot;, &amp;quot;requestId&amp;quot;: 16827, &amp;quot;operationId&amp;quot;: 16827, &amp;quot;driverConnectionId&amp;quot;: 1, &amp;quot;serverConnectionId&amp;quot;: 1340, &amp;quot;serverHost&amp;quot;: &amp;quot;autorack.proxy.rlwy.net&amp;quot;, &amp;quot;serverPort&amp;quot;: 44467}\nDEBUG    pymongo.command:logger.py:100 {&amp;quot;clientId&amp;quot;: {&amp;quot;$oid&amp;quot;: &amp;quot;67edb2d75a19ff9b4f46d274&amp;quot;}, &amp;quot;message&amp;quot;: &amp;quot;Command succeeded&amp;quot;, &amp;quot;durationMS&amp;quot;: 212.112, &amp;quot;reply&amp;quot;: &amp;quot;{\\&amp;quot;n\\&amp;quot;: 1, \\&amp;quot;ok\\&amp;quot;: 1.0}&amp;quot;, &amp;quot;commandName&amp;quot;: &amp;quot;delete&amp;quot;, &amp;quot;databaseName&amp;quot;: &amp;quot;fl_all&amp;quot;, &amp;quot;requestId&amp;quot;: 16827, &amp;quot;operationId&amp;quot;: 16827, &amp;quot;driverConnectionId&amp;quot;: 1, &amp;quot;serverConnectionId&amp;quot;: 1340, &amp;quot;serverHost&amp;quot;: &amp;quot;autorack.proxy.rlwy.net&amp;quot;, &amp;quot;serverPort&amp;quot;: 44467}\nDEBUG    pymongo.connection:logger.py:100 {&amp;quot;clientId&amp;quot;: {&amp;quot;$oid&amp;quot;: &amp;quot;67edb2d75a19ff9b4f46d274&amp;quot;}, &amp;quot;message&amp;quot;: &amp;quot;Connection checked in&amp;quot;, &amp;quot;serverHost&amp;quot;: &amp;quot;autorack.proxy.rlwy.net&amp;quot;, &amp;quot;serverPort&amp;quot;: 44467, &amp;quot;driverConnectionId&amp;quot;: 1}\nINFO     tests.test_auth_endpoints:test_auth_endpoints.py:345 Cleaned up test user from database.\nDEBUG    pymongo.serverSelection:logger.py:100 {&amp;quot;message&amp;quot;: &amp;quot;Server selection started&amp;quot;, &amp;quot;selector&amp;quot;: &amp;quot;&amp;lt;function writable_server_selector at 0x0000023C77B6E520&amp;gt;&amp;quot;, &amp;quot;operation&amp;quot;: &amp;quot;delete&amp;quot;, &amp;quot;topologyDescription&amp;quot;: &amp;quot;&amp;lt;TopologyDescription id: 67edb2d75a19ff9b4f46d274, topology_type: Single, servers: [&amp;lt;ServerDescription (&amp;#x27;autorack.proxy.rlwy.net&amp;#x27;, 44467) server_type: Standalone, rtt: 0.3717999999877066&amp;gt;]&amp;gt;&amp;quot;, &amp;quot;clientId&amp;quot;: {&amp;quot;$oid&amp;quot;: &amp;quot;67edb2d75a19ff9b4f46d274&amp;quot;}}\nDEBUG    pymongo.serverSelection:logger.py:100 {&amp;quot;message&amp;quot;: &amp;quot;Server selection succeeded&amp;quot;, &amp;quot;selector&amp;quot;: &amp;quot;&amp;lt;function writable_server_selector at 0x0000023C77B6E520&amp;gt;&amp;quot;, &amp;quot;operation&amp;quot;: &amp;quot;delete&amp;quot;, &amp;quot;topologyDescription&amp;quot;: &amp;quot;&amp;lt;TopologyDescription id: 67edb2d75a19ff9b4f46d274, topology_type: Single, servers: [&amp;lt;ServerDescription (&amp;#x27;autorack.proxy.rlwy.net&amp;#x27;, 44467) server_type: Standalone, rtt: 0.3717999999877066&amp;gt;]&amp;gt;&amp;quot;, &amp;quot;clientId&amp;quot;: {&amp;quot;$oid&amp;quot;: &amp;quot;67edb2d75a19ff9b4f46d274&amp;quot;}, &amp;quot;serverHost&amp;quot;: &amp;quot;autorack.proxy.rlwy.net&amp;quot;, &amp;quot;serverPort&amp;quot;: 44467}\nDEBUG    pymongo.connection:logger.py:100 {&amp;quot;clientId&amp;quot;: {&amp;quot;$oid&amp;quot;: &amp;quot;67edb2d75a19ff9b4f46d274&amp;quot;}, &amp;quot;message&amp;quot;: &amp;quot;Connection checkout started&amp;quot;, &amp;quot;serverHost&amp;quot;: &amp;quot;autorack.proxy.rlwy.net&amp;quot;, &amp;quot;serverPort&amp;quot;: 44467}\nDEBUG    pymongo.connection:logger.py:100 {&amp;quot;clientId&amp;quot;: {&amp;quot;$oid&amp;quot;: &amp;quot;67edb2d75a19ff9b4f46d274&amp;quot;}, &amp;quot;message&amp;quot;: &amp;quot;Connection checked out&amp;quot;, &amp;quot;serverHost&amp;quot;: &amp;quot;autorack.proxy.rlwy.net&amp;quot;, &amp;quot;serverPort&amp;quot;: 44467, &amp;quot;driverConnectionId&amp;quot;: 1, &amp;quot;durationMS&amp;quot;: 0.0}\nDEBUG    pymongo.command:logger.py:100 {&amp;quot;clientId&amp;quot;: {&amp;quot;$oid&amp;quot;: &amp;quot;67edb2d75a19ff9b4f46d274&amp;quot;}, &amp;quot;message&amp;quot;: &amp;quot;Command started&amp;quot;, &amp;quot;command&amp;quot;: &amp;quot;{\\&amp;quot;delete\\&amp;quot;: \\&amp;quot;Sessions\\&amp;quot;, \\&amp;quot;ordered\\&amp;quot;: true, \\&amp;quot;lsid\\&amp;quot;: {\\&amp;quot;id\\&amp;quot;: {\\&amp;quot;$binary\\&amp;quot;: {\\&amp;quot;base64\\&amp;quot;: \\&amp;quot;ORN9TyaLRL6k23ZTkM6ueA==\\&amp;quot;, \\&amp;quot;subType\\&amp;quot;: \\&amp;quot;04\\&amp;quot;}}}, \\&amp;quot;$db\\&amp;quot;: \\&amp;quot;fl_all\\&amp;quot;, \\&amp;quot;deletes\\&amp;quot;: [{\\&amp;quot;q\\&amp;quot;: {\\&amp;quot;token\\&amp;quot;: \\&amp;quot;ffe6aeadfb3655e4074020926bb9040fb2ad19b4a547aa09f71bdba2ea190219\\&amp;quot;}, \\&amp;quot;limit\\&amp;quot;: 1}]}&amp;quot;, &amp;quot;commandName&amp;quot;: &amp;quot;delete&amp;quot;, &amp;quot;databaseName&amp;quot;: &amp;quot;fl_all&amp;quot;, &amp;quot;requestId&amp;quot;: 9961, &amp;quot;operationId&amp;quot;: 9961, &amp;quot;driverConnectionId&amp;quot;: 1, &amp;quot;serverConnectionId&amp;quot;: 1340, &amp;quot;serverHost&amp;quot;: &amp;quot;autorack.proxy.rlwy.net&amp;quot;, &amp;quot;serverPort&amp;quot;: 44467}\nDEBUG    pymongo.command:logger.py:100 {&amp;quot;clientId&amp;quot;: {&amp;quot;$oid&amp;quot;: &amp;quot;67edb2d75a19ff9b4f46d274&amp;quot;}, &amp;quot;message&amp;quot;: &amp;quot;Command succeeded&amp;quot;, &amp;quot;durationMS&amp;quot;: 212.342, &amp;quot;reply&amp;quot;: &amp;quot;{\\&amp;quot;n\\&amp;quot;: 1, \\&amp;quot;ok\\&amp;quot;: 1.0}&amp;quot;, &amp;quot;commandName&amp;quot;: &amp;quot;delete&amp;quot;, &amp;quot;databaseName&amp;quot;: &amp;quot;fl_all&amp;quot;, &amp;quot;requestId&amp;quot;: 9961, &amp;quot;operationId&amp;quot;: 9961, &amp;quot;driverConnectionId&amp;quot;: 1, &amp;quot;serverConnectionId&amp;quot;: 1340, &amp;quot;serverHost&amp;quot;: &amp;quot;autorack.proxy.rlwy.net&amp;quot;, &amp;quot;serverPort&amp;quot;: 44467}\nDEBUG    pymongo.connection:logger.py:100 {&amp;quot;clientId&amp;quot;: {&amp;quot;$oid&amp;quot;: &amp;quot;67edb2d75a19ff9b4f46d274&amp;quot;}, &amp;quot;message&amp;quot;: &amp;quot;Connection checked in&amp;quot;, &amp;quot;serverHost&amp;quot;: &amp;quot;autorack.proxy.rlwy.net&amp;quot;, &amp;quot;serverPort&amp;quot;: 44467, &amp;quot;driverConnectionId&amp;quot;: 1}\nINFO     tests.test_auth_endpoints:test_auth_endpoints.py:348 Cleaned up session token from database.\n\n---------------------------- Captured log teardown -----------------------------\nDEBUG    httpcore.connection:_trace.py:87 close.started\nDEBUG    httpcore.connection:_trace.py:87 close.complete\nINFO     tests.test_auth_endpoints:test_auth_endpoints.py:23 AsyncClient closed.&#34;}], &#34;test_authentication.py::test_route_without_login[chromium]&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Passed&#34;, &#34;testId&#34;: &#34;test_authentication.py::test_route_without_login[chromium]&#34;, &#34;duration&#34;: &#34;00:00:01&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Passed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;test_authentication.py::test_route_without_login[chromium]&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;00:00:01&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;------------------------------ Captured log setup ------------------------------\nDEBUG    asyncio:proactor_events.py:633 Using proactor: IocpProactor\n\n------------------------------ Captured log call -------------------------------\nDEBUG    tests.test_authentication:test_authentication.py:15 Starting test_route_without_login...\nDEBUG    tests.test_authentication:test_authentication.py:19 Navigated to /dashboard.\nDEBUG    tests.test_authentication:test_authentication.py:23 Redirected to /login.\nDEBUG    tests.test_authentication:test_authentication.py:25 Login page verified.\n\n&#34;}], &#34;test_authentication.py::test_register_user[chromium]&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Passed&#34;, &#34;testId&#34;: &#34;test_authentication.py::test_register_user[chromium]&#34;, &#34;duration&#34;: &#34;00:00:01&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Passed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;test_authentication.py::test_register_user[chromium]&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;00:00:01&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;------------------------------ Captured log call -------------------------------\nDEBUG    tests.test_authentication:test_authentication.py:32 Starting test_register_user...\nDEBUG    tests.test_authentication:test_authentication.py:36 Navigated to /register.\nDEBUG    tests.test_authentication:test_authentication.py:42 Registration form submitted.\nDEBUG    tests.test_authentication:test_authentication.py:46 Redirected to /login.\nDEBUG    tests.test_authentication:test_authentication.py:48 Login page verified after registration.\n\n&#34;}], &#34;test_authentication.py::test_register_user_with_existing_email[chromium]&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Passed&#34;, &#34;testId&#34;: &#34;test_authentication.py::test_register_user_with_existing_email[chromium]&#34;, &#34;duration&#34;: &#34;00:00:01&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Passed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;test_authentication.py::test_register_user_with_existing_email[chromium]&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;00:00:01&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;------------------------------ Captured log call -------------------------------\nDEBUG    tests.test_authentication:test_authentication.py:54 Starting test_register_user_with_existing_email...\nDEBUG    pymongo.topology:logger.py:100 {&amp;quot;topologyId&amp;quot;: {&amp;quot;$oid&amp;quot;: &amp;quot;67edb2d75a19ff9b4f46d274&amp;quot;}, &amp;quot;driverConnectionId&amp;quot;: 1, &amp;quot;serverConnectionId&amp;quot;: 1339, &amp;quot;serverHost&amp;quot;: &amp;quot;autorack.proxy.rlwy.net&amp;quot;, &amp;quot;serverPort&amp;quot;: 44467, &amp;quot;awaited&amp;quot;: true, &amp;quot;durationMS&amp;quot;: 10000.0, &amp;quot;reply&amp;quot;: &amp;quot;{\\&amp;quot;isWritablePrimary\\&amp;quot;: true, \\&amp;quot;topologyVersion\\&amp;quot;: {\\&amp;quot;processId\\&amp;quot;: {\\&amp;quot;$oid\\&amp;quot;: \\&amp;quot;67e69dde62eb67eb8833ab82\\&amp;quot;}}, \\&amp;quot;maxBsonObjectSize\\&amp;quot;: 16777216, \\&amp;quot;maxMessageSizeBytes\\&amp;quot;: 48000000, \\&amp;quot;maxWriteBatchSize\\&amp;quot;: 100000, \\&amp;quot;localTime\\&amp;quot;: {\\&amp;quot;$date\\&amp;quot;: \\&amp;quot;2025-04-02T21:58:05.803Z\\&amp;quot;}, \\&amp;quot;logicalSessionTimeoutMinutes\\&amp;quot;: 30, \\&amp;quot;connectionId\\&amp;quot;: 1339, \\&amp;quot;maxWireVersion\\&amp;quot;: 21, \\&amp;quot;ok\\&amp;quot;: 1.0}&amp;quot;, &amp;quot;message&amp;quot;: &amp;quot;Server heartbeat succeeded&amp;quot;}\nDEBUG    pymongo.topology:logger.py:100 {&amp;quot;topologyId&amp;quot;: {&amp;quot;$oid&amp;quot;: &amp;quot;67edb2d75a19ff9b4f46d274&amp;quot;}, &amp;quot;driverConnectionId&amp;quot;: 1, &amp;quot;serverConnectionId&amp;quot;: 1339, &amp;quot;serverHost&amp;quot;: &amp;quot;autorack.proxy.rlwy.net&amp;quot;, &amp;quot;serverPort&amp;quot;: 44467, &amp;quot;awaited&amp;quot;: true, &amp;quot;message&amp;quot;: &amp;quot;Server heartbeat started&amp;quot;}\nDEBUG    tests.test_authentication:test_authentication.py:58 Navigated to /register.\nDEBUG    tests.test_authentication:test_authentication.py:64 Registration form submitted with existing email.\nDEBUG    tests.test_authentication:test_authentication.py:69 Error message for existing email verified.\n\n&#34;}], &#34;test_authentication.py::test_login_user[chromium]&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Passed&#34;, &#34;testId&#34;: &#34;test_authentication.py::test_login_user[chromium]&#34;, &#34;duration&#34;: &#34;00:00:03&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Passed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;test_authentication.py::test_login_user[chromium]&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;00:00:03&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;------------------------------ Captured log call -------------------------------\nDEBUG    tests.test_authentication:test_authentication.py:75 Starting test_login_user...\nDEBUG    tests.test_authentication:test_authentication.py:79 Navigated to /login.\nDEBUG    tests.test_authentication:test_authentication.py:85 Login form submitted.\nDEBUG    tests.test_authentication:test_authentication.py:89 Redirected to /model-trial.\nDEBUG    tests.test_authentication:test_authentication.py:91 Dashboard verified.\nDEBUG    tests.test_authentication:test_authentication.py:97 Logged out and redirected to login page.\n\n&#34;}], &#34;test_authentication.py::test_login_with_invalid_credentials[chromium]&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Passed&#34;, &#34;testId&#34;: &#34;test_authentication.py::test_login_with_invalid_credentials[chromium]&#34;, &#34;duration&#34;: &#34;00:00:01&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Passed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;test_authentication.py::test_login_with_invalid_credentials[chromium]&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;00:00:01&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;------------------------------ Captured log call -------------------------------\nDEBUG    tests.test_authentication:test_authentication.py:103 Starting test_login_with_invalid_credentials...\nDEBUG    tests.test_authentication:test_authentication.py:107 Navigated to /login.\nDEBUG    tests.test_authentication:test_authentication.py:113 Login form submitted with invalid credentials.\nDEBUG    tests.test_authentication:test_authentication.py:118 Error message for invalid credentials verified.\n\n&#34;}], &#34;test_authentication.py::test_session_expiry[chromium]&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Passed&#34;, &#34;testId&#34;: &#34;test_authentication.py::test_session_expiry[chromium]&#34;, &#34;duration&#34;: &#34;00:00:01&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Passed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;test_authentication.py::test_session_expiry[chromium]&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;00:00:01&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;------------------------------ Captured log call -------------------------------\nDEBUG    tests.test_authentication:test_authentication.py:124 Starting test_session_expiry...\nDEBUG    tests.test_authentication:test_authentication.py:131 Logged in successfully.\nDEBUG    tests.test_authentication:test_authentication.py:135 Session cookies cleared.\nDEBUG    tests.test_authentication:test_authentication.py:139 Attempted to access /model-trial after session expiry.\nDEBUG    tests.test_authentication:test_authentication.py:144 Redirected to login page after session expiry.\n\n&#34;}], &#34;test_authentication.py::test_inaccessible_route[chromium]&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Passed&#34;, &#34;testId&#34;: &#34;test_authentication.py::test_inaccessible_route[chromium]&#34;, &#34;duration&#34;: &#34;00:00:03&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Passed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;test_authentication.py::test_inaccessible_route[chromium]&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;00:00:03&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;------------------------------ Captured log call -------------------------------\nDEBUG    tests.test_authentication:test_authentication.py:150 Starting test_inaccessible_route...\nDEBUG    tests.test_authentication:test_authentication.py:157 Logged in successfully.\nDEBUG    tests.test_authentication:test_authentication.py:162 Dashboard verified.\nDEBUG    tests.test_authentication:test_authentication.py:167 Redirected to /unauthorized for accessing admin route.\nDEBUG    tests.test_authentication:test_authentication.py:172 Unauthorized access verified.\n\n&#34;}], &#34;test_interaction.py::test_admin_access_dashboard[chromium]&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Passed&#34;, &#34;testId&#34;: &#34;test_interaction.py::test_admin_access_dashboard[chromium]&#34;, &#34;duration&#34;: &#34;00:00:03&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Passed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;test_interaction.py::test_admin_access_dashboard[chromium]&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;00:00:03&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;------------------------------ Captured log call -------------------------------\nDEBUG    tests.test_interaction:test_interaction.py:12 Starting test_admin_access_dashboard...\nDEBUG    tests.test_interaction:test_interaction.py:16 Navigated to /login.\nDEBUG    tests.test_interaction:test_interaction.py:21 Admin login form submitted.\nDEBUG    pymongo.topology:logger.py:100 {&amp;quot;topologyId&amp;quot;: {&amp;quot;$oid&amp;quot;: &amp;quot;67edb2d75a19ff9b4f46d274&amp;quot;}, &amp;quot;driverConnectionId&amp;quot;: 1, &amp;quot;serverConnectionId&amp;quot;: 1339, &amp;quot;serverHost&amp;quot;: &amp;quot;autorack.proxy.rlwy.net&amp;quot;, &amp;quot;serverPort&amp;quot;: 44467, &amp;quot;awaited&amp;quot;: true, &amp;quot;durationMS&amp;quot;: 10015.000000130385, &amp;quot;reply&amp;quot;: &amp;quot;{\\&amp;quot;isWritablePrimary\\&amp;quot;: true, \\&amp;quot;topologyVersion\\&amp;quot;: {\\&amp;quot;processId\\&amp;quot;: {\\&amp;quot;$oid\\&amp;quot;: \\&amp;quot;67e69dde62eb67eb8833ab82\\&amp;quot;}}, \\&amp;quot;maxBsonObjectSize\\&amp;quot;: 16777216, \\&amp;quot;maxMessageSizeBytes\\&amp;quot;: 48000000, \\&amp;quot;maxWriteBatchSize\\&amp;quot;: 100000, \\&amp;quot;localTime\\&amp;quot;: {\\&amp;quot;$date\\&amp;quot;: \\&amp;quot;2025-04-02T21:58:15.811Z\\&amp;quot;}, \\&amp;quot;logicalSessionTimeoutMinutes\\&amp;quot;: 30, \\&amp;quot;connectionId\\&amp;quot;: 1339, \\&amp;quot;maxWireVersion\\&amp;quot;: 21, \\&amp;quot;ok\\&amp;quot;: 1.0}&amp;quot;, &amp;quot;message&amp;quot;: &amp;quot;Server heartbeat succeeded&amp;quot;}\nDEBUG    pymongo.topology:logger.py:100 {&amp;quot;topologyId&amp;quot;: {&amp;quot;$oid&amp;quot;: &amp;quot;67edb2d75a19ff9b4f46d274&amp;quot;}, &amp;quot;driverConnectionId&amp;quot;: 1, &amp;quot;serverConnectionId&amp;quot;: 1339, &amp;quot;serverHost&amp;quot;: &amp;quot;autorack.proxy.rlwy.net&amp;quot;, &amp;quot;serverPort&amp;quot;: 44467, &amp;quot;awaited&amp;quot;: true, &amp;quot;message&amp;quot;: &amp;quot;Server heartbeat started&amp;quot;}\nDEBUG    tests.test_interaction:test_interaction.py:26 Admin successfully logged in and redirected to the dashboard.\nDEBUG    tests.test_interaction:test_interaction.py:31 Page title verified: Dashboard - FL-ALL\nDEBUG    tests.test_interaction:test_interaction.py:36 Clients data fetched successfully.\nDEBUG    tests.test_interaction:test_interaction.py:41 Dashboard data fetched successfully.\n\n&#34;}], &#34;test_interaction.py::test_admin_access_clients[chromium]&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Passed&#34;, &#34;testId&#34;: &#34;test_interaction.py::test_admin_access_clients[chromium]&#34;, &#34;duration&#34;: &#34;00:00:04&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Passed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;test_interaction.py::test_admin_access_clients[chromium]&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;00:00:04&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;------------------------------ Captured log call -------------------------------\nDEBUG    tests.test_interaction:test_interaction.py:47 Starting test_admin_access_clients...\nDEBUG    tests.test_interaction:test_interaction.py:51 Navigated to /login.\nDEBUG    tests.test_interaction:test_interaction.py:56 Admin login form submitted.\nDEBUG    tests.test_interaction:test_interaction.py:61 Admin successfully logged in and redirected to the dashboard.\nDEBUG    tests.test_interaction:test_interaction.py:66 Navigated to /clients.\nDEBUG    tests.test_interaction:test_interaction.py:70 Clients page verified successfully.\nDEBUG    tests.test_interaction:test_interaction.py:75 Page title verified: Clients - FL-ALL\nDEBUG    tests.test_interaction:test_interaction.py:80 Clients data fetched successfully.\n\n&#34;}], &#34;test_interaction.py::test_admin_access_model_trial[chromium]&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Passed&#34;, &#34;testId&#34;: &#34;test_interaction.py::test_admin_access_model_trial[chromium]&#34;, &#34;duration&#34;: &#34;00:00:08&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Passed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;test_interaction.py::test_admin_access_model_trial[chromium]&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;00:00:08&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;------------------------------ Captured log call -------------------------------\nDEBUG    tests.test_interaction:test_interaction.py:86 Starting test_admin_access_model_trial...\nDEBUG    tests.test_interaction:test_interaction.py:90 Navigated to /login.\nDEBUG    tests.test_interaction:test_interaction.py:95 Admin login form submitted.\nDEBUG    tests.test_interaction:test_interaction.py:100 Admin successfully logged in and redirected to the dashboard.\nDEBUG    tests.test_interaction:test_interaction.py:105 Navigated to /model-trial.\nDEBUG    tests.test_interaction:test_interaction.py:109 Model Trial page verified successfully.\nDEBUG    tests.test_interaction:test_interaction.py:114 Page title verified: Model Trial - FL-ALL\nDEBUG    tests.test_interaction:test_interaction.py:122 Uploaded image file: C:\\Users\\Work\\Documents\\GitHub\\GP_Dashboard\\Back-End\\tests\\WBC-Benign-001_test.jpg\nDEBUG    pymongo.topology:logger.py:100 {&amp;quot;topologyId&amp;quot;: {&amp;quot;$oid&amp;quot;: &amp;quot;67edb2d75a19ff9b4f46d274&amp;quot;}, &amp;quot;driverConnectionId&amp;quot;: 1, &amp;quot;serverConnectionId&amp;quot;: 1339, &amp;quot;serverHost&amp;quot;: &amp;quot;autorack.proxy.rlwy.net&amp;quot;, &amp;quot;serverPort&amp;quot;: 44467, &amp;quot;awaited&amp;quot;: true, &amp;quot;durationMS&amp;quot;: 10015.999999828637, &amp;quot;reply&amp;quot;: &amp;quot;{\\&amp;quot;isWritablePrimary\\&amp;quot;: true, \\&amp;quot;topologyVersion\\&amp;quot;: {\\&amp;quot;processId\\&amp;quot;: {\\&amp;quot;$oid\\&amp;quot;: \\&amp;quot;67e69dde62eb67eb8833ab82\\&amp;quot;}}, \\&amp;quot;maxBsonObjectSize\\&amp;quot;: 16777216, \\&amp;quot;maxMessageSizeBytes\\&amp;quot;: 48000000, \\&amp;quot;maxWriteBatchSize\\&amp;quot;: 100000, \\&amp;quot;localTime\\&amp;quot;: {\\&amp;quot;$date\\&amp;quot;: \\&amp;quot;2025-04-02T21:58:25.821Z\\&amp;quot;}, \\&amp;quot;logicalSessionTimeoutMinutes\\&amp;quot;: 30, \\&amp;quot;connectionId\\&amp;quot;: 1339, \\&amp;quot;maxWireVersion\\&amp;quot;: 21, \\&amp;quot;ok\\&amp;quot;: 1.0}&amp;quot;, &amp;quot;message&amp;quot;: &amp;quot;Server heartbeat succeeded&amp;quot;}\nDEBUG    pymongo.topology:logger.py:100 {&amp;quot;topologyId&amp;quot;: {&amp;quot;$oid&amp;quot;: &amp;quot;67edb2d75a19ff9b4f46d274&amp;quot;}, &amp;quot;driverConnectionId&amp;quot;: 1, &amp;quot;serverConnectionId&amp;quot;: 1339, &amp;quot;serverHost&amp;quot;: &amp;quot;autorack.proxy.rlwy.net&amp;quot;, &amp;quot;serverPort&amp;quot;: 44467, &amp;quot;awaited&amp;quot;: true, &amp;quot;message&amp;quot;: &amp;quot;Server heartbeat started&amp;quot;}\nDEBUG    tests.test_interaction:test_interaction.py:128 Classification header is visible.\nDEBUG    tests.test_interaction:test_interaction.py:138 Classification result: Benign\nDEBUG    tests.test_interaction:test_interaction.py:143 Uploaded non-image file: C:\\Users\\Work\\Documents\\GitHub\\GP_Dashboard\\Back-End\\tests\\note_test.txt\nDEBUG    tests.test_interaction:test_interaction.py:154 Admin logged out and redirected to the login page.\n\n&#34;}], &#34;test_authentication.py::test_rate_limiting[chromium]&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Passed&#34;, &#34;testId&#34;: &#34;test_authentication.py::test_rate_limiting[chromium]&#34;, &#34;duration&#34;: &#34;00:00:10&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Passed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;test_authentication.py::test_rate_limiting[chromium]&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;00:00:10&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;------------------------------ Captured log call -------------------------------\nDEBUG    tests.test_authentication:test_authentication.py:275 Starting test_rate_limiting...\nDEBUG    tests.test_authentication:test_authentication.py:279 Navigated to /login.\nDEBUG    tests.test_authentication:test_authentication.py:286 Invalid login attempt submitted.\nDEBUG    tests.test_authentication:test_authentication.py:286 Invalid login attempt submitted.\nDEBUG    tests.test_authentication:test_authentication.py:286 Invalid login attempt submitted.\nDEBUG    tests.test_authentication:test_authentication.py:286 Invalid login attempt submitted.\nDEBUG    tests.test_authentication:test_authentication.py:286 Invalid login attempt submitted.\nDEBUG    tests.test_authentication:test_authentication.py:286 Invalid login attempt submitted.\nDEBUG    tests.test_authentication:test_authentication.py:286 Invalid login attempt submitted.\nDEBUG    tests.test_authentication:test_authentication.py:286 Invalid login attempt submitted.\nDEBUG    tests.test_authentication:test_authentication.py:286 Invalid login attempt submitted.\nDEBUG    tests.test_authentication:test_authentication.py:286 Invalid login attempt submitted.\nDEBUG    tests.test_authentication:test_authentication.py:286 Invalid login attempt submitted.\nDEBUG    tests.test_authentication:test_authentication.py:286 Invalid login attempt submitted.\nDEBUG    tests.test_authentication:test_authentication.py:286 Invalid login attempt submitted.\nDEBUG    tests.test_authentication:test_authentication.py:286 Invalid login attempt submitted.\nDEBUG    tests.test_authentication:test_authentication.py:286 Invalid login attempt submitted.\nDEBUG    tests.test_authentication:test_authentication.py:286 Invalid login attempt submitted.\nDEBUG    pymongo.topology:logger.py:100 {&amp;quot;topologyId&amp;quot;: {&amp;quot;$oid&amp;quot;: &amp;quot;67edb2d75a19ff9b4f46d274&amp;quot;}, &amp;quot;driverConnectionId&amp;quot;: 1, &amp;quot;serverConnectionId&amp;quot;: 1339, &amp;quot;serverHost&amp;quot;: &amp;quot;autorack.proxy.rlwy.net&amp;quot;, &amp;quot;serverPort&amp;quot;: 44467, &amp;quot;awaited&amp;quot;: true, &amp;quot;durationMS&amp;quot;: 10000.0, &amp;quot;reply&amp;quot;: &amp;quot;{\\&amp;quot;isWritablePrimary\\&amp;quot;: true, \\&amp;quot;topologyVersion\\&amp;quot;: {\\&amp;quot;processId\\&amp;quot;: {\\&amp;quot;$oid\\&amp;quot;: \\&amp;quot;67e69dde62eb67eb8833ab82\\&amp;quot;}}, \\&amp;quot;maxBsonObjectSize\\&amp;quot;: 16777216, \\&amp;quot;maxMessageSizeBytes\\&amp;quot;: 48000000, \\&amp;quot;maxWriteBatchSize\\&amp;quot;: 100000, \\&amp;quot;localTime\\&amp;quot;: {\\&amp;quot;$date\\&amp;quot;: \\&amp;quot;2025-04-02T21:58:35.832Z\\&amp;quot;}, \\&amp;quot;logicalSessionTimeoutMinutes\\&amp;quot;: 30, \\&amp;quot;connectionId\\&amp;quot;: 1339, \\&amp;quot;maxWireVersion\\&amp;quot;: 21, \\&amp;quot;ok\\&amp;quot;: 1.0}&amp;quot;, &amp;quot;message&amp;quot;: &amp;quot;Server heartbeat succeeded&amp;quot;}\nDEBUG    pymongo.topology:logger.py:100 {&amp;quot;topologyId&amp;quot;: {&amp;quot;$oid&amp;quot;: &amp;quot;67edb2d75a19ff9b4f46d274&amp;quot;}, &amp;quot;driverConnectionId&amp;quot;: 1, &amp;quot;serverConnectionId&amp;quot;: 1339, &amp;quot;serverHost&amp;quot;: &amp;quot;autorack.proxy.rlwy.net&amp;quot;, &amp;quot;serverPort&amp;quot;: 44467, &amp;quot;awaited&amp;quot;: true, &amp;quot;message&amp;quot;: &amp;quot;Server heartbeat started&amp;quot;}\nDEBUG    tests.test_authentication:test_authentication.py:286 Invalid login attempt submitted.\nDEBUG    tests.test_authentication:test_authentication.py:286 Invalid login attempt submitted.\nDEBUG    tests.test_authentication:test_authentication.py:286 Invalid login attempt submitted.\nDEBUG    tests.test_authentication:test_authentication.py:286 Invalid login attempt submitted.\nDEBUG    tests.test_authentication:test_authentication.py:286 Invalid login attempt submitted.\nDEBUG    tests.test_authentication:test_authentication.py:286 Invalid login attempt submitted.\nDEBUG    tests.test_authentication:test_authentication.py:286 Invalid login attempt submitted.\nDEBUG    tests.test_authentication:test_authentication.py:286 Invalid login attempt submitted.\nDEBUG    tests.test_authentication:test_authentication.py:286 Invalid login attempt submitted.\nDEBUG    tests.test_authentication:test_authentication.py:290 Rate limiting error message verified.\n\n---------------------------- Captured log teardown -----------------------------\nINFO     tests.test_auth_endpoints:test_auth_endpoints.py:14 Closing MongoDB connection for test session.\nDEBUG    pymongo.serverSelection:logger.py:100 {&amp;quot;message&amp;quot;: &amp;quot;Server selection started&amp;quot;, &amp;quot;selector&amp;quot;: &amp;quot;PrimaryPreferred(tag_sets=None, max_staleness=-1, hedge=None)&amp;quot;, &amp;quot;operation&amp;quot;: &amp;quot;endSessions&amp;quot;, &amp;quot;topologyDescription&amp;quot;: &amp;quot;&amp;lt;TopologyDescription id: 67edb2d75a19ff9b4f46d274, topology_type: Single, servers: [&amp;lt;ServerDescription (&amp;#x27;autorack.proxy.rlwy.net&amp;#x27;, 44467) server_type: Standalone, rtt: 0.2859948799970002&amp;gt;]&amp;gt;&amp;quot;, &amp;quot;clientId&amp;quot;: {&amp;quot;$oid&amp;quot;: &amp;quot;67edb2d75a19ff9b4f46d274&amp;quot;}}\nDEBUG    pymongo.serverSelection:logger.py:100 {&amp;quot;message&amp;quot;: &amp;quot;Server selection succeeded&amp;quot;, &amp;quot;selector&amp;quot;: &amp;quot;PrimaryPreferred(tag_sets=None, max_staleness=-1, hedge=None)&amp;quot;, &amp;quot;operation&amp;quot;: &amp;quot;endSessions&amp;quot;, &amp;quot;topologyDescription&amp;quot;: &amp;quot;&amp;lt;TopologyDescription id: 67edb2d75a19ff9b4f46d274, topology_type: Single, servers: [&amp;lt;ServerDescription (&amp;#x27;autorack.proxy.rlwy.net&amp;#x27;, 44467) server_type: Standalone, rtt: 0.2859948799970002&amp;gt;]&amp;gt;&amp;quot;, &amp;quot;clientId&amp;quot;: {&amp;quot;$oid&amp;quot;: &amp;quot;67edb2d75a19ff9b4f46d274&amp;quot;}, &amp;quot;serverHost&amp;quot;: &amp;quot;autorack.proxy.rlwy.net&amp;quot;, &amp;quot;serverPort&amp;quot;: 44467}\nDEBUG    pymongo.connection:logger.py:100 {&amp;quot;clientId&amp;quot;: {&amp;quot;$oid&amp;quot;: &amp;quot;67edb2d75a19ff9b4f46d274&amp;quot;}, &amp;quot;message&amp;quot;: &amp;quot;Connection checkout started&amp;quot;, &amp;quot;serverHost&amp;quot;: &amp;quot;autorack.proxy.rlwy.net&amp;quot;, &amp;quot;serverPort&amp;quot;: 44467}\nDEBUG    pymongo.connection:logger.py:100 {&amp;quot;clientId&amp;quot;: {&amp;quot;$oid&amp;quot;: &amp;quot;67edb2d75a19ff9b4f46d274&amp;quot;}, &amp;quot;message&amp;quot;: &amp;quot;Connection checked out&amp;quot;, &amp;quot;serverHost&amp;quot;: &amp;quot;autorack.proxy.rlwy.net&amp;quot;, &amp;quot;serverPort&amp;quot;: 44467, &amp;quot;driverConnectionId&amp;quot;: 1, &amp;quot;durationMS&amp;quot;: 0.0}\nDEBUG    pymongo.command:logger.py:100 {&amp;quot;clientId&amp;quot;: {&amp;quot;$oid&amp;quot;: &amp;quot;67edb2d75a19ff9b4f46d274&amp;quot;}, &amp;quot;message&amp;quot;: &amp;quot;Command started&amp;quot;, &amp;quot;command&amp;quot;: &amp;quot;{\\&amp;quot;endSessions\\&amp;quot;: [{\\&amp;quot;id\\&amp;quot;: {\\&amp;quot;$binary\\&amp;quot;: {\\&amp;quot;base64\\&amp;quot;: \\&amp;quot;ORN9TyaLRL6k23ZTkM6ueA==\\&amp;quot;, \\&amp;quot;subType\\&amp;quot;: \\&amp;quot;04\\&amp;quot;}}}], \\&amp;quot;$db\\&amp;quot;: \\&amp;quot;admin\\&amp;quot;}&amp;quot;, &amp;quot;commandName&amp;quot;: &amp;quot;endSessions&amp;quot;, &amp;quot;databaseName&amp;quot;: &amp;quot;admin&amp;quot;, &amp;quot;requestId&amp;quot;: 41, &amp;quot;operationId&amp;quot;: 41, &amp;quot;driverConnectionId&amp;quot;: 1, &amp;quot;serverConnectionId&amp;quot;: 1340, &amp;quot;serverHost&amp;quot;: &amp;quot;autorack.proxy.rlwy.net&amp;quot;, &amp;quot;serverPort&amp;quot;: 44467}\nDEBUG    pymongo.command:logger.py:100 {&amp;quot;clientId&amp;quot;: {&amp;quot;$oid&amp;quot;: &amp;quot;67edb2d75a19ff9b4f46d274&amp;quot;}, &amp;quot;message&amp;quot;: &amp;quot;Command succeeded&amp;quot;, &amp;quot;durationMS&amp;quot;: 229.59199999999998, &amp;quot;reply&amp;quot;: &amp;quot;{\\&amp;quot;ok\\&amp;quot;: 1.0}&amp;quot;, &amp;quot;commandName&amp;quot;: &amp;quot;endSessions&amp;quot;, &amp;quot;databaseName&amp;quot;: &amp;quot;admin&amp;quot;, &amp;quot;requestId&amp;quot;: 41, &amp;quot;operationId&amp;quot;: 41, &amp;quot;driverConnectionId&amp;quot;: 1, &amp;quot;serverConnectionId&amp;quot;: 1340, &amp;quot;serverHost&amp;quot;: &amp;quot;autorack.proxy.rlwy.net&amp;quot;, &amp;quot;serverPort&amp;quot;: 44467}\nDEBUG    pymongo.connection:logger.py:100 {&amp;quot;clientId&amp;quot;: {&amp;quot;$oid&amp;quot;: &amp;quot;67edb2d75a19ff9b4f46d274&amp;quot;}, &amp;quot;message&amp;quot;: &amp;quot;Connection checked in&amp;quot;, &amp;quot;serverHost&amp;quot;: &amp;quot;autorack.proxy.rlwy.net&amp;quot;, &amp;quot;serverPort&amp;quot;: 44467, &amp;quot;driverConnectionId&amp;quot;: 1}\nDEBUG    pymongo.topology:logger.py:100 {&amp;quot;topologyId&amp;quot;: {&amp;quot;$oid&amp;quot;: &amp;quot;67edb2d75a19ff9b4f46d274&amp;quot;}, &amp;quot;serverHost&amp;quot;: &amp;quot;autorack.proxy.rlwy.net&amp;quot;, &amp;quot;serverPort&amp;quot;: 44467, &amp;quot;message&amp;quot;: &amp;quot;Stopped server monitoring&amp;quot;}\nDEBUG    pymongo.connection:logger.py:100 {&amp;quot;clientId&amp;quot;: {&amp;quot;$oid&amp;quot;: &amp;quot;67edb2d75a19ff9b4f46d274&amp;quot;}, &amp;quot;message&amp;quot;: &amp;quot;Connection closed&amp;quot;, &amp;quot;serverHost&amp;quot;: &amp;quot;autorack.proxy.rlwy.net&amp;quot;, &amp;quot;serverPort&amp;quot;: 44467, &amp;quot;driverConnectionId&amp;quot;: 1, &amp;quot;reason&amp;quot;: &amp;quot;Connection pool was closed&amp;quot;, &amp;quot;error&amp;quot;: &amp;quot;poolClosed&amp;quot;}\nDEBUG    pymongo.connection:logger.py:100 {&amp;quot;clientId&amp;quot;: {&amp;quot;$oid&amp;quot;: &amp;quot;67edb2d75a19ff9b4f46d274&amp;quot;}, &amp;quot;message&amp;quot;: &amp;quot;Connection pool closed&amp;quot;, &amp;quot;serverHost&amp;quot;: &amp;quot;autorack.proxy.rlwy.net&amp;quot;, &amp;quot;serverPort&amp;quot;: 44467}\nDEBUG    pymongo.topology:logger.py:100 {&amp;quot;topologyId&amp;quot;: {&amp;quot;$oid&amp;quot;: &amp;quot;67edb2d75a19ff9b4f46d274&amp;quot;}, &amp;quot;previousDescription&amp;quot;: &amp;quot;&amp;lt;TopologyDescription id: 67edb2d75a19ff9b4f46d274, topology_type: Single, servers: [&amp;lt;ServerDescription (&amp;#x27;autorack.proxy.rlwy.net&amp;#x27;, 44467) server_type: Standalone, rtt: 0.2859948799970002&amp;gt;]&amp;gt;&amp;quot;, &amp;quot;newDescription&amp;quot;: &amp;quot;&amp;lt;TopologyDescription id: 67edb2d75a19ff9b4f46d274, topology_type: Single, servers: [&amp;lt;ServerDescription (&amp;#x27;autorack.proxy.rlwy.net&amp;#x27;, 44467) server_type: Unknown, rtt: None&amp;gt;]&amp;gt;&amp;quot;, &amp;quot;message&amp;quot;: &amp;quot;Topology description changed&amp;quot;}\nDEBUG    pymongo.topology:logger.py:100 {&amp;quot;topologyId&amp;quot;: {&amp;quot;$oid&amp;quot;: &amp;quot;67edb2d75a19ff9b4f46d274&amp;quot;}, &amp;quot;message&amp;quot;: &amp;quot;Stopped topology monitoring&amp;quot;}\nDEBUG    asyncio:proactor_events.py:633 Using proactor: IocpProactor&#34;}]}, &#34;renderCollapsed&#34;: [&#34;passed&#34;], &#34;initialSort&#34;: &#34;result&#34;, &#34;title&#34;: &#34;report.html&#34;}"></div>
+    <script>
+      (function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c="function"==typeof require&&require;if(!f&&c)return c(i,!0);if(u)return u(i,!0);var a=new Error("Cannot find module '"+i+"'");throw a.code="MODULE_NOT_FOUND",a}var p=n[i]={exports:{}};e[i][0].call(p.exports,function(r){var n=e[i][1][r];return o(n||r)},p,p.exports,r,e,n,t)}return n[i].exports}for(var u="function"==typeof require&&require,i=0;i<t.length;i++)o(t[i]);return o}return r})()({1:[function(require,module,exports){
+const { getCollapsedCategory, setCollapsedIds } = require('./storage.js')
+
+class DataManager {
+    setManager(data) {
+        const collapsedCategories = [...getCollapsedCategory(data.renderCollapsed)]
+        const collapsedIds = []
+        const tests = Object.values(data.tests).flat().map((test, index) => {
+            const collapsed = collapsedCategories.includes(test.result.toLowerCase())
+            const id = `test_${index}`
+            if (collapsed) {
+                collapsedIds.push(id)
+            }
+            return {
+                ...test,
+                id,
+                collapsed,
+            }
+        })
+        const dataBlob = { ...data, tests }
+        this.data = { ...dataBlob }
+        this.renderData = { ...dataBlob }
+        setCollapsedIds(collapsedIds)
+    }
+
+    get allData() {
+        return { ...this.data }
+    }
+
+    resetRender() {
+        this.renderData = { ...this.data }
+    }
+
+    setRender(data) {
+        this.renderData.tests = [...data]
+    }
+
+    toggleCollapsedItem(id) {
+        this.renderData.tests = this.renderData.tests.map((test) =>
+            test.id === id ? { ...test, collapsed: !test.collapsed } : test,
+        )
+    }
+
+    set allCollapsed(collapsed) {
+        this.renderData = { ...this.renderData, tests: [...this.renderData.tests.map((test) => (
+            { ...test, collapsed }
+        ))] }
+    }
+
+    get testSubset() {
+        return [...this.renderData.tests]
+    }
+
+    get environment() {
+        return this.renderData.environment
+    }
+
+    get initialSort() {
+        return this.data.initialSort
+    }
+}
+
+module.exports = {
+    manager: new DataManager(),
+}
+
+},{"./storage.js":8}],2:[function(require,module,exports){
+const mediaViewer = require('./mediaviewer.js')
+const templateEnvRow = document.getElementById('template_environment_row')
+const templateResult = document.getElementById('template_results-table__tbody')
+
+function htmlToElements(html) {
+    const temp = document.createElement('template')
+    temp.innerHTML = html
+    return temp.content.childNodes
+}
+
+const find = (selector, elem) => {
+    if (!elem) {
+        elem = document
+    }
+    return elem.querySelector(selector)
+}
+
+const findAll = (selector, elem) => {
+    if (!elem) {
+        elem = document
+    }
+    return [...elem.querySelectorAll(selector)]
+}
+
+const dom = {
+    getStaticRow: (key, value) => {
+        const envRow = templateEnvRow.content.cloneNode(true)
+        const isObj = typeof value === 'object' && value !== null
+        const values = isObj ? Object.keys(value).map((k) => `${k}: ${value[k]}`) : null
+
+        const valuesElement = htmlToElements(
+            values ? `<ul>${values.map((val) => `<li>${val}</li>`).join('')}<ul>` : `<div>${value}</div>`)[0]
+        const td = findAll('td', envRow)
+        td[0].textContent = key
+        td[1].appendChild(valuesElement)
+
+        return envRow
+    },
+    getResultTBody: ({ testId, id, log, extras, resultsTableRow, tableHtml, result, collapsed }) => {
+        const resultBody = templateResult.content.cloneNode(true)
+        resultBody.querySelector('tbody').classList.add(result.toLowerCase())
+        resultBody.querySelector('tbody').id = testId
+        resultBody.querySelector('.collapsible').dataset.id = id
+
+        resultsTableRow.forEach((html) => {
+            const t = document.createElement('template')
+            t.innerHTML = html
+            resultBody.querySelector('.collapsible').appendChild(t.content)
+        })
+
+        if (log) {
+            // Wrap lines starting with "E" with span.error to color those lines red
+            const wrappedLog = log.replace(/^E.*$/gm, (match) => `<span class="error">${match}</span>`)
+            resultBody.querySelector('.log').innerHTML = wrappedLog
+        } else {
+            resultBody.querySelector('.log').remove()
+        }
+
+        if (collapsed) {
+            resultBody.querySelector('.collapsible > td')?.classList.add('collapsed')
+            resultBody.querySelector('.extras-row').classList.add('hidden')
+        } else {
+            resultBody.querySelector('.collapsible > td')?.classList.remove('collapsed')
+        }
+
+        const media = []
+        extras?.forEach(({ name, format_type, content }) => {
+            if (['image', 'video'].includes(format_type)) {
+                media.push({ path: content, name, format_type })
+            }
+
+            if (format_type === 'html') {
+                resultBody.querySelector('.extraHTML').insertAdjacentHTML('beforeend', `<div>${content}</div>`)
+            }
+        })
+        mediaViewer.setup(resultBody, media)
+
+        // Add custom html from the pytest_html_results_table_html hook
+        tableHtml?.forEach((item) => {
+            resultBody.querySelector('td[class="extra"]').insertAdjacentHTML('beforeend', item)
+        })
+
+        return resultBody
+    },
+}
+
+module.exports = {
+    dom,
+    htmlToElements,
+    find,
+    findAll,
+}
+
+},{"./mediaviewer.js":6}],3:[function(require,module,exports){
+const { manager } = require('./datamanager.js')
+const { doSort } = require('./sort.js')
+const storageModule = require('./storage.js')
+
+const getFilteredSubSet = (filter) =>
+    manager.allData.tests.filter(({ result }) => filter.includes(result.toLowerCase()))
+
+const doInitFilter = () => {
+    const currentFilter = storageModule.getVisible()
+    const filteredSubset = getFilteredSubSet(currentFilter)
+    manager.setRender(filteredSubset)
+}
+
+const doFilter = (type, show) => {
+    if (show) {
+        storageModule.showCategory(type)
+    } else {
+        storageModule.hideCategory(type)
+    }
+
+    const currentFilter = storageModule.getVisible()
+    const filteredSubset = getFilteredSubSet(currentFilter)
+    manager.setRender(filteredSubset)
+
+    const sortColumn = storageModule.getSort()
+    doSort(sortColumn, true)
+}
+
+module.exports = {
+    doFilter,
+    doInitFilter,
+}
+
+},{"./datamanager.js":1,"./sort.js":7,"./storage.js":8}],4:[function(require,module,exports){
+const { redraw, bindEvents, renderStatic } = require('./main.js')
+const { doInitFilter } = require('./filter.js')
+const { doInitSort } = require('./sort.js')
+const { manager } = require('./datamanager.js')
+const data = JSON.parse(document.getElementById('data-container').dataset.jsonblob)
+
+function init() {
+    manager.setManager(data)
+    doInitFilter()
+    doInitSort()
+    renderStatic()
+    redraw()
+    bindEvents()
+}
+
+init()
+
+},{"./datamanager.js":1,"./filter.js":3,"./main.js":5,"./sort.js":7}],5:[function(require,module,exports){
+const { dom, find, findAll } = require('./dom.js')
+const { manager } = require('./datamanager.js')
+const { doSort } = require('./sort.js')
+const { doFilter } = require('./filter.js')
+const {
+    getVisible,
+    getCollapsedIds,
+    setCollapsedIds,
+    getSort,
+    getSortDirection,
+    possibleFilters,
+} = require('./storage.js')
+
+const removeChildren = (node) => {
+    while (node.firstChild) {
+        node.removeChild(node.firstChild)
+    }
+}
+
+const renderStatic = () => {
+    const renderEnvironmentTable = () => {
+        const environment = manager.environment
+        const rows = Object.keys(environment).map((key) => dom.getStaticRow(key, environment[key]))
+        const table = document.getElementById('environment')
+        removeChildren(table)
+        rows.forEach((row) => table.appendChild(row))
+    }
+    renderEnvironmentTable()
+}
+
+const addItemToggleListener = (elem) => {
+    elem.addEventListener('click', ({ target }) => {
+        const id = target.parentElement.dataset.id
+        manager.toggleCollapsedItem(id)
+
+        const collapsedIds = getCollapsedIds()
+        if (collapsedIds.includes(id)) {
+            const updated = collapsedIds.filter((item) => item !== id)
+            setCollapsedIds(updated)
+        } else {
+            collapsedIds.push(id)
+            setCollapsedIds(collapsedIds)
+        }
+        redraw()
+    })
+}
+
+const renderContent = (tests) => {
+    const sortAttr = getSort(manager.initialSort)
+    const sortAsc = JSON.parse(getSortDirection())
+    const rows = tests.map(dom.getResultTBody)
+    const table = document.getElementById('results-table')
+    const tableHeader = document.getElementById('results-table-head')
+
+    const newTable = document.createElement('table')
+    newTable.id = 'results-table'
+
+    // remove all sorting classes and set the relevant
+    findAll('.sortable', tableHeader).forEach((elem) => elem.classList.remove('asc', 'desc'))
+    tableHeader.querySelector(`.sortable[data-column-type="${sortAttr}"]`)?.classList.add(sortAsc ? 'desc' : 'asc')
+    newTable.appendChild(tableHeader)
+
+    if (!rows.length) {
+        const emptyTable = document.getElementById('template_results-table__body--empty').content.cloneNode(true)
+        newTable.appendChild(emptyTable)
+    } else {
+        rows.forEach((row) => {
+            if (!!row) {
+                findAll('.collapsible td:not(.col-links', row).forEach(addItemToggleListener)
+                find('.logexpander', row).addEventListener('click',
+                    (evt) => evt.target.parentNode.classList.toggle('expanded'),
+                )
+                newTable.appendChild(row)
+            }
+        })
+    }
+
+    table.replaceWith(newTable)
+}
+
+const renderDerived = () => {
+    const currentFilter = getVisible()
+    possibleFilters.forEach((result) => {
+        const input = document.querySelector(`input[data-test-result="${result}"]`)
+        input.checked = currentFilter.includes(result)
+    })
+}
+
+const bindEvents = () => {
+    const filterColumn = (evt) => {
+        const { target: element } = evt
+        const { testResult } = element.dataset
+
+        doFilter(testResult, element.checked)
+        const collapsedIds = getCollapsedIds()
+        const updated = manager.renderData.tests.map((test) => {
+            return {
+                ...test,
+                collapsed: collapsedIds.includes(test.id),
+            }
+        })
+        manager.setRender(updated)
+        redraw()
+    }
+
+    const header = document.getElementById('environment-header')
+    header.addEventListener('click', () => {
+        const table = document.getElementById('environment')
+        table.classList.toggle('hidden')
+        header.classList.toggle('collapsed')
+    })
+
+    findAll('input[name="filter_checkbox"]').forEach((elem) => {
+        elem.addEventListener('click', filterColumn)
+    })
+
+    findAll('.sortable').forEach((elem) => {
+        elem.addEventListener('click', (evt) => {
+            const { target: element } = evt
+            const { columnType } = element.dataset
+            doSort(columnType)
+            redraw()
+        })
+    })
+
+    document.getElementById('show_all_details').addEventListener('click', () => {
+        manager.allCollapsed = false
+        setCollapsedIds([])
+        redraw()
+    })
+    document.getElementById('hide_all_details').addEventListener('click', () => {
+        manager.allCollapsed = true
+        const allIds = manager.renderData.tests.map((test) => test.id)
+        setCollapsedIds(allIds)
+        redraw()
+    })
+}
+
+const redraw = () => {
+    const { testSubset } = manager
+
+    renderContent(testSubset)
+    renderDerived()
+}
+
+module.exports = {
+    redraw,
+    bindEvents,
+    renderStatic,
+}
+
+},{"./datamanager.js":1,"./dom.js":2,"./filter.js":3,"./sort.js":7,"./storage.js":8}],6:[function(require,module,exports){
+class MediaViewer {
+    constructor(assets) {
+        this.assets = assets
+        this.index = 0
+    }
+
+    nextActive() {
+        this.index = this.index === this.assets.length - 1 ? 0 : this.index + 1
+        return [this.activeFile, this.index]
+    }
+
+    prevActive() {
+        this.index = this.index === 0 ? this.assets.length - 1 : this.index -1
+        return [this.activeFile, this.index]
+    }
+
+    get currentIndex() {
+        return this.index
+    }
+
+    get activeFile() {
+        return this.assets[this.index]
+    }
+}
+
+
+const setup = (resultBody, assets) => {
+    if (!assets.length) {
+        resultBody.querySelector('.media').classList.add('hidden')
+        return
+    }
+
+    const mediaViewer = new MediaViewer(assets)
+    const container = resultBody.querySelector('.media-container')
+    const leftArrow = resultBody.querySelector('.media-container__nav--left')
+    const rightArrow = resultBody.querySelector('.media-container__nav--right')
+    const mediaName = resultBody.querySelector('.media__name')
+    const counter = resultBody.querySelector('.media__counter')
+    const imageEl = resultBody.querySelector('img')
+    const sourceEl = resultBody.querySelector('source')
+    const videoEl = resultBody.querySelector('video')
+
+    const setImg = (media, index) => {
+        if (media?.format_type === 'image') {
+            imageEl.src = media.path
+
+            imageEl.classList.remove('hidden')
+            videoEl.classList.add('hidden')
+        } else if (media?.format_type === 'video') {
+            sourceEl.src = media.path
+
+            videoEl.classList.remove('hidden')
+            imageEl.classList.add('hidden')
+        }
+
+        mediaName.innerText = media?.name
+        counter.innerText = `${index + 1} / ${assets.length}`
+    }
+    setImg(mediaViewer.activeFile, mediaViewer.currentIndex)
+
+    const moveLeft = () => {
+        const [media, index] = mediaViewer.prevActive()
+        setImg(media, index)
+    }
+    const doRight = () => {
+        const [media, index] = mediaViewer.nextActive()
+        setImg(media, index)
+    }
+    const openImg = () => {
+        window.open(mediaViewer.activeFile.path, '_blank')
+    }
+    if (assets.length === 1) {
+        container.classList.add('media-container--fullscreen')
+    } else {
+        leftArrow.addEventListener('click', moveLeft)
+        rightArrow.addEventListener('click', doRight)
+    }
+    imageEl.addEventListener('click', openImg)
+}
+
+module.exports = {
+    setup,
+}
+
+},{}],7:[function(require,module,exports){
+const { manager } = require('./datamanager.js')
+const storageModule = require('./storage.js')
+
+const genericSort = (list, key, ascending, customOrder) => {
+    let sorted
+    if (customOrder) {
+        sorted = list.sort((a, b) => {
+            const aValue = a.result.toLowerCase()
+            const bValue = b.result.toLowerCase()
+
+            const aIndex = customOrder.findIndex((item) => item.toLowerCase() === aValue)
+            const bIndex = customOrder.findIndex((item) => item.toLowerCase() === bValue)
+
+            // Compare the indices to determine the sort order
+            return aIndex - bIndex
+        })
+    } else {
+        sorted = list.sort((a, b) => a[key] === b[key] ? 0 : a[key] > b[key] ? 1 : -1)
+    }
+
+    if (ascending) {
+        sorted.reverse()
+    }
+    return sorted
+}
+
+const durationSort = (list, ascending) => {
+    const parseDuration = (duration) => {
+        if (duration.includes(':')) {
+            // If it's in the format "HH:mm:ss"
+            const [hours, minutes, seconds] = duration.split(':').map(Number)
+            return (hours * 3600 + minutes * 60 + seconds) * 1000
+        } else {
+            // If it's in the format "nnn ms"
+            return parseInt(duration)
+        }
+    }
+    const sorted = list.sort((a, b) => parseDuration(a['duration']) - parseDuration(b['duration']))
+    if (ascending) {
+        sorted.reverse()
+    }
+    return sorted
+}
+
+const doInitSort = () => {
+    const type = storageModule.getSort(manager.initialSort)
+    const ascending = storageModule.getSortDirection()
+    const list = manager.testSubset
+    const initialOrder = ['Error', 'Failed', 'Rerun', 'XFailed', 'XPassed', 'Skipped', 'Passed']
+
+    storageModule.setSort(type)
+    storageModule.setSortDirection(ascending)
+
+    if (type?.toLowerCase() === 'original') {
+        manager.setRender(list)
+    } else {
+        let sortedList
+        switch (type) {
+        case 'duration':
+            sortedList = durationSort(list, ascending)
+            break
+        case 'result':
+            sortedList = genericSort(list, type, ascending, initialOrder)
+            break
+        default:
+            sortedList = genericSort(list, type, ascending)
+            break
+        }
+        manager.setRender(sortedList)
+    }
+}
+
+const doSort = (type, skipDirection) => {
+    const newSortType = storageModule.getSort(manager.initialSort) !== type
+    const currentAsc = storageModule.getSortDirection()
+    let ascending
+    if (skipDirection) {
+        ascending = currentAsc
+    } else {
+        ascending = newSortType ? false : !currentAsc
+    }
+    storageModule.setSort(type)
+    storageModule.setSortDirection(ascending)
+
+    const list = manager.testSubset
+    const sortedList = type === 'duration' ? durationSort(list, ascending) : genericSort(list, type, ascending)
+    manager.setRender(sortedList)
+}
+
+module.exports = {
+    doInitSort,
+    doSort,
+}
+
+},{"./datamanager.js":1,"./storage.js":8}],8:[function(require,module,exports){
+const possibleFilters = [
+    'passed',
+    'skipped',
+    'failed',
+    'error',
+    'xfailed',
+    'xpassed',
+    'rerun',
+]
+
+const getVisible = () => {
+    const url = new URL(window.location.href)
+    const settings = new URLSearchParams(url.search).get('visible')
+    const lower = (item) => {
+        const lowerItem = item.toLowerCase()
+        if (possibleFilters.includes(lowerItem)) {
+            return lowerItem
+        }
+        return null
+    }
+    return settings === null ?
+        possibleFilters :
+        [...new Set(settings?.split(',').map(lower).filter((item) => item))]
+}
+
+const hideCategory = (categoryToHide) => {
+    const url = new URL(window.location.href)
+    const visibleParams = new URLSearchParams(url.search).get('visible')
+    const currentVisible = visibleParams ? visibleParams.split(',') : [...possibleFilters]
+    const settings = [...new Set(currentVisible)].filter((f) => f !== categoryToHide).join(',')
+
+    url.searchParams.set('visible', settings)
+    window.history.pushState({}, null, unescape(url.href))
+}
+
+const showCategory = (categoryToShow) => {
+    if (typeof window === 'undefined') {
+        return
+    }
+    const url = new URL(window.location.href)
+    const currentVisible = new URLSearchParams(url.search).get('visible')?.split(',').filter(Boolean) ||
+        [...possibleFilters]
+    const settings = [...new Set([categoryToShow, ...currentVisible])]
+    const noFilter = possibleFilters.length === settings.length || !settings.length
+
+    noFilter ? url.searchParams.delete('visible') : url.searchParams.set('visible', settings.join(','))
+    window.history.pushState({}, null, unescape(url.href))
+}
+
+const getSort = (initialSort) => {
+    const url = new URL(window.location.href)
+    let sort = new URLSearchParams(url.search).get('sort')
+    if (!sort) {
+        sort = initialSort || 'result'
+    }
+    return sort
+}
+
+const setSort = (type) => {
+    const url = new URL(window.location.href)
+    url.searchParams.set('sort', type)
+    window.history.pushState({}, null, unescape(url.href))
+}
+
+const getCollapsedCategory = (renderCollapsed) => {
+    let categories
+    if (typeof window !== 'undefined') {
+        const url = new URL(window.location.href)
+        const collapsedItems = new URLSearchParams(url.search).get('collapsed')
+        switch (true) {
+        case !renderCollapsed && collapsedItems === null:
+            categories = ['passed']
+            break
+        case collapsedItems?.length === 0 || /^["']{2}$/.test(collapsedItems):
+            categories = []
+            break
+        case /^all$/.test(collapsedItems) || collapsedItems === null && /^all$/.test(renderCollapsed):
+            categories = [...possibleFilters]
+            break
+        default:
+            categories = collapsedItems?.split(',').map((item) => item.toLowerCase()) || renderCollapsed
+            break
+        }
+    } else {
+        categories = []
+    }
+    return categories
+}
+
+const getSortDirection = () => JSON.parse(sessionStorage.getItem('sortAsc')) || false
+const setSortDirection = (ascending) => sessionStorage.setItem('sortAsc', ascending)
+
+const getCollapsedIds = () => JSON.parse(sessionStorage.getItem('collapsedIds')) || []
+const setCollapsedIds = (list) => sessionStorage.setItem('collapsedIds', JSON.stringify(list))
+
+module.exports = {
+    getVisible,
+    hideCategory,
+    showCategory,
+    getCollapsedIds,
+    setCollapsedIds,
+    getSort,
+    setSort,
+    getSortDirection,
+    setSortDirection,
+    getCollapsedCategory,
+    possibleFilters,
+}
+
+},{}]},{},[4]);
+    </script>
+  </footer>
+</html>

@@ -1,0 +1,598 @@
+DEBUG    asyncio:proactor_events.py:633 Using proactor: IocpProactor
+DEBUG    asyncio:proactor_events.py:633 Using proactor: IocpProactor
+DEBUG    tests.test_authentication:test_authentication.py:181 Starting test_multi_user_login...
+DEBUG    tests.test_authentication:test_authentication.py:184 Browser launched.
+DEBUG    tests.test_authentication:test_authentication.py:265 Running both user workflows concurrently...
+DEBUG    tests.test_authentication:test_authentication.py:187 Starting first_user_workflow...
+DEBUG    tests.test_authentication:test_authentication.py:226 Starting second_user_workflow...
+DEBUG    tests.test_authentication:test_authentication.py:191 First user context and page created.
+DEBUG    tests.test_authentication:test_authentication.py:230 Second user context and page created.
+DEBUG    tests.test_authentication:test_authentication.py:235 Second user navigated to /register.
+DEBUG    tests.test_authentication:test_authentication.py:196 First user navigated to /register.
+DEBUG    tests.test_authentication:test_authentication.py:239 Second user registration form submitted.
+DEBUG    tests.test_authentication:test_authentication.py:200 First user registration form submitted.
+DEBUG    tests.test_authentication:test_authentication.py:241 Second user redirected to /login after registration.
+DEBUG    tests.test_authentication:test_authentication.py:202 First user redirected to /login after registration.
+DEBUG    tests.test_authentication:test_authentication.py:247 Second user login form submitted.
+DEBUG    tests.test_authentication:test_authentication.py:208 First user login form submitted.
+DEBUG    tests.test_authentication:test_authentication.py:251 Second user successfully logged in and verified.
+DEBUG    tests.test_authentication:test_authentication.py:212 First user successfully logged in and verified.
+DEBUG    tests.test_authentication:test_authentication.py:257 Second user logged out and redirected to /login.
+DEBUG    tests.test_authentication:test_authentication.py:262 Second user context and page closed.
+DEBUG    tests.test_authentication:test_authentication.py:218 First user logged out and redirected to /login.
+DEBUG    tests.test_authentication:test_authentication.py:223 First user context and page closed.
+DEBUG    tests.test_authentication:test_authentication.py:270 Browser closed.
+DEBUG    asyncio:proactor_events.py:633 Using proactor: IocpProactor
+INFO     tests.test_auth_endpoints:test_auth_endpoints.py:11 Opening MongoDB connection for test session.
+DEBUG    pymongo.topology:logger.py:100 {"topologyId": {"$oid": "67edb2d75a19ff9b4f46d274"}, "message": "Starting topology monitoring"}
+DEBUG    pymongo.topology:logger.py:100 {"topologyId": {"$oid": "67edb2d75a19ff9b4f46d274"}, "previousDescription": "<TopologyDescription id: 67edb2d75a19ff9b4f46d274, topology_type: Unknown, servers: []>", "newDescription": "<TopologyDescription id: 67edb2d75a19ff9b4f46d274, topology_type: Unknown, servers: [<ServerDescription ('autorack.proxy.rlwy.net', 44467) server_type: Unknown, rtt: None>]>", "message": "Topology description changed"}
+DEBUG    pymongo.topology:logger.py:100 {"topologyId": {"$oid": "67edb2d75a19ff9b4f46d274"}, "serverHost": "autorack.proxy.rlwy.net", "serverPort": 44467, "message": "Starting server monitoring"}
+INFO     tests.test_auth_endpoints:test_auth_endpoints.py:20 Creating AsyncClient for testing.
+DEBUG    httpx:_config.py:78 load_ssl_context verify=True cert=None trust_env=True http2=False
+DEBUG    httpx:_config.py:144 load_verify_locations cafile='C:\\Users\\Work\\AppData\\Local\\Packages\\PythonSoftwareFoundation.Python.3.11_qbz5n2kfra8p0\\LocalCache\\local-packages\\Python311\\site-packages\\certifi\\cacert.pem'
+INFO     tests.test_auth_endpoints:test_auth_endpoints.py:30 Starting test: test_register_user
+DEBUG    httpcore.connection:_trace.py:87 connect_tcp.started host='localhost' port=8000 local_address=None timeout=5.0 socket_options=None
+DEBUG    httpcore.connection:_trace.py:87 connect_tcp.complete return_value=<httpcore._backends.anyio.AnyIOStream object at 0x0000023C78BC3E50>
+DEBUG    httpcore.http11:_trace.py:87 send_request_headers.started request=<Request [b'POST']>
+DEBUG    httpcore.http11:_trace.py:87 send_request_headers.complete
+DEBUG    httpcore.http11:_trace.py:87 send_request_body.started request=<Request [b'POST']>
+DEBUG    httpcore.http11:_trace.py:87 send_request_body.complete
+DEBUG    httpcore.http11:_trace.py:87 receive_response_headers.started request=<Request [b'POST']>
+DEBUG    httpcore.http11:_trace.py:87 receive_response_headers.complete return_value=(b'HTTP/1.1', 200, b'OK', [(b'date', b'Wed, 02 Apr 2025 21:57:43 GMT'), (b'server', b'uvicorn'), (b'content-length', b'42'), (b'content-type', b'application/json')])
+INFO     httpx:_client.py:1758 HTTP Request: POST http://localhost:8000/api/auth/register "HTTP/1.1 200 OK"
+DEBUG    httpcore.http11:_trace.py:87 receive_response_body.started request=<Request [b'POST']>
+DEBUG    httpcore.http11:_trace.py:87 receive_response_body.complete
+DEBUG    httpcore.http11:_trace.py:87 response_closed.started
+DEBUG    httpcore.http11:_trace.py:87 response_closed.complete
+INFO     tests.test_auth_endpoints:test_auth_endpoints.py:38 Response status: 200, body: {"message":"User registered successfully"}
+DEBUG    pymongo.connection:logger.py:100 {"clientId": {"$oid": "67edb2d75a19ff9b4f46d274"}, "message": "Connection pool created", "serverHost": "autorack.proxy.rlwy.net", "serverPort": 44467}
+DEBUG    pymongo.serverSelection:logger.py:100 {"message": "Server selection started", "selector": "Primary()", "operation": "find", "topologyDescription": "<TopologyDescription id: 67edb2d75a19ff9b4f46d274, topology_type: Unknown, servers: [<ServerDescription ('autorack.proxy.rlwy.net', 44467) server_type: Unknown, rtt: None>]>", "clientId": {"$oid": "67edb2d75a19ff9b4f46d274"}}
+DEBUG    pymongo.serverSelection:logger.py:100 {"message": "Waiting for suitable server to become available", "selector": "Primary()", "operation": "find", "topologyDescription": "<TopologyDescription id: 67edb2d75a19ff9b4f46d274, topology_type: Unknown, servers: [<ServerDescription ('autorack.proxy.rlwy.net', 44467) server_type: Unknown, rtt: None>]>", "clientId": {"$oid": "67edb2d75a19ff9b4f46d274"}, "remainingTimeMS": 30}
+DEBUG    pymongo.topology:logger.py:100 {"topologyId": {"$oid": "67edb2d75a19ff9b4f46d274"}, "driverConnectionId": 1, "serverHost": "autorack.proxy.rlwy.net", "serverPort": 44467, "awaited": false, "message": "Server heartbeat started"}
+DEBUG    pymongo.topology:logger.py:100 {"topologyId": {"$oid": "67edb2d75a19ff9b4f46d274"}, "driverConnectionId": 1, "serverConnectionId": 1339, "serverHost": "autorack.proxy.rlwy.net", "serverPort": 44467, "awaited": false, "durationMS": 375.0, "reply": "{\"helloOk\": true, \"ismaster\": true, \"topologyVersion\": {\"processId\": {\"$oid\": \"67e69dde62eb67eb8833ab82\"}}, \"maxBsonObjectSize\": 16777216, \"maxMessageSizeBytes\": 48000000, \"maxWriteBatchSize\": 100000, \"localTime\": {\"$date\": \"2025-04-02T21:57:45.555Z\"}, \"logicalSessionTimeoutMinutes\": 30, \"connectionId\": 1339, \"maxWireVersion\": 21, \"ok\": 1.0}", "message": "Server heartbeat succeeded"}
+DEBUG    pymongo.connection:logger.py:100 {"clientId": {"$oid": "67edb2d75a19ff9b4f46d274"}, "message": "Connection pool ready", "serverHost": "autorack.proxy.rlwy.net", "serverPort": 44467}
+DEBUG    pymongo.topology:logger.py:100 {"topologyId": {"$oid": "67edb2d75a19ff9b4f46d274"}, "previousDescription": "<TopologyDescription id: 67edb2d75a19ff9b4f46d274, topology_type: Unknown, servers: [<ServerDescription ('autorack.proxy.rlwy.net', 44467) server_type: Unknown, rtt: None>]>", "newDescription": "<TopologyDescription id: 67edb2d75a19ff9b4f46d274, topology_type: Single, servers: [<ServerDescription ('autorack.proxy.rlwy.net', 44467) server_type: Standalone, rtt: 0.375>]>", "message": "Topology description changed"}
+DEBUG    pymongo.serverSelection:logger.py:100 {"message": "Server selection succeeded", "selector": "Primary()", "operation": "find", "topologyDescription": "<TopologyDescription id: 67edb2d75a19ff9b4f46d274, topology_type: Single, servers: [<ServerDescription ('autorack.proxy.rlwy.net', 44467) server_type: Standalone, rtt: 0.375>]>", "clientId": {"$oid": "67edb2d75a19ff9b4f46d274"}, "serverHost": "autorack.proxy.rlwy.net", "serverPort": 44467}
+DEBUG    pymongo.connection:logger.py:100 {"clientId": {"$oid": "67edb2d75a19ff9b4f46d274"}, "message": "Connection checkout started", "serverHost": "autorack.proxy.rlwy.net", "serverPort": 44467}
+DEBUG    pymongo.topology:logger.py:100 {"topologyId": {"$oid": "67edb2d75a19ff9b4f46d274"}, "driverConnectionId": 1, "serverConnectionId": 1339, "serverHost": "autorack.proxy.rlwy.net", "serverPort": 44467, "awaited": true, "message": "Server heartbeat started"}
+DEBUG    pymongo.connection:logger.py:100 {"clientId": {"$oid": "67edb2d75a19ff9b4f46d274"}, "message": "Connection created", "serverHost": "autorack.proxy.rlwy.net", "serverPort": 44467, "driverConnectionId": 1}
+DEBUG    pymongo.connection:logger.py:100 {"clientId": {"$oid": "67edb2d75a19ff9b4f46d274"}, "message": "Connection ready", "serverHost": "autorack.proxy.rlwy.net", "serverPort": 44467, "driverConnectionId": 1, "durationMS": 0.5779999999795109}
+DEBUG    pymongo.connection:logger.py:100 {"clientId": {"$oid": "67edb2d75a19ff9b4f46d274"}, "message": "Connection checked out", "serverHost": "autorack.proxy.rlwy.net", "serverPort": 44467, "driverConnectionId": 1, "durationMS": 0.6569999998901039}
+DEBUG    pymongo.command:logger.py:100 {"clientId": {"$oid": "67edb2d75a19ff9b4f46d274"}, "message": "Command started", "command": "{\"find\": \"Users\", \"filter\": {\"username\": \"testuser@example.com\"}, \"limit\": 1, \"singleBatch\": true, \"lsid\": {\"id\": {\"$binary\": {\"base64\": \"ORN9TyaLRL6k23ZTkM6ueA==\", \"subType\": \"04\"}}}, \"$db\": \"fl_all\"}", "commandName": "find", "databaseName": "fl_all", "requestId": 6334, "operationId": 6334, "driverConnectionId": 1, "serverConnectionId": 1340, "serverHost": "autorack.proxy.rlwy.net", "serverPort": 44467}
+DEBUG    pymongo.command:logger.py:100 {"clientId": {"$oid": "67edb2d75a19ff9b4f46d274"}, "message": "Command succeeded", "durationMS": 226.14000000000001, "reply": "{\"cursor\": {\"firstBatch\": [{\"_id\": {\"$oid\": \"67edb2d8bb5733a8d846303a\"}, \"username\": \"testuser@example.com\", \"password\": \"$argon2id$v=19$m=65536,t=3,p=4$xbiX0npvbY1xLiXEGANAaA$jDL9fiG8uAQV4HxhyM7fitdcEhB+Ar0PE8f9uohf0eo\", \"role\": \"clinic\"}], \"ns\": \"fl_all.Users\"}, \"ok\": 1.0}", "commandName": "find", "databaseName": "fl_all", "requestId": 6334, "operationId": 6334, "driverConnectionId": 1, "serverConnectionId": 1340, "serverHost": "autorack.proxy.rlwy.net", "serverPort": 44467}
+DEBUG    pymongo.connection:logger.py:100 {"clientId": {"$oid": "67edb2d75a19ff9b4f46d274"}, "message": "Connection checked in", "serverHost": "autorack.proxy.rlwy.net", "serverPort": 44467, "driverConnectionId": 1}
+INFO     tests.test_auth_endpoints:test_auth_endpoints.py:46 User found in database: {'_id': ObjectId('67edb2d8bb5733a8d846303a'), 'username': 'testuser@example.com', 'password': '$argon2id$v=19$m=65536,t=3,p=4$xbiX0npvbY1xLiXEGANAaA$jDL9fiG8uAQV4HxhyM7fitdcEhB+Ar0PE8f9uohf0eo', 'role': 'clinic'}
+DEBUG    pymongo.serverSelection:logger.py:100 {"message": "Server selection started", "selector": "<function writable_server_selector at 0x0000023C77B6E520>", "operation": "delete", "topologyDescription": "<TopologyDescription id: 67edb2d75a19ff9b4f46d274, topology_type: Single, servers: [<ServerDescription ('autorack.proxy.rlwy.net', 44467) server_type: Standalone, rtt: 0.375>]>", "clientId": {"$oid": "67edb2d75a19ff9b4f46d274"}}
+DEBUG    pymongo.serverSelection:logger.py:100 {"message": "Server selection succeeded", "selector": "<function writable_server_selector at 0x0000023C77B6E520>", "operation": "delete", "topologyDescription": "<TopologyDescription id: 67edb2d75a19ff9b4f46d274, topology_type: Single, servers: [<ServerDescription ('autorack.proxy.rlwy.net', 44467) server_type: Standalone, rtt: 0.375>]>", "clientId": {"$oid": "67edb2d75a19ff9b4f46d274"}, "serverHost": "autorack.proxy.rlwy.net", "serverPort": 44467}
+DEBUG    pymongo.connection:logger.py:100 {"clientId": {"$oid": "67edb2d75a19ff9b4f46d274"}, "message": "Connection checkout started", "serverHost": "autorack.proxy.rlwy.net", "serverPort": 44467}
+DEBUG    pymongo.connection:logger.py:100 {"clientId": {"$oid": "67edb2d75a19ff9b4f46d274"}, "message": "Connection checked out", "serverHost": "autorack.proxy.rlwy.net", "serverPort": 44467, "driverConnectionId": 1, "durationMS": 0.0}
+DEBUG    pymongo.command:logger.py:100 {"clientId": {"$oid": "67edb2d75a19ff9b4f46d274"}, "message": "Command started", "command": "{\"delete\": \"Users\", \"ordered\": true, \"lsid\": {\"id\": {\"$binary\": {\"base64\": \"ORN9TyaLRL6k23ZTkM6ueA==\", \"subType\": \"04\"}}}, \"$db\": \"fl_all\", \"deletes\": [{\"q\": {\"username\": \"testuser@example.com\"}, \"limit\": 1}]}", "commandName": "delete", "databaseName": "fl_all", "requestId": 26500, "operationId": 26500, "driverConnectionId": 1, "serverConnectionId": 1340, "serverHost": "autorack.proxy.rlwy.net", "serverPort": 44467}
+DEBUG    pymongo.command:logger.py:100 {"clientId": {"$oid": "67edb2d75a19ff9b4f46d274"}, "message": "Command succeeded", "durationMS": 212.537, "reply": "{\"n\": 1, \"ok\": 1.0}", "commandName": "delete", "databaseName": "fl_all", "requestId": 26500, "operationId": 26500, "driverConnectionId": 1, "serverConnectionId": 1340, "serverHost": "autorack.proxy.rlwy.net", "serverPort": 44467}
+DEBUG    pymongo.connection:logger.py:100 {"clientId": {"$oid": "67edb2d75a19ff9b4f46d274"}, "message": "Connection checked in", "serverHost": "autorack.proxy.rlwy.net", "serverPort": 44467, "driverConnectionId": 1}
+INFO     tests.test_auth_endpoints:test_auth_endpoints.py:52 Cleaned up test user from database.
+DEBUG    httpcore.connection:_trace.py:87 close.started
+DEBUG    httpcore.connection:_trace.py:87 close.complete
+INFO     tests.test_auth_endpoints:test_auth_endpoints.py:23 AsyncClient closed.
+INFO     tests.test_auth_endpoints:test_auth_endpoints.py:20 Creating AsyncClient for testing.
+DEBUG    httpx:_config.py:78 load_ssl_context verify=True cert=None trust_env=True http2=False
+DEBUG    httpx:_config.py:144 load_verify_locations cafile='C:\\Users\\Work\\AppData\\Local\\Packages\\PythonSoftwareFoundation.Python.3.11_qbz5n2kfra8p0\\LocalCache\\local-packages\\Python311\\site-packages\\certifi\\cacert.pem'
+INFO     tests.test_auth_endpoints:test_auth_endpoints.py:59 Starting test: test_register_duplicate_user
+DEBUG    httpcore.connection:_trace.py:87 connect_tcp.started host='localhost' port=8000 local_address=None timeout=5.0 socket_options=None
+DEBUG    httpcore.connection:_trace.py:87 connect_tcp.complete return_value=<httpcore._backends.anyio.AnyIOStream object at 0x0000023C77B0A790>
+DEBUG    httpcore.http11:_trace.py:87 send_request_headers.started request=<Request [b'POST']>
+DEBUG    httpcore.http11:_trace.py:87 send_request_headers.complete
+DEBUG    httpcore.http11:_trace.py:87 send_request_body.started request=<Request [b'POST']>
+DEBUG    httpcore.http11:_trace.py:87 send_request_body.complete
+DEBUG    httpcore.http11:_trace.py:87 receive_response_headers.started request=<Request [b'POST']>
+DEBUG    httpcore.http11:_trace.py:87 receive_response_headers.complete return_value=(b'HTTP/1.1', 200, b'OK', [(b'date', b'Wed, 02 Apr 2025 21:57:46 GMT'), (b'server', b'uvicorn'), (b'content-length', b'42'), (b'content-type', b'application/json')])
+INFO     httpx:_client.py:1758 HTTP Request: POST http://localhost:8000/api/auth/register "HTTP/1.1 200 OK"
+DEBUG    httpcore.http11:_trace.py:87 receive_response_body.started request=<Request [b'POST']>
+DEBUG    httpcore.http11:_trace.py:87 receive_response_body.complete
+DEBUG    httpcore.http11:_trace.py:87 response_closed.started
+DEBUG    httpcore.http11:_trace.py:87 response_closed.complete
+INFO     tests.test_auth_endpoints:test_auth_endpoints.py:66 Registered user for duplicate test.
+DEBUG    httpcore.http11:_trace.py:87 send_request_headers.started request=<Request [b'POST']>
+DEBUG    httpcore.http11:_trace.py:87 send_request_headers.complete
+DEBUG    httpcore.http11:_trace.py:87 send_request_body.started request=<Request [b'POST']>
+DEBUG    httpcore.http11:_trace.py:87 send_request_body.complete
+DEBUG    httpcore.http11:_trace.py:87 receive_response_headers.started request=<Request [b'POST']>
+DEBUG    httpcore.http11:_trace.py:87 receive_response_headers.complete return_value=(b'HTTP/1.1', 400, b'Bad Request', [(b'date', b'Wed, 02 Apr 2025 21:57:46 GMT'), (b'server', b'uvicorn'), (b'content-length', b'37'), (b'content-type', b'application/json')])
+INFO     httpx:_client.py:1758 HTTP Request: POST http://localhost:8000/api/auth/register "HTTP/1.1 400 Bad Request"
+DEBUG    httpcore.http11:_trace.py:87 receive_response_body.started request=<Request [b'POST']>
+DEBUG    httpcore.http11:_trace.py:87 receive_response_body.complete
+DEBUG    httpcore.http11:_trace.py:87 response_closed.started
+DEBUG    httpcore.http11:_trace.py:87 response_closed.complete
+INFO     tests.test_auth_endpoints:test_auth_endpoints.py:74 Response status: 400, body: {"detail":"Email already registered"}
+DEBUG    pymongo.serverSelection:logger.py:100 {"message": "Server selection started", "selector": "<function writable_server_selector at 0x0000023C77B6E520>", "operation": "delete", "topologyDescription": "<TopologyDescription id: 67edb2d75a19ff9b4f46d274, topology_type: Single, servers: [<ServerDescription ('autorack.proxy.rlwy.net', 44467) server_type: Standalone, rtt: 0.375>]>", "clientId": {"$oid": "67edb2d75a19ff9b4f46d274"}}
+DEBUG    pymongo.serverSelection:logger.py:100 {"message": "Server selection succeeded", "selector": "<function writable_server_selector at 0x0000023C77B6E520>", "operation": "delete", "topologyDescription": "<TopologyDescription id: 67edb2d75a19ff9b4f46d274, topology_type: Single, servers: [<ServerDescription ('autorack.proxy.rlwy.net', 44467) server_type: Standalone, rtt: 0.375>]>", "clientId": {"$oid": "67edb2d75a19ff9b4f46d274"}, "serverHost": "autorack.proxy.rlwy.net", "serverPort": 44467}
+DEBUG    pymongo.connection:logger.py:100 {"clientId": {"$oid": "67edb2d75a19ff9b4f46d274"}, "message": "Connection checkout started", "serverHost": "autorack.proxy.rlwy.net", "serverPort": 44467}
+DEBUG    pymongo.connection:logger.py:100 {"clientId": {"$oid": "67edb2d75a19ff9b4f46d274"}, "message": "Connection checked out", "serverHost": "autorack.proxy.rlwy.net", "serverPort": 44467, "driverConnectionId": 1, "durationMS": 0.0}
+DEBUG    pymongo.command:logger.py:100 {"clientId": {"$oid": "67edb2d75a19ff9b4f46d274"}, "message": "Command started", "command": "{\"delete\": \"Users\", \"ordered\": true, \"lsid\": {\"id\": {\"$binary\": {\"base64\": \"ORN9TyaLRL6k23ZTkM6ueA==\", \"subType\": \"04\"}}}, \"$db\": \"fl_all\", \"deletes\": [{\"q\": {\"username\": \"testuser@example.com\"}, \"limit\": 1}]}", "commandName": "delete", "databaseName": "fl_all", "requestId": 19169, "operationId": 19169, "driverConnectionId": 1, "serverConnectionId": 1340, "serverHost": "autorack.proxy.rlwy.net", "serverPort": 44467}
+DEBUG    pymongo.command:logger.py:100 {"clientId": {"$oid": "67edb2d75a19ff9b4f46d274"}, "message": "Command succeeded", "durationMS": 213.81, "reply": "{\"n\": 1, \"ok\": 1.0}", "commandName": "delete", "databaseName": "fl_all", "requestId": 19169, "operationId": 19169, "driverConnectionId": 1, "serverConnectionId": 1340, "serverHost": "autorack.proxy.rlwy.net", "serverPort": 44467}
+DEBUG    pymongo.connection:logger.py:100 {"clientId": {"$oid": "67edb2d75a19ff9b4f46d274"}, "message": "Connection checked in", "serverHost": "autorack.proxy.rlwy.net", "serverPort": 44467, "driverConnectionId": 1}
+INFO     tests.test_auth_endpoints:test_auth_endpoints.py:82 Cleaned up test user from database.
+DEBUG    httpcore.connection:_trace.py:87 close.started
+DEBUG    httpcore.connection:_trace.py:87 close.complete
+INFO     tests.test_auth_endpoints:test_auth_endpoints.py:23 AsyncClient closed.
+INFO     tests.test_auth_endpoints:test_auth_endpoints.py:20 Creating AsyncClient for testing.
+DEBUG    httpx:_config.py:78 load_ssl_context verify=True cert=None trust_env=True http2=False
+DEBUG    httpx:_config.py:144 load_verify_locations cafile='C:\\Users\\Work\\AppData\\Local\\Packages\\PythonSoftwareFoundation.Python.3.11_qbz5n2kfra8p0\\LocalCache\\local-packages\\Python311\\site-packages\\certifi\\cacert.pem'
+INFO     tests.test_auth_endpoints:test_auth_endpoints.py:89 Starting test: test_login_user
+DEBUG    httpcore.connection:_trace.py:87 connect_tcp.started host='localhost' port=8000 local_address=None timeout=5.0 socket_options=None
+DEBUG    httpcore.connection:_trace.py:87 connect_tcp.complete return_value=<httpcore._backends.anyio.AnyIOStream object at 0x0000023C78C1A090>
+DEBUG    httpcore.http11:_trace.py:87 send_request_headers.started request=<Request [b'POST']>
+DEBUG    httpcore.http11:_trace.py:87 send_request_headers.complete
+DEBUG    httpcore.http11:_trace.py:87 send_request_body.started request=<Request [b'POST']>
+DEBUG    httpcore.http11:_trace.py:87 send_request_body.complete
+DEBUG    httpcore.http11:_trace.py:87 receive_response_headers.started request=<Request [b'POST']>
+DEBUG    httpcore.http11:_trace.py:87 receive_response_headers.complete return_value=(b'HTTP/1.1', 200, b'OK', [(b'date', b'Wed, 02 Apr 2025 21:57:48 GMT'), (b'server', b'uvicorn'), (b'content-length', b'42'), (b'content-type', b'application/json')])
+INFO     httpx:_client.py:1758 HTTP Request: POST http://localhost:8000/api/auth/register "HTTP/1.1 200 OK"
+DEBUG    httpcore.http11:_trace.py:87 receive_response_body.started request=<Request [b'POST']>
+DEBUG    httpcore.http11:_trace.py:87 receive_response_body.complete
+DEBUG    httpcore.http11:_trace.py:87 response_closed.started
+DEBUG    httpcore.http11:_trace.py:87 response_closed.complete
+INFO     tests.test_auth_endpoints:test_auth_endpoints.py:96 Registration response: 200, body: {"message":"User registered successfully"}
+DEBUG    httpcore.http11:_trace.py:87 send_request_headers.started request=<Request [b'POST']>
+DEBUG    httpcore.http11:_trace.py:87 send_request_headers.complete
+DEBUG    httpcore.http11:_trace.py:87 send_request_body.started request=<Request [b'POST']>
+DEBUG    httpcore.http11:_trace.py:87 send_request_body.complete
+DEBUG    httpcore.http11:_trace.py:87 receive_response_headers.started request=<Request [b'POST']>
+DEBUG    httpcore.http11:_trace.py:87 receive_response_headers.complete return_value=(b'HTTP/1.1', 200, b'OK', [(b'date', b'Wed, 02 Apr 2025 21:57:48 GMT'), (b'server', b'uvicorn'), (b'content-length', b'46'), (b'content-type', b'application/json'), (b'set-cookie', b'session_token=e5f6d43c660f6adc0a7c62ab59a4f4d9da75747c6f3a0828dfe6f2d4f9cf50d6; HttpOnly; Path=/; SameSite=strict; Secure')])
+INFO     httpx:_client.py:1758 HTTP Request: POST http://localhost:8000/api/auth/login "HTTP/1.1 200 OK"
+DEBUG    httpcore.http11:_trace.py:87 receive_response_body.started request=<Request [b'POST']>
+DEBUG    httpcore.http11:_trace.py:87 receive_response_body.complete
+DEBUG    httpcore.http11:_trace.py:87 response_closed.started
+DEBUG    httpcore.http11:_trace.py:87 response_closed.complete
+INFO     tests.test_auth_endpoints:test_auth_endpoints.py:104 Login response: 200, body: {"message":"Login successful","role":"clinic"}
+DEBUG    pymongo.serverSelection:logger.py:100 {"message": "Server selection started", "selector": "<function writable_server_selector at 0x0000023C77B6E520>", "operation": "delete", "topologyDescription": "<TopologyDescription id: 67edb2d75a19ff9b4f46d274, topology_type: Single, servers: [<ServerDescription ('autorack.proxy.rlwy.net', 44467) server_type: Standalone, rtt: 0.375>]>", "clientId": {"$oid": "67edb2d75a19ff9b4f46d274"}}
+DEBUG    pymongo.serverSelection:logger.py:100 {"message": "Server selection succeeded", "selector": "<function writable_server_selector at 0x0000023C77B6E520>", "operation": "delete", "topologyDescription": "<TopologyDescription id: 67edb2d75a19ff9b4f46d274, topology_type: Single, servers: [<ServerDescription ('autorack.proxy.rlwy.net', 44467) server_type: Standalone, rtt: 0.375>]>", "clientId": {"$oid": "67edb2d75a19ff9b4f46d274"}, "serverHost": "autorack.proxy.rlwy.net", "serverPort": 44467}
+DEBUG    pymongo.connection:logger.py:100 {"clientId": {"$oid": "67edb2d75a19ff9b4f46d274"}, "message": "Connection checkout started", "serverHost": "autorack.proxy.rlwy.net", "serverPort": 44467}
+DEBUG    pymongo.connection:logger.py:100 {"clientId": {"$oid": "67edb2d75a19ff9b4f46d274"}, "message": "Connection checked out", "serverHost": "autorack.proxy.rlwy.net", "serverPort": 44467, "driverConnectionId": 1, "durationMS": 0.0}
+DEBUG    pymongo.command:logger.py:100 {"clientId": {"$oid": "67edb2d75a19ff9b4f46d274"}, "message": "Command started", "command": "{\"delete\": \"Users\", \"ordered\": true, \"lsid\": {\"id\": {\"$binary\": {\"base64\": \"ORN9TyaLRL6k23ZTkM6ueA==\", \"subType\": \"04\"}}}, \"$db\": \"fl_all\", \"deletes\": [{\"q\": {\"username\": \"testuser@example.com\"}, \"limit\": 1}]}", "commandName": "delete", "databaseName": "fl_all", "requestId": 15724, "operationId": 15724, "driverConnectionId": 1, "serverConnectionId": 1340, "serverHost": "autorack.proxy.rlwy.net", "serverPort": 44467}
+DEBUG    pymongo.command:logger.py:100 {"clientId": {"$oid": "67edb2d75a19ff9b4f46d274"}, "message": "Command succeeded", "durationMS": 212.571, "reply": "{\"n\": 1, \"ok\": 1.0}", "commandName": "delete", "databaseName": "fl_all", "requestId": 15724, "operationId": 15724, "driverConnectionId": 1, "serverConnectionId": 1340, "serverHost": "autorack.proxy.rlwy.net", "serverPort": 44467}
+DEBUG    pymongo.connection:logger.py:100 {"clientId": {"$oid": "67edb2d75a19ff9b4f46d274"}, "message": "Connection checked in", "serverHost": "autorack.proxy.rlwy.net", "serverPort": 44467, "driverConnectionId": 1}
+INFO     tests.test_auth_endpoints:test_auth_endpoints.py:112 Cleaned up test user from database.
+DEBUG    pymongo.serverSelection:logger.py:100 {"message": "Server selection started", "selector": "<function writable_server_selector at 0x0000023C77B6E520>", "operation": "delete", "topologyDescription": "<TopologyDescription id: 67edb2d75a19ff9b4f46d274, topology_type: Single, servers: [<ServerDescription ('autorack.proxy.rlwy.net', 44467) server_type: Standalone, rtt: 0.375>]>", "clientId": {"$oid": "67edb2d75a19ff9b4f46d274"}}
+DEBUG    pymongo.serverSelection:logger.py:100 {"message": "Server selection succeeded", "selector": "<function writable_server_selector at 0x0000023C77B6E520>", "operation": "delete", "topologyDescription": "<TopologyDescription id: 67edb2d75a19ff9b4f46d274, topology_type: Single, servers: [<ServerDescription ('autorack.proxy.rlwy.net', 44467) server_type: Standalone, rtt: 0.375>]>", "clientId": {"$oid": "67edb2d75a19ff9b4f46d274"}, "serverHost": "autorack.proxy.rlwy.net", "serverPort": 44467}
+DEBUG    pymongo.connection:logger.py:100 {"clientId": {"$oid": "67edb2d75a19ff9b4f46d274"}, "message": "Connection checkout started", "serverHost": "autorack.proxy.rlwy.net", "serverPort": 44467}
+DEBUG    pymongo.connection:logger.py:100 {"clientId": {"$oid": "67edb2d75a19ff9b4f46d274"}, "message": "Connection checked out", "serverHost": "autorack.proxy.rlwy.net", "serverPort": 44467, "driverConnectionId": 1, "durationMS": 0.0}
+DEBUG    pymongo.command:logger.py:100 {"clientId": {"$oid": "67edb2d75a19ff9b4f46d274"}, "message": "Command started", "command": "{\"delete\": \"Sessions\", \"ordered\": true, \"lsid\": {\"id\": {\"$binary\": {\"base64\": \"ORN9TyaLRL6k23ZTkM6ueA==\", \"subType\": \"04\"}}}, \"$db\": \"fl_all\", \"deletes\": [{\"q\": {\"token\": \"e5f6d43c660f6adc0a7c62ab59a4f4d9da75747c6f3a0828dfe6f2d4f9cf50d6\"}, \"limit\": 1}]}", "commandName": "delete", "databaseName": "fl_all", "requestId": 11478, "operationId": 11478, "driverConnectionId": 1, "serverConnectionId": 1340, "serverHost": "autorack.proxy.rlwy.net", "serverPort": 44467}
+DEBUG    pymongo.command:logger.py:100 {"clientId": {"$oid": "67edb2d75a19ff9b4f46d274"}, "message": "Command succeeded", "durationMS": 215.489, "reply": "{\"n\": 1, \"ok\": 1.0}", "commandName": "delete", "databaseName": "fl_all", "requestId": 11478, "operationId": 11478, "driverConnectionId": 1, "serverConnectionId": 1340, "serverHost": "autorack.proxy.rlwy.net", "serverPort": 44467}
+DEBUG    pymongo.connection:logger.py:100 {"clientId": {"$oid": "67edb2d75a19ff9b4f46d274"}, "message": "Connection checked in", "serverHost": "autorack.proxy.rlwy.net", "serverPort": 44467, "driverConnectionId": 1}
+INFO     tests.test_auth_endpoints:test_auth_endpoints.py:115 Cleaned up session token from database.
+DEBUG    httpcore.connection:_trace.py:87 close.started
+DEBUG    httpcore.connection:_trace.py:87 close.complete
+INFO     tests.test_auth_endpoints:test_auth_endpoints.py:23 AsyncClient closed.
+INFO     tests.test_auth_endpoints:test_auth_endpoints.py:20 Creating AsyncClient for testing.
+DEBUG    httpx:_config.py:78 load_ssl_context verify=True cert=None trust_env=True http2=False
+DEBUG    httpx:_config.py:144 load_verify_locations cafile='C:\\Users\\Work\\AppData\\Local\\Packages\\PythonSoftwareFoundation.Python.3.11_qbz5n2kfra8p0\\LocalCache\\local-packages\\Python311\\site-packages\\certifi\\cacert.pem'
+INFO     tests.test_auth_endpoints:test_auth_endpoints.py:121 Starting test: test_login_invalid_credentials
+DEBUG    httpcore.connection:_trace.py:87 connect_tcp.started host='localhost' port=8000 local_address=None timeout=5.0 socket_options=None
+DEBUG    httpcore.connection:_trace.py:87 connect_tcp.complete return_value=<httpcore._backends.anyio.AnyIOStream object at 0x0000023C78C29F90>
+DEBUG    httpcore.http11:_trace.py:87 send_request_headers.started request=<Request [b'POST']>
+DEBUG    httpcore.http11:_trace.py:87 send_request_headers.complete
+DEBUG    httpcore.http11:_trace.py:87 send_request_body.started request=<Request [b'POST']>
+DEBUG    httpcore.http11:_trace.py:87 send_request_body.complete
+DEBUG    httpcore.http11:_trace.py:87 receive_response_headers.started request=<Request [b'POST']>
+DEBUG    httpcore.http11:_trace.py:87 receive_response_headers.complete return_value=(b'HTTP/1.1', 401, b'Unauthorized', [(b'date', b'Wed, 02 Apr 2025 21:57:50 GMT'), (b'server', b'uvicorn'), (b'content-length', b'32'), (b'content-type', b'application/json')])
+INFO     httpx:_client.py:1758 HTTP Request: POST http://localhost:8000/api/auth/login "HTTP/1.1 401 Unauthorized"
+DEBUG    httpcore.http11:_trace.py:87 receive_response_body.started request=<Request [b'POST']>
+DEBUG    httpcore.http11:_trace.py:87 receive_response_body.complete
+DEBUG    httpcore.http11:_trace.py:87 response_closed.started
+DEBUG    httpcore.http11:_trace.py:87 response_closed.complete
+INFO     tests.test_auth_endpoints:test_auth_endpoints.py:129 Response status: 401, body: {'detail': 'Invalid credentials'}
+DEBUG    httpcore.connection:_trace.py:87 close.started
+DEBUG    httpcore.connection:_trace.py:87 close.complete
+INFO     tests.test_auth_endpoints:test_auth_endpoints.py:23 AsyncClient closed.
+INFO     tests.test_auth_endpoints:test_auth_endpoints.py:20 Creating AsyncClient for testing.
+DEBUG    httpx:_config.py:78 load_ssl_context verify=True cert=None trust_env=True http2=False
+DEBUG    httpx:_config.py:144 load_verify_locations cafile='C:\\Users\\Work\\AppData\\Local\\Packages\\PythonSoftwareFoundation.Python.3.11_qbz5n2kfra8p0\\LocalCache\\local-packages\\Python311\\site-packages\\certifi\\cacert.pem'
+INFO     tests.test_auth_endpoints:test_auth_endpoints.py:139 Starting test: test_register_missing_fields
+DEBUG    httpcore.connection:_trace.py:87 connect_tcp.started host='localhost' port=8000 local_address=None timeout=5.0 socket_options=None
+DEBUG    httpcore.connection:_trace.py:87 connect_tcp.complete return_value=<httpcore._backends.anyio.AnyIOStream object at 0x0000023C78B213D0>
+DEBUG    httpcore.http11:_trace.py:87 send_request_headers.started request=<Request [b'POST']>
+DEBUG    httpcore.http11:_trace.py:87 send_request_headers.complete
+DEBUG    httpcore.http11:_trace.py:87 send_request_body.started request=<Request [b'POST']>
+DEBUG    httpcore.http11:_trace.py:87 send_request_body.complete
+DEBUG    httpcore.http11:_trace.py:87 receive_response_headers.started request=<Request [b'POST']>
+DEBUG    httpcore.http11:_trace.py:87 receive_response_headers.complete return_value=(b'HTTP/1.1', 422, b'Unprocessable Entity', [(b'date', b'Wed, 02 Apr 2025 21:57:51 GMT'), (b'server', b'uvicorn'), (b'content-length', b'93'), (b'content-type', b'application/json')])
+INFO     httpx:_client.py:1758 HTTP Request: POST http://localhost:8000/api/auth/register "HTTP/1.1 422 Unprocessable Entity"
+DEBUG    httpcore.http11:_trace.py:87 receive_response_body.started request=<Request [b'POST']>
+DEBUG    httpcore.http11:_trace.py:87 receive_response_body.complete
+DEBUG    httpcore.http11:_trace.py:87 response_closed.started
+DEBUG    httpcore.http11:_trace.py:87 response_closed.complete
+INFO     tests.test_auth_endpoints:test_auth_endpoints.py:146 Response for missing password: 422, body: {'detail': [{'type': 'missing', 'loc': ['body', 'password'], 'msg': 'Field required', 'input': None}]}
+DEBUG    httpcore.http11:_trace.py:87 send_request_headers.started request=<Request [b'POST']>
+DEBUG    httpcore.http11:_trace.py:87 send_request_headers.complete
+DEBUG    httpcore.http11:_trace.py:87 send_request_body.started request=<Request [b'POST']>
+DEBUG    httpcore.http11:_trace.py:87 send_request_body.complete
+DEBUG    httpcore.http11:_trace.py:87 receive_response_headers.started request=<Request [b'POST']>
+DEBUG    httpcore.http11:_trace.py:87 receive_response_headers.complete return_value=(b'HTTP/1.1', 422, b'Unprocessable Entity', [(b'date', b'Wed, 02 Apr 2025 21:57:51 GMT'), (b'server', b'uvicorn'), (b'content-length', b'93'), (b'content-type', b'application/json')])
+INFO     httpx:_client.py:1758 HTTP Request: POST http://localhost:8000/api/auth/register "HTTP/1.1 422 Unprocessable Entity"
+DEBUG    httpcore.http11:_trace.py:87 receive_response_body.started request=<Request [b'POST']>
+DEBUG    httpcore.http11:_trace.py:87 receive_response_body.complete
+DEBUG    httpcore.http11:_trace.py:87 response_closed.started
+DEBUG    httpcore.http11:_trace.py:87 response_closed.complete
+INFO     tests.test_auth_endpoints:test_auth_endpoints.py:157 Response for missing username: 422, body: {'detail': [{'type': 'missing', 'loc': ['body', 'username'], 'msg': 'Field required', 'input': None}]}
+DEBUG    httpcore.connection:_trace.py:87 close.started
+DEBUG    httpcore.connection:_trace.py:87 close.complete
+INFO     tests.test_auth_endpoints:test_auth_endpoints.py:23 AsyncClient closed.
+INFO     tests.test_auth_endpoints:test_auth_endpoints.py:20 Creating AsyncClient for testing.
+DEBUG    httpx:_config.py:78 load_ssl_context verify=True cert=None trust_env=True http2=False
+DEBUG    httpx:_config.py:144 load_verify_locations cafile='C:\\Users\\Work\\AppData\\Local\\Packages\\PythonSoftwareFoundation.Python.3.11_qbz5n2kfra8p0\\LocalCache\\local-packages\\Python311\\site-packages\\certifi\\cacert.pem'
+INFO     tests.test_auth_endpoints:test_auth_endpoints.py:167 Starting test: test_register_weak_password
+DEBUG    httpcore.connection:_trace.py:87 connect_tcp.started host='localhost' port=8000 local_address=None timeout=5.0 socket_options=None
+DEBUG    httpcore.connection:_trace.py:87 connect_tcp.complete return_value=<httpcore._backends.anyio.AnyIOStream object at 0x0000023C78C2AB90>
+DEBUG    httpcore.http11:_trace.py:87 send_request_headers.started request=<Request [b'POST']>
+DEBUG    httpcore.http11:_trace.py:87 send_request_headers.complete
+DEBUG    httpcore.http11:_trace.py:87 send_request_body.started request=<Request [b'POST']>
+DEBUG    httpcore.http11:_trace.py:87 send_request_body.complete
+DEBUG    httpcore.http11:_trace.py:87 receive_response_headers.started request=<Request [b'POST']>
+DEBUG    httpcore.http11:_trace.py:87 receive_response_headers.complete return_value=(b'HTTP/1.1', 400, b'Bad Request', [(b'date', b'Wed, 02 Apr 2025 21:57:51 GMT'), (b'server', b'uvicorn'), (b'content-length', b'56'), (b'content-type', b'application/json')])
+INFO     httpx:_client.py:1758 HTTP Request: POST http://localhost:8000/api/auth/register "HTTP/1.1 400 Bad Request"
+DEBUG    httpcore.http11:_trace.py:87 receive_response_body.started request=<Request [b'POST']>
+DEBUG    httpcore.http11:_trace.py:87 receive_response_body.complete
+DEBUG    httpcore.http11:_trace.py:87 response_closed.started
+DEBUG    httpcore.http11:_trace.py:87 response_closed.complete
+INFO     tests.test_auth_endpoints:test_auth_endpoints.py:174 Response for weak password: 400, body: {'detail': 'Password must be at least 8 characters long'}
+DEBUG    httpcore.connection:_trace.py:87 close.started
+DEBUG    httpcore.connection:_trace.py:87 close.complete
+INFO     tests.test_auth_endpoints:test_auth_endpoints.py:23 AsyncClient closed.
+INFO     tests.test_auth_endpoints:test_auth_endpoints.py:20 Creating AsyncClient for testing.
+DEBUG    httpx:_config.py:78 load_ssl_context verify=True cert=None trust_env=True http2=False
+DEBUG    httpx:_config.py:144 load_verify_locations cafile='C:\\Users\\Work\\AppData\\Local\\Packages\\PythonSoftwareFoundation.Python.3.11_qbz5n2kfra8p0\\LocalCache\\local-packages\\Python311\\site-packages\\certifi\\cacert.pem'
+INFO     tests.test_auth_endpoints:test_auth_endpoints.py:184 Starting test: test_logout_user
+DEBUG    httpcore.connection:_trace.py:87 connect_tcp.started host='localhost' port=8000 local_address=None timeout=5.0 socket_options=None
+DEBUG    httpcore.connection:_trace.py:87 connect_tcp.complete return_value=<httpcore._backends.anyio.AnyIOStream object at 0x0000023C78C18490>
+DEBUG    httpcore.http11:_trace.py:87 send_request_headers.started request=<Request [b'POST']>
+DEBUG    httpcore.http11:_trace.py:87 send_request_headers.complete
+DEBUG    httpcore.http11:_trace.py:87 send_request_body.started request=<Request [b'POST']>
+DEBUG    httpcore.http11:_trace.py:87 send_request_body.complete
+DEBUG    httpcore.http11:_trace.py:87 receive_response_headers.started request=<Request [b'POST']>
+DEBUG    httpcore.http11:_trace.py:87 receive_response_headers.complete return_value=(b'HTTP/1.1', 200, b'OK', [(b'date', b'Wed, 02 Apr 2025 21:57:52 GMT'), (b'server', b'uvicorn'), (b'content-length', b'42'), (b'content-type', b'application/json')])
+INFO     httpx:_client.py:1758 HTTP Request: POST http://localhost:8000/api/auth/register "HTTP/1.1 200 OK"
+DEBUG    httpcore.http11:_trace.py:87 receive_response_body.started request=<Request [b'POST']>
+DEBUG    httpcore.http11:_trace.py:87 receive_response_body.complete
+DEBUG    httpcore.http11:_trace.py:87 response_closed.started
+DEBUG    httpcore.http11:_trace.py:87 response_closed.complete
+INFO     tests.test_auth_endpoints:test_auth_endpoints.py:191 Registered user for logout test.
+DEBUG    httpcore.http11:_trace.py:87 send_request_headers.started request=<Request [b'POST']>
+DEBUG    httpcore.http11:_trace.py:87 send_request_headers.complete
+DEBUG    httpcore.http11:_trace.py:87 send_request_body.started request=<Request [b'POST']>
+DEBUG    httpcore.http11:_trace.py:87 send_request_body.complete
+DEBUG    httpcore.http11:_trace.py:87 receive_response_headers.started request=<Request [b'POST']>
+DEBUG    httpcore.http11:_trace.py:87 receive_response_headers.complete return_value=(b'HTTP/1.1', 200, b'OK', [(b'date', b'Wed, 02 Apr 2025 21:57:52 GMT'), (b'server', b'uvicorn'), (b'content-length', b'46'), (b'content-type', b'application/json'), (b'set-cookie', b'session_token=4be49701ec01b881a49de656bea5dffd98b1e48c237b32ecf146d68986b22abb; HttpOnly; Path=/; SameSite=strict; Secure')])
+INFO     httpx:_client.py:1758 HTTP Request: POST http://localhost:8000/api/auth/login "HTTP/1.1 200 OK"
+DEBUG    httpcore.http11:_trace.py:87 receive_response_body.started request=<Request [b'POST']>
+DEBUG    httpcore.http11:_trace.py:87 receive_response_body.complete
+DEBUG    httpcore.http11:_trace.py:87 response_closed.started
+DEBUG    httpcore.http11:_trace.py:87 response_closed.complete
+INFO     tests.test_auth_endpoints:test_auth_endpoints.py:198 Login response: 200, body: {"message":"Login successful","role":"clinic"}
+DEBUG    httpcore.http11:_trace.py:87 send_request_headers.started request=<Request [b'POST']>
+DEBUG    httpcore.http11:_trace.py:87 send_request_headers.complete
+DEBUG    httpcore.http11:_trace.py:87 send_request_body.started request=<Request [b'POST']>
+DEBUG    httpcore.http11:_trace.py:87 send_request_body.complete
+DEBUG    httpcore.http11:_trace.py:87 receive_response_headers.started request=<Request [b'POST']>
+DEBUG    httpcore.http11:_trace.py:87 receive_response_headers.complete return_value=(b'HTTP/1.1', 200, b'OK', [(b'date', b'Wed, 02 Apr 2025 21:57:53 GMT'), (b'server', b'uvicorn'), (b'content-length', b'24'), (b'content-type', b'application/json'), (b'set-cookie', b'session_token=""; expires=Wed, 02 Apr 2025 21:57:54 GMT; Max-Age=0; Path=/; SameSite=lax')])
+INFO     httpx:_client.py:1758 HTTP Request: POST http://localhost:8000/api/auth/logout "HTTP/1.1 200 OK"
+DEBUG    httpcore.http11:_trace.py:87 receive_response_body.started request=<Request [b'POST']>
+DEBUG    httpcore.http11:_trace.py:87 receive_response_body.complete
+DEBUG    httpcore.http11:_trace.py:87 response_closed.started
+DEBUG    httpcore.http11:_trace.py:87 response_closed.complete
+INFO     tests.test_auth_endpoints:test_auth_endpoints.py:209 Logout response: 200, body: {"message":"Logged out"}
+DEBUG    pymongo.serverSelection:logger.py:100 {"message": "Server selection started", "selector": "Primary()", "operation": "find", "topologyDescription": "<TopologyDescription id: 67edb2d75a19ff9b4f46d274, topology_type: Single, servers: [<ServerDescription ('autorack.proxy.rlwy.net', 44467) server_type: Standalone, rtt: 0.375>]>", "clientId": {"$oid": "67edb2d75a19ff9b4f46d274"}}
+DEBUG    pymongo.serverSelection:logger.py:100 {"message": "Server selection succeeded", "selector": "Primary()", "operation": "find", "topologyDescription": "<TopologyDescription id: 67edb2d75a19ff9b4f46d274, topology_type: Single, servers: [<ServerDescription ('autorack.proxy.rlwy.net', 44467) server_type: Standalone, rtt: 0.375>]>", "clientId": {"$oid": "67edb2d75a19ff9b4f46d274"}, "serverHost": "autorack.proxy.rlwy.net", "serverPort": 44467}
+DEBUG    pymongo.connection:logger.py:100 {"clientId": {"$oid": "67edb2d75a19ff9b4f46d274"}, "message": "Connection checkout started", "serverHost": "autorack.proxy.rlwy.net", "serverPort": 44467}
+DEBUG    pymongo.connection:logger.py:100 {"clientId": {"$oid": "67edb2d75a19ff9b4f46d274"}, "message": "Connection checked out", "serverHost": "autorack.proxy.rlwy.net", "serverPort": 44467, "driverConnectionId": 1, "durationMS": 0.0}
+DEBUG    pymongo.command:logger.py:100 {"clientId": {"$oid": "67edb2d75a19ff9b4f46d274"}, "message": "Command started", "command": "{\"find\": \"Sessions\", \"filter\": {\"token\": \"4be49701ec01b881a49de656bea5dffd98b1e48c237b32ecf146d68986b22abb\"}, \"limit\": 1, \"singleBatch\": true, \"lsid\": {\"id\": {\"$binary\": {\"base64\": \"ORN9TyaLRL6k23ZTkM6ueA==\", \"subType\": \"04\"}}}, \"$db\": \"fl_all\"}", "commandName": "find", "databaseName": "fl_all", "requestId": 29358, "operationId": 29358, "driverConnectionId": 1, "serverConnectionId": 1340, "serverHost": "autorack.proxy.rlwy.net", "serverPort": 44467}
+DEBUG    pymongo.command:logger.py:100 {"clientId": {"$oid": "67edb2d75a19ff9b4f46d274"}, "message": "Command succeeded", "durationMS": 212.762, "reply": "{\"cursor\": {\"ns\": \"fl_all.Sessions\"}, \"ok\": 1.0}", "commandName": "find", "databaseName": "fl_all", "requestId": 29358, "operationId": 29358, "driverConnectionId": 1, "serverConnectionId": 1340, "serverHost": "autorack.proxy.rlwy.net", "serverPort": 44467}
+DEBUG    pymongo.connection:logger.py:100 {"clientId": {"$oid": "67edb2d75a19ff9b4f46d274"}, "message": "Connection checked in", "serverHost": "autorack.proxy.rlwy.net", "serverPort": 44467, "driverConnectionId": 1}
+INFO     tests.test_auth_endpoints:test_auth_endpoints.py:218 Session token after logout: None
+DEBUG    pymongo.serverSelection:logger.py:100 {"message": "Server selection started", "selector": "<function writable_server_selector at 0x0000023C77B6E520>", "operation": "delete", "topologyDescription": "<TopologyDescription id: 67edb2d75a19ff9b4f46d274, topology_type: Single, servers: [<ServerDescription ('autorack.proxy.rlwy.net', 44467) server_type: Standalone, rtt: 0.375>]>", "clientId": {"$oid": "67edb2d75a19ff9b4f46d274"}}
+DEBUG    pymongo.serverSelection:logger.py:100 {"message": "Server selection succeeded", "selector": "<function writable_server_selector at 0x0000023C77B6E520>", "operation": "delete", "topologyDescription": "<TopologyDescription id: 67edb2d75a19ff9b4f46d274, topology_type: Single, servers: [<ServerDescription ('autorack.proxy.rlwy.net', 44467) server_type: Standalone, rtt: 0.375>]>", "clientId": {"$oid": "67edb2d75a19ff9b4f46d274"}, "serverHost": "autorack.proxy.rlwy.net", "serverPort": 44467}
+DEBUG    pymongo.connection:logger.py:100 {"clientId": {"$oid": "67edb2d75a19ff9b4f46d274"}, "message": "Connection checkout started", "serverHost": "autorack.proxy.rlwy.net", "serverPort": 44467}
+DEBUG    pymongo.connection:logger.py:100 {"clientId": {"$oid": "67edb2d75a19ff9b4f46d274"}, "message": "Connection checked out", "serverHost": "autorack.proxy.rlwy.net", "serverPort": 44467, "driverConnectionId": 1, "durationMS": 0.0}
+DEBUG    pymongo.command:logger.py:100 {"clientId": {"$oid": "67edb2d75a19ff9b4f46d274"}, "message": "Command started", "command": "{\"delete\": \"Users\", \"ordered\": true, \"lsid\": {\"id\": {\"$binary\": {\"base64\": \"ORN9TyaLRL6k23ZTkM6ueA==\", \"subType\": \"04\"}}}, \"$db\": \"fl_all\", \"deletes\": [{\"q\": {\"username\": \"testuser@example.com\"}, \"limit\": 1}]}", "commandName": "delete", "databaseName": "fl_all", "requestId": 26962, "operationId": 26962, "driverConnectionId": 1, "serverConnectionId": 1340, "serverHost": "autorack.proxy.rlwy.net", "serverPort": 44467}
+DEBUG    pymongo.command:logger.py:100 {"clientId": {"$oid": "67edb2d75a19ff9b4f46d274"}, "message": "Command succeeded", "durationMS": 212.179, "reply": "{\"n\": 1, \"ok\": 1.0}", "commandName": "delete", "databaseName": "fl_all", "requestId": 26962, "operationId": 26962, "driverConnectionId": 1, "serverConnectionId": 1340, "serverHost": "autorack.proxy.rlwy.net", "serverPort": 44467}
+DEBUG    pymongo.connection:logger.py:100 {"clientId": {"$oid": "67edb2d75a19ff9b4f46d274"}, "message": "Connection checked in", "serverHost": "autorack.proxy.rlwy.net", "serverPort": 44467, "driverConnectionId": 1}
+INFO     tests.test_auth_endpoints:test_auth_endpoints.py:223 Cleaned up test user from database.
+DEBUG    httpcore.connection:_trace.py:87 close.started
+DEBUG    httpcore.connection:_trace.py:87 close.complete
+INFO     tests.test_auth_endpoints:test_auth_endpoints.py:23 AsyncClient closed.
+INFO     tests.test_auth_endpoints:test_auth_endpoints.py:20 Creating AsyncClient for testing.
+DEBUG    httpx:_config.py:78 load_ssl_context verify=True cert=None trust_env=True http2=False
+DEBUG    httpx:_config.py:144 load_verify_locations cafile='C:\\Users\\Work\\AppData\\Local\\Packages\\PythonSoftwareFoundation.Python.3.11_qbz5n2kfra8p0\\LocalCache\\local-packages\\Python311\\site-packages\\certifi\\cacert.pem'
+INFO     tests.test_auth_endpoints:test_auth_endpoints.py:230 Starting test: test_verify_token
+DEBUG    httpcore.connection:_trace.py:87 connect_tcp.started host='localhost' port=8000 local_address=None timeout=5.0 socket_options=None
+DEBUG    httpcore.connection:_trace.py:87 connect_tcp.complete return_value=<httpcore._backends.anyio.AnyIOStream object at 0x0000023C78A66750>
+DEBUG    httpcore.http11:_trace.py:87 send_request_headers.started request=<Request [b'POST']>
+DEBUG    httpcore.http11:_trace.py:87 send_request_headers.complete
+DEBUG    httpcore.http11:_trace.py:87 send_request_body.started request=<Request [b'POST']>
+DEBUG    httpcore.http11:_trace.py:87 send_request_body.complete
+DEBUG    httpcore.http11:_trace.py:87 receive_response_headers.started request=<Request [b'POST']>
+DEBUG    pymongo.topology:logger.py:100 {"topologyId": {"$oid": "67edb2d75a19ff9b4f46d274"}, "driverConnectionId": 1, "serverConnectionId": 1339, "serverHost": "autorack.proxy.rlwy.net", "serverPort": 44467, "awaited": true, "durationMS": 10234.999999869615, "reply": "{\"isWritablePrimary\": true, \"topologyVersion\": {\"processId\": {\"$oid\": \"67e69dde62eb67eb8833ab82\"}}, \"maxBsonObjectSize\": 16777216, \"maxMessageSizeBytes\": 48000000, \"maxWriteBatchSize\": 100000, \"localTime\": {\"$date\": \"2025-04-02T21:57:55.793Z\"}, \"logicalSessionTimeoutMinutes\": 30, \"connectionId\": 1339, \"maxWireVersion\": 21, \"ok\": 1.0}", "message": "Server heartbeat succeeded"}
+DEBUG    pymongo.topology:logger.py:100 {"topologyId": {"$oid": "67edb2d75a19ff9b4f46d274"}, "driverConnectionId": 1, "serverConnectionId": 1339, "serverHost": "autorack.proxy.rlwy.net", "serverPort": 44467, "awaited": true, "message": "Server heartbeat started"}
+DEBUG    httpcore.http11:_trace.py:87 receive_response_headers.complete return_value=(b'HTTP/1.1', 200, b'OK', [(b'date', b'Wed, 02 Apr 2025 21:57:54 GMT'), (b'server', b'uvicorn'), (b'content-length', b'42'), (b'content-type', b'application/json')])
+INFO     httpx:_client.py:1758 HTTP Request: POST http://localhost:8000/api/auth/register "HTTP/1.1 200 OK"
+DEBUG    httpcore.http11:_trace.py:87 receive_response_body.started request=<Request [b'POST']>
+DEBUG    httpcore.http11:_trace.py:87 receive_response_body.complete
+DEBUG    httpcore.http11:_trace.py:87 response_closed.started
+DEBUG    httpcore.http11:_trace.py:87 response_closed.complete
+INFO     tests.test_auth_endpoints:test_auth_endpoints.py:237 Registered user for token verification test.
+DEBUG    httpcore.http11:_trace.py:87 send_request_headers.started request=<Request [b'POST']>
+DEBUG    httpcore.http11:_trace.py:87 send_request_headers.complete
+DEBUG    httpcore.http11:_trace.py:87 send_request_body.started request=<Request [b'POST']>
+DEBUG    httpcore.http11:_trace.py:87 send_request_body.complete
+DEBUG    httpcore.http11:_trace.py:87 receive_response_headers.started request=<Request [b'POST']>
+DEBUG    httpcore.http11:_trace.py:87 receive_response_headers.complete return_value=(b'HTTP/1.1', 200, b'OK', [(b'date', b'Wed, 02 Apr 2025 21:57:55 GMT'), (b'server', b'uvicorn'), (b'content-length', b'46'), (b'content-type', b'application/json'), (b'set-cookie', b'session_token=2023a46d7a8e83335f0f8b0b0fd1282d67ccac21564e11a4b4a6125eac16c560; HttpOnly; Path=/; SameSite=strict; Secure')])
+INFO     httpx:_client.py:1758 HTTP Request: POST http://localhost:8000/api/auth/login "HTTP/1.1 200 OK"
+DEBUG    httpcore.http11:_trace.py:87 receive_response_body.started request=<Request [b'POST']>
+DEBUG    httpcore.http11:_trace.py:87 receive_response_body.complete
+DEBUG    httpcore.http11:_trace.py:87 response_closed.started
+DEBUG    httpcore.http11:_trace.py:87 response_closed.complete
+INFO     tests.test_auth_endpoints:test_auth_endpoints.py:244 Login response: 200, body: {"message":"Login successful","role":"clinic"}
+DEBUG    httpcore.http11:_trace.py:87 send_request_headers.started request=<Request [b'GET']>
+DEBUG    httpcore.http11:_trace.py:87 send_request_headers.complete
+DEBUG    httpcore.http11:_trace.py:87 send_request_body.started request=<Request [b'GET']>
+DEBUG    httpcore.http11:_trace.py:87 send_request_body.complete
+DEBUG    httpcore.http11:_trace.py:87 receive_response_headers.started request=<Request [b'GET']>
+DEBUG    httpcore.http11:_trace.py:87 receive_response_headers.complete return_value=(b'HTTP/1.1', 200, b'OK', [(b'date', b'Wed, 02 Apr 2025 21:57:55 GMT'), (b'server', b'uvicorn'), (b'content-length', b'81'), (b'content-type', b'application/json')])
+INFO     httpx:_client.py:1758 HTTP Request: GET http://localhost:8000/api/auth/verify-token "HTTP/1.1 200 OK"
+DEBUG    httpcore.http11:_trace.py:87 receive_response_body.started request=<Request [b'GET']>
+DEBUG    httpcore.http11:_trace.py:87 receive_response_body.complete
+DEBUG    httpcore.http11:_trace.py:87 response_closed.started
+DEBUG    httpcore.http11:_trace.py:87 response_closed.complete
+INFO     tests.test_auth_endpoints:test_auth_endpoints.py:254 Verify response: 200, body: {"message":"Session is valid.","username":"testuser@example.com","role":"clinic"}
+DEBUG    pymongo.serverSelection:logger.py:100 {"message": "Server selection started", "selector": "<function writable_server_selector at 0x0000023C77B6E520>", "operation": "delete", "topologyDescription": "<TopologyDescription id: 67edb2d75a19ff9b4f46d274, topology_type: Single, servers: [<ServerDescription ('autorack.proxy.rlwy.net', 44467) server_type: Standalone, rtt: 0.3717999999877066>]>", "clientId": {"$oid": "67edb2d75a19ff9b4f46d274"}}
+DEBUG    pymongo.serverSelection:logger.py:100 {"message": "Server selection succeeded", "selector": "<function writable_server_selector at 0x0000023C77B6E520>", "operation": "delete", "topologyDescription": "<TopologyDescription id: 67edb2d75a19ff9b4f46d274, topology_type: Single, servers: [<ServerDescription ('autorack.proxy.rlwy.net', 44467) server_type: Standalone, rtt: 0.3717999999877066>]>", "clientId": {"$oid": "67edb2d75a19ff9b4f46d274"}, "serverHost": "autorack.proxy.rlwy.net", "serverPort": 44467}
+DEBUG    pymongo.connection:logger.py:100 {"clientId": {"$oid": "67edb2d75a19ff9b4f46d274"}, "message": "Connection checkout started", "serverHost": "autorack.proxy.rlwy.net", "serverPort": 44467}
+DEBUG    pymongo.connection:logger.py:100 {"clientId": {"$oid": "67edb2d75a19ff9b4f46d274"}, "message": "Connection checked out", "serverHost": "autorack.proxy.rlwy.net", "serverPort": 44467, "driverConnectionId": 1, "durationMS": 0.0}
+DEBUG    pymongo.command:logger.py:100 {"clientId": {"$oid": "67edb2d75a19ff9b4f46d274"}, "message": "Command started", "command": "{\"delete\": \"Users\", \"ordered\": true, \"lsid\": {\"id\": {\"$binary\": {\"base64\": \"ORN9TyaLRL6k23ZTkM6ueA==\", \"subType\": \"04\"}}}, \"$db\": \"fl_all\", \"deletes\": [{\"q\": {\"username\": \"testuser@example.com\"}, \"limit\": 1}]}", "commandName": "delete", "databaseName": "fl_all", "requestId": 24464, "operationId": 24464, "driverConnectionId": 1, "serverConnectionId": 1340, "serverHost": "autorack.proxy.rlwy.net", "serverPort": 44467}
+DEBUG    pymongo.command:logger.py:100 {"clientId": {"$oid": "67edb2d75a19ff9b4f46d274"}, "message": "Command succeeded", "durationMS": 213.611, "reply": "{\"n\": 1, \"ok\": 1.0}", "commandName": "delete", "databaseName": "fl_all", "requestId": 24464, "operationId": 24464, "driverConnectionId": 1, "serverConnectionId": 1340, "serverHost": "autorack.proxy.rlwy.net", "serverPort": 44467}
+DEBUG    pymongo.connection:logger.py:100 {"clientId": {"$oid": "67edb2d75a19ff9b4f46d274"}, "message": "Connection checked in", "serverHost": "autorack.proxy.rlwy.net", "serverPort": 44467, "driverConnectionId": 1}
+INFO     tests.test_auth_endpoints:test_auth_endpoints.py:262 Cleaned up test user from database.
+DEBUG    pymongo.serverSelection:logger.py:100 {"message": "Server selection started", "selector": "<function writable_server_selector at 0x0000023C77B6E520>", "operation": "delete", "topologyDescription": "<TopologyDescription id: 67edb2d75a19ff9b4f46d274, topology_type: Single, servers: [<ServerDescription ('autorack.proxy.rlwy.net', 44467) server_type: Standalone, rtt: 0.3717999999877066>]>", "clientId": {"$oid": "67edb2d75a19ff9b4f46d274"}}
+DEBUG    pymongo.serverSelection:logger.py:100 {"message": "Server selection succeeded", "selector": "<function writable_server_selector at 0x0000023C77B6E520>", "operation": "delete", "topologyDescription": "<TopologyDescription id: 67edb2d75a19ff9b4f46d274, topology_type: Single, servers: [<ServerDescription ('autorack.proxy.rlwy.net', 44467) server_type: Standalone, rtt: 0.3717999999877066>]>", "clientId": {"$oid": "67edb2d75a19ff9b4f46d274"}, "serverHost": "autorack.proxy.rlwy.net", "serverPort": 44467}
+DEBUG    pymongo.connection:logger.py:100 {"clientId": {"$oid": "67edb2d75a19ff9b4f46d274"}, "message": "Connection checkout started", "serverHost": "autorack.proxy.rlwy.net", "serverPort": 44467}
+DEBUG    pymongo.connection:logger.py:100 {"clientId": {"$oid": "67edb2d75a19ff9b4f46d274"}, "message": "Connection checked out", "serverHost": "autorack.proxy.rlwy.net", "serverPort": 44467, "driverConnectionId": 1, "durationMS": 0.0}
+DEBUG    pymongo.command:logger.py:100 {"clientId": {"$oid": "67edb2d75a19ff9b4f46d274"}, "message": "Command started", "command": "{\"delete\": \"Sessions\", \"ordered\": true, \"lsid\": {\"id\": {\"$binary\": {\"base64\": \"ORN9TyaLRL6k23ZTkM6ueA==\", \"subType\": \"04\"}}}, \"$db\": \"fl_all\", \"deletes\": [{\"q\": {\"token\": \"2023a46d7a8e83335f0f8b0b0fd1282d67ccac21564e11a4b4a6125eac16c560\"}, \"limit\": 1}]}", "commandName": "delete", "databaseName": "fl_all", "requestId": 5705, "operationId": 5705, "driverConnectionId": 1, "serverConnectionId": 1340, "serverHost": "autorack.proxy.rlwy.net", "serverPort": 44467}
+DEBUG    pymongo.command:logger.py:100 {"clientId": {"$oid": "67edb2d75a19ff9b4f46d274"}, "message": "Command succeeded", "durationMS": 211.94199999999998, "reply": "{\"n\": 1, \"ok\": 1.0}", "commandName": "delete", "databaseName": "fl_all", "requestId": 5705, "operationId": 5705, "driverConnectionId": 1, "serverConnectionId": 1340, "serverHost": "autorack.proxy.rlwy.net", "serverPort": 44467}
+DEBUG    pymongo.connection:logger.py:100 {"clientId": {"$oid": "67edb2d75a19ff9b4f46d274"}, "message": "Connection checked in", "serverHost": "autorack.proxy.rlwy.net", "serverPort": 44467, "driverConnectionId": 1}
+INFO     tests.test_auth_endpoints:test_auth_endpoints.py:265 Cleaned up session token from database.
+DEBUG    httpcore.connection:_trace.py:87 close.started
+DEBUG    httpcore.connection:_trace.py:87 close.complete
+INFO     tests.test_auth_endpoints:test_auth_endpoints.py:23 AsyncClient closed.
+INFO     tests.test_auth_endpoints:test_auth_endpoints.py:20 Creating AsyncClient for testing.
+DEBUG    httpx:_config.py:78 load_ssl_context verify=True cert=None trust_env=True http2=False
+DEBUG    httpx:_config.py:144 load_verify_locations cafile='C:\\Users\\Work\\AppData\\Local\\Packages\\PythonSoftwareFoundation.Python.3.11_qbz5n2kfra8p0\\LocalCache\\local-packages\\Python311\\site-packages\\certifi\\cacert.pem'
+INFO     tests.test_auth_endpoints:test_auth_endpoints.py:273 Starting test: test_verify_expired_token
+DEBUG    httpcore.connection:_trace.py:87 connect_tcp.started host='localhost' port=8000 local_address=None timeout=5.0 socket_options=None
+DEBUG    httpcore.connection:_trace.py:87 connect_tcp.complete return_value=<httpcore._backends.anyio.AnyIOStream object at 0x0000023C78AD7690>
+DEBUG    httpcore.http11:_trace.py:87 send_request_headers.started request=<Request [b'POST']>
+DEBUG    httpcore.http11:_trace.py:87 send_request_headers.complete
+DEBUG    httpcore.http11:_trace.py:87 send_request_body.started request=<Request [b'POST']>
+DEBUG    httpcore.http11:_trace.py:87 send_request_body.complete
+DEBUG    httpcore.http11:_trace.py:87 receive_response_headers.started request=<Request [b'POST']>
+DEBUG    httpcore.http11:_trace.py:87 receive_response_headers.complete return_value=(b'HTTP/1.1', 200, b'OK', [(b'date', b'Wed, 02 Apr 2025 21:57:57 GMT'), (b'server', b'uvicorn'), (b'content-length', b'42'), (b'content-type', b'application/json')])
+INFO     httpx:_client.py:1758 HTTP Request: POST http://localhost:8000/api/auth/register "HTTP/1.1 200 OK"
+DEBUG    httpcore.http11:_trace.py:87 receive_response_body.started request=<Request [b'POST']>
+DEBUG    httpcore.http11:_trace.py:87 receive_response_body.complete
+DEBUG    httpcore.http11:_trace.py:87 response_closed.started
+DEBUG    httpcore.http11:_trace.py:87 response_closed.complete
+INFO     tests.test_auth_endpoints:test_auth_endpoints.py:280 Registered user for expired token test.
+DEBUG    httpcore.http11:_trace.py:87 send_request_headers.started request=<Request [b'POST']>
+DEBUG    httpcore.http11:_trace.py:87 send_request_headers.complete
+DEBUG    httpcore.http11:_trace.py:87 send_request_body.started request=<Request [b'POST']>
+DEBUG    httpcore.http11:_trace.py:87 send_request_body.complete
+DEBUG    httpcore.http11:_trace.py:87 receive_response_headers.started request=<Request [b'POST']>
+DEBUG    httpcore.http11:_trace.py:87 receive_response_headers.complete return_value=(b'HTTP/1.1', 200, b'OK', [(b'date', b'Wed, 02 Apr 2025 21:57:57 GMT'), (b'server', b'uvicorn'), (b'content-length', b'46'), (b'content-type', b'application/json'), (b'set-cookie', b'session_token=02d8af44c27fa5212c32ff527a5695ee8a9ecb016e953a51dd976c2ad8ef3ca7; HttpOnly; Path=/; SameSite=strict; Secure')])
+INFO     httpx:_client.py:1758 HTTP Request: POST http://localhost:8000/api/auth/login "HTTP/1.1 200 OK"
+DEBUG    httpcore.http11:_trace.py:87 receive_response_body.started request=<Request [b'POST']>
+DEBUG    httpcore.http11:_trace.py:87 receive_response_body.complete
+DEBUG    httpcore.http11:_trace.py:87 response_closed.started
+DEBUG    httpcore.http11:_trace.py:87 response_closed.complete
+INFO     tests.test_auth_endpoints:test_auth_endpoints.py:287 Login response: 200, body: {"message":"Login successful","role":"clinic"}
+DEBUG    pymongo.serverSelection:logger.py:100 {"message": "Server selection started", "selector": "<function writable_server_selector at 0x0000023C77B6E520>", "operation": "delete", "topologyDescription": "<TopologyDescription id: 67edb2d75a19ff9b4f46d274, topology_type: Single, servers: [<ServerDescription ('autorack.proxy.rlwy.net', 44467) server_type: Standalone, rtt: 0.3717999999877066>]>", "clientId": {"$oid": "67edb2d75a19ff9b4f46d274"}}
+DEBUG    pymongo.serverSelection:logger.py:100 {"message": "Server selection succeeded", "selector": "<function writable_server_selector at 0x0000023C77B6E520>", "operation": "delete", "topologyDescription": "<TopologyDescription id: 67edb2d75a19ff9b4f46d274, topology_type: Single, servers: [<ServerDescription ('autorack.proxy.rlwy.net', 44467) server_type: Standalone, rtt: 0.3717999999877066>]>", "clientId": {"$oid": "67edb2d75a19ff9b4f46d274"}, "serverHost": "autorack.proxy.rlwy.net", "serverPort": 44467}
+DEBUG    pymongo.connection:logger.py:100 {"clientId": {"$oid": "67edb2d75a19ff9b4f46d274"}, "message": "Connection checkout started", "serverHost": "autorack.proxy.rlwy.net", "serverPort": 44467}
+DEBUG    pymongo.connection:logger.py:100 {"clientId": {"$oid": "67edb2d75a19ff9b4f46d274"}, "message": "Connection checked out", "serverHost": "autorack.proxy.rlwy.net", "serverPort": 44467, "driverConnectionId": 1, "durationMS": 0.0}
+DEBUG    pymongo.command:logger.py:100 {"clientId": {"$oid": "67edb2d75a19ff9b4f46d274"}, "message": "Command started", "command": "{\"delete\": \"Sessions\", \"ordered\": true, \"lsid\": {\"id\": {\"$binary\": {\"base64\": \"ORN9TyaLRL6k23ZTkM6ueA==\", \"subType\": \"04\"}}}, \"$db\": \"fl_all\", \"deletes\": [{\"q\": {\"token\": \"02d8af44c27fa5212c32ff527a5695ee8a9ecb016e953a51dd976c2ad8ef3ca7\"}, \"limit\": 1}]}", "commandName": "delete", "databaseName": "fl_all", "requestId": 28145, "operationId": 28145, "driverConnectionId": 1, "serverConnectionId": 1340, "serverHost": "autorack.proxy.rlwy.net", "serverPort": 44467}
+DEBUG    pymongo.command:logger.py:100 {"clientId": {"$oid": "67edb2d75a19ff9b4f46d274"}, "message": "Command succeeded", "durationMS": 221.414, "reply": "{\"n\": 1, \"ok\": 1.0}", "commandName": "delete", "databaseName": "fl_all", "requestId": 28145, "operationId": 28145, "driverConnectionId": 1, "serverConnectionId": 1340, "serverHost": "autorack.proxy.rlwy.net", "serverPort": 44467}
+DEBUG    pymongo.connection:logger.py:100 {"clientId": {"$oid": "67edb2d75a19ff9b4f46d274"}, "message": "Connection checked in", "serverHost": "autorack.proxy.rlwy.net", "serverPort": 44467, "driverConnectionId": 1}
+INFO     tests.test_auth_endpoints:test_auth_endpoints.py:293 Simulated token expiration by removing it from the database.
+DEBUG    httpcore.http11:_trace.py:87 send_request_headers.started request=<Request [b'GET']>
+DEBUG    httpcore.http11:_trace.py:87 send_request_headers.complete
+DEBUG    httpcore.http11:_trace.py:87 send_request_body.started request=<Request [b'GET']>
+DEBUG    httpcore.http11:_trace.py:87 send_request_body.complete
+DEBUG    httpcore.http11:_trace.py:87 receive_response_headers.started request=<Request [b'GET']>
+DEBUG    httpcore.http11:_trace.py:87 receive_response_headers.complete return_value=(b'HTTP/1.1', 401, b'Unauthorized', [(b'date', b'Wed, 02 Apr 2025 21:57:58 GMT'), (b'server', b'uvicorn'), (b'content-length', b'39'), (b'content-type', b'application/json')])
+INFO     httpx:_client.py:1758 HTTP Request: GET http://localhost:8000/api/auth/verify-token "HTTP/1.1 401 Unauthorized"
+DEBUG    httpcore.http11:_trace.py:87 receive_response_body.started request=<Request [b'GET']>
+DEBUG    httpcore.http11:_trace.py:87 receive_response_body.complete
+DEBUG    httpcore.http11:_trace.py:87 response_closed.started
+DEBUG    httpcore.http11:_trace.py:87 response_closed.complete
+INFO     tests.test_auth_endpoints:test_auth_endpoints.py:300 Verify response: 401, body: {"detail":"Session expired or invalid"}
+DEBUG    pymongo.serverSelection:logger.py:100 {"message": "Server selection started", "selector": "<function writable_server_selector at 0x0000023C77B6E520>", "operation": "delete", "topologyDescription": "<TopologyDescription id: 67edb2d75a19ff9b4f46d274, topology_type: Single, servers: [<ServerDescription ('autorack.proxy.rlwy.net', 44467) server_type: Standalone, rtt: 0.3717999999877066>]>", "clientId": {"$oid": "67edb2d75a19ff9b4f46d274"}}
+DEBUG    pymongo.serverSelection:logger.py:100 {"message": "Server selection succeeded", "selector": "<function writable_server_selector at 0x0000023C77B6E520>", "operation": "delete", "topologyDescription": "<TopologyDescription id: 67edb2d75a19ff9b4f46d274, topology_type: Single, servers: [<ServerDescription ('autorack.proxy.rlwy.net', 44467) server_type: Standalone, rtt: 0.3717999999877066>]>", "clientId": {"$oid": "67edb2d75a19ff9b4f46d274"}, "serverHost": "autorack.proxy.rlwy.net", "serverPort": 44467}
+DEBUG    pymongo.connection:logger.py:100 {"clientId": {"$oid": "67edb2d75a19ff9b4f46d274"}, "message": "Connection checkout started", "serverHost": "autorack.proxy.rlwy.net", "serverPort": 44467}
+DEBUG    pymongo.connection:logger.py:100 {"clientId": {"$oid": "67edb2d75a19ff9b4f46d274"}, "message": "Connection checked out", "serverHost": "autorack.proxy.rlwy.net", "serverPort": 44467, "driverConnectionId": 1, "durationMS": 0.0}
+DEBUG    pymongo.command:logger.py:100 {"clientId": {"$oid": "67edb2d75a19ff9b4f46d274"}, "message": "Command started", "command": "{\"delete\": \"Users\", \"ordered\": true, \"lsid\": {\"id\": {\"$binary\": {\"base64\": \"ORN9TyaLRL6k23ZTkM6ueA==\", \"subType\": \"04\"}}}, \"$db\": \"fl_all\", \"deletes\": [{\"q\": {\"username\": \"testuser@example.com\"}, \"limit\": 1}]}", "commandName": "delete", "databaseName": "fl_all", "requestId": 23281, "operationId": 23281, "driverConnectionId": 1, "serverConnectionId": 1340, "serverHost": "autorack.proxy.rlwy.net", "serverPort": 44467}
+DEBUG    pymongo.command:logger.py:100 {"clientId": {"$oid": "67edb2d75a19ff9b4f46d274"}, "message": "Command succeeded", "durationMS": 211.083, "reply": "{\"n\": 1, \"ok\": 1.0}", "commandName": "delete", "databaseName": "fl_all", "requestId": 23281, "operationId": 23281, "driverConnectionId": 1, "serverConnectionId": 1340, "serverHost": "autorack.proxy.rlwy.net", "serverPort": 44467}
+DEBUG    pymongo.connection:logger.py:100 {"clientId": {"$oid": "67edb2d75a19ff9b4f46d274"}, "message": "Connection checked in", "serverHost": "autorack.proxy.rlwy.net", "serverPort": 44467, "driverConnectionId": 1}
+INFO     tests.test_auth_endpoints:test_auth_endpoints.py:308 Cleaned up test user from database.
+DEBUG    httpcore.connection:_trace.py:87 close.started
+DEBUG    httpcore.connection:_trace.py:87 close.complete
+INFO     tests.test_auth_endpoints:test_auth_endpoints.py:23 AsyncClient closed.
+INFO     tests.test_auth_endpoints:test_auth_endpoints.py:20 Creating AsyncClient for testing.
+DEBUG    httpx:_config.py:78 load_ssl_context verify=True cert=None trust_env=True http2=False
+DEBUG    httpx:_config.py:144 load_verify_locations cafile='C:\\Users\\Work\\AppData\\Local\\Packages\\PythonSoftwareFoundation.Python.3.11_qbz5n2kfra8p0\\LocalCache\\local-packages\\Python311\\site-packages\\certifi\\cacert.pem'
+INFO     tests.test_auth_endpoints:test_auth_endpoints.py:316 Starting test: test_multiple_login_same_user
+DEBUG    httpcore.connection:_trace.py:87 connect_tcp.started host='localhost' port=8000 local_address=None timeout=5.0 socket_options=None
+DEBUG    httpcore.connection:_trace.py:87 connect_tcp.complete return_value=<httpcore._backends.anyio.AnyIOStream object at 0x0000023C7826A4D0>
+DEBUG    httpcore.http11:_trace.py:87 send_request_headers.started request=<Request [b'POST']>
+DEBUG    httpcore.http11:_trace.py:87 send_request_headers.complete
+DEBUG    httpcore.http11:_trace.py:87 send_request_body.started request=<Request [b'POST']>
+DEBUG    httpcore.http11:_trace.py:87 send_request_body.complete
+DEBUG    httpcore.http11:_trace.py:87 receive_response_headers.started request=<Request [b'POST']>
+DEBUG    httpcore.http11:_trace.py:87 receive_response_headers.complete return_value=(b'HTTP/1.1', 200, b'OK', [(b'date', b'Wed, 02 Apr 2025 21:57:59 GMT'), (b'server', b'uvicorn'), (b'content-length', b'42'), (b'content-type', b'application/json')])
+INFO     httpx:_client.py:1758 HTTP Request: POST http://localhost:8000/api/auth/register "HTTP/1.1 200 OK"
+DEBUG    httpcore.http11:_trace.py:87 receive_response_body.started request=<Request [b'POST']>
+DEBUG    httpcore.http11:_trace.py:87 receive_response_body.complete
+DEBUG    httpcore.http11:_trace.py:87 response_closed.started
+DEBUG    httpcore.http11:_trace.py:87 response_closed.complete
+INFO     tests.test_auth_endpoints:test_auth_endpoints.py:323 Registered user for multiple login test.
+DEBUG    httpcore.http11:_trace.py:87 send_request_headers.started request=<Request [b'POST']>
+DEBUG    httpcore.http11:_trace.py:87 send_request_headers.complete
+DEBUG    httpcore.http11:_trace.py:87 send_request_body.started request=<Request [b'POST']>
+DEBUG    httpcore.http11:_trace.py:87 send_request_body.complete
+DEBUG    httpcore.http11:_trace.py:87 receive_response_headers.started request=<Request [b'POST']>
+DEBUG    httpcore.http11:_trace.py:87 receive_response_headers.complete return_value=(b'HTTP/1.1', 200, b'OK', [(b'date', b'Wed, 02 Apr 2025 21:58:00 GMT'), (b'server', b'uvicorn'), (b'content-length', b'46'), (b'content-type', b'application/json'), (b'set-cookie', b'session_token=f8eebb9fc239524886c9feb8af976de33e6d590d28eb04a47d716cc906693267; HttpOnly; Path=/; SameSite=strict; Secure')])
+INFO     httpx:_client.py:1758 HTTP Request: POST http://localhost:8000/api/auth/login "HTTP/1.1 200 OK"
+DEBUG    httpcore.http11:_trace.py:87 receive_response_body.started request=<Request [b'POST']>
+DEBUG    httpcore.http11:_trace.py:87 receive_response_body.complete
+DEBUG    httpcore.http11:_trace.py:87 response_closed.started
+DEBUG    httpcore.http11:_trace.py:87 response_closed.complete
+INFO     tests.test_auth_endpoints:test_auth_endpoints.py:328 First login response: 200, body: {"message":"Login successful","role":"clinic"}
+DEBUG    httpcore.http11:_trace.py:87 send_request_headers.started request=<Request [b'POST']>
+DEBUG    httpcore.http11:_trace.py:87 send_request_headers.complete
+DEBUG    httpcore.http11:_trace.py:87 send_request_body.started request=<Request [b'POST']>
+DEBUG    httpcore.http11:_trace.py:87 send_request_body.complete
+DEBUG    httpcore.http11:_trace.py:87 receive_response_headers.started request=<Request [b'POST']>
+DEBUG    httpcore.http11:_trace.py:87 receive_response_headers.complete return_value=(b'HTTP/1.1', 200, b'OK', [(b'date', b'Wed, 02 Apr 2025 21:58:00 GMT'), (b'server', b'uvicorn'), (b'content-length', b'46'), (b'content-type', b'application/json'), (b'set-cookie', b'session_token=ffe6aeadfb3655e4074020926bb9040fb2ad19b4a547aa09f71bdba2ea190219; HttpOnly; Path=/; SameSite=strict; Secure')])
+INFO     httpx:_client.py:1758 HTTP Request: POST http://localhost:8000/api/auth/login "HTTP/1.1 200 OK"
+DEBUG    httpcore.http11:_trace.py:87 receive_response_body.started request=<Request [b'POST']>
+DEBUG    httpcore.http11:_trace.py:87 receive_response_body.complete
+DEBUG    httpcore.http11:_trace.py:87 response_closed.started
+DEBUG    httpcore.http11:_trace.py:87 response_closed.complete
+INFO     tests.test_auth_endpoints:test_auth_endpoints.py:336 Second login response: 200, body: {"message":"Login successful","role":"clinic"}
+INFO     tests.test_auth_endpoints:test_auth_endpoints.py:341 Verified that session tokens from multiple logins are unique.
+DEBUG    pymongo.serverSelection:logger.py:100 {"message": "Server selection started", "selector": "<function writable_server_selector at 0x0000023C77B6E520>", "operation": "delete", "topologyDescription": "<TopologyDescription id: 67edb2d75a19ff9b4f46d274, topology_type: Single, servers: [<ServerDescription ('autorack.proxy.rlwy.net', 44467) server_type: Standalone, rtt: 0.3717999999877066>]>", "clientId": {"$oid": "67edb2d75a19ff9b4f46d274"}}
+DEBUG    pymongo.serverSelection:logger.py:100 {"message": "Server selection succeeded", "selector": "<function writable_server_selector at 0x0000023C77B6E520>", "operation": "delete", "topologyDescription": "<TopologyDescription id: 67edb2d75a19ff9b4f46d274, topology_type: Single, servers: [<ServerDescription ('autorack.proxy.rlwy.net', 44467) server_type: Standalone, rtt: 0.3717999999877066>]>", "clientId": {"$oid": "67edb2d75a19ff9b4f46d274"}, "serverHost": "autorack.proxy.rlwy.net", "serverPort": 44467}
+DEBUG    pymongo.connection:logger.py:100 {"clientId": {"$oid": "67edb2d75a19ff9b4f46d274"}, "message": "Connection checkout started", "serverHost": "autorack.proxy.rlwy.net", "serverPort": 44467}
+DEBUG    pymongo.connection:logger.py:100 {"clientId": {"$oid": "67edb2d75a19ff9b4f46d274"}, "message": "Connection checked out", "serverHost": "autorack.proxy.rlwy.net", "serverPort": 44467, "driverConnectionId": 1, "durationMS": 0.0}
+DEBUG    pymongo.command:logger.py:100 {"clientId": {"$oid": "67edb2d75a19ff9b4f46d274"}, "message": "Command started", "command": "{\"delete\": \"Users\", \"ordered\": true, \"lsid\": {\"id\": {\"$binary\": {\"base64\": \"ORN9TyaLRL6k23ZTkM6ueA==\", \"subType\": \"04\"}}}, \"$db\": \"fl_all\", \"deletes\": [{\"q\": {\"username\": \"testuser@example.com\"}, \"limit\": 1}]}", "commandName": "delete", "databaseName": "fl_all", "requestId": 16827, "operationId": 16827, "driverConnectionId": 1, "serverConnectionId": 1340, "serverHost": "autorack.proxy.rlwy.net", "serverPort": 44467}
+DEBUG    pymongo.command:logger.py:100 {"clientId": {"$oid": "67edb2d75a19ff9b4f46d274"}, "message": "Command succeeded", "durationMS": 212.112, "reply": "{\"n\": 1, \"ok\": 1.0}", "commandName": "delete", "databaseName": "fl_all", "requestId": 16827, "operationId": 16827, "driverConnectionId": 1, "serverConnectionId": 1340, "serverHost": "autorack.proxy.rlwy.net", "serverPort": 44467}
+DEBUG    pymongo.connection:logger.py:100 {"clientId": {"$oid": "67edb2d75a19ff9b4f46d274"}, "message": "Connection checked in", "serverHost": "autorack.proxy.rlwy.net", "serverPort": 44467, "driverConnectionId": 1}
+INFO     tests.test_auth_endpoints:test_auth_endpoints.py:345 Cleaned up test user from database.
+DEBUG    pymongo.serverSelection:logger.py:100 {"message": "Server selection started", "selector": "<function writable_server_selector at 0x0000023C77B6E520>", "operation": "delete", "topologyDescription": "<TopologyDescription id: 67edb2d75a19ff9b4f46d274, topology_type: Single, servers: [<ServerDescription ('autorack.proxy.rlwy.net', 44467) server_type: Standalone, rtt: 0.3717999999877066>]>", "clientId": {"$oid": "67edb2d75a19ff9b4f46d274"}}
+DEBUG    pymongo.serverSelection:logger.py:100 {"message": "Server selection succeeded", "selector": "<function writable_server_selector at 0x0000023C77B6E520>", "operation": "delete", "topologyDescription": "<TopologyDescription id: 67edb2d75a19ff9b4f46d274, topology_type: Single, servers: [<ServerDescription ('autorack.proxy.rlwy.net', 44467) server_type: Standalone, rtt: 0.3717999999877066>]>", "clientId": {"$oid": "67edb2d75a19ff9b4f46d274"}, "serverHost": "autorack.proxy.rlwy.net", "serverPort": 44467}
+DEBUG    pymongo.connection:logger.py:100 {"clientId": {"$oid": "67edb2d75a19ff9b4f46d274"}, "message": "Connection checkout started", "serverHost": "autorack.proxy.rlwy.net", "serverPort": 44467}
+DEBUG    pymongo.connection:logger.py:100 {"clientId": {"$oid": "67edb2d75a19ff9b4f46d274"}, "message": "Connection checked out", "serverHost": "autorack.proxy.rlwy.net", "serverPort": 44467, "driverConnectionId": 1, "durationMS": 0.0}
+DEBUG    pymongo.command:logger.py:100 {"clientId": {"$oid": "67edb2d75a19ff9b4f46d274"}, "message": "Command started", "command": "{\"delete\": \"Sessions\", \"ordered\": true, \"lsid\": {\"id\": {\"$binary\": {\"base64\": \"ORN9TyaLRL6k23ZTkM6ueA==\", \"subType\": \"04\"}}}, \"$db\": \"fl_all\", \"deletes\": [{\"q\": {\"token\": \"ffe6aeadfb3655e4074020926bb9040fb2ad19b4a547aa09f71bdba2ea190219\"}, \"limit\": 1}]}", "commandName": "delete", "databaseName": "fl_all", "requestId": 9961, "operationId": 9961, "driverConnectionId": 1, "serverConnectionId": 1340, "serverHost": "autorack.proxy.rlwy.net", "serverPort": 44467}
+DEBUG    pymongo.command:logger.py:100 {"clientId": {"$oid": "67edb2d75a19ff9b4f46d274"}, "message": "Command succeeded", "durationMS": 212.342, "reply": "{\"n\": 1, \"ok\": 1.0}", "commandName": "delete", "databaseName": "fl_all", "requestId": 9961, "operationId": 9961, "driverConnectionId": 1, "serverConnectionId": 1340, "serverHost": "autorack.proxy.rlwy.net", "serverPort": 44467}
+DEBUG    pymongo.connection:logger.py:100 {"clientId": {"$oid": "67edb2d75a19ff9b4f46d274"}, "message": "Connection checked in", "serverHost": "autorack.proxy.rlwy.net", "serverPort": 44467, "driverConnectionId": 1}
+INFO     tests.test_auth_endpoints:test_auth_endpoints.py:348 Cleaned up session token from database.
+DEBUG    httpcore.connection:_trace.py:87 close.started
+DEBUG    httpcore.connection:_trace.py:87 close.complete
+INFO     tests.test_auth_endpoints:test_auth_endpoints.py:23 AsyncClient closed.
+DEBUG    asyncio:proactor_events.py:633 Using proactor: IocpProactor
+DEBUG    tests.test_authentication:test_authentication.py:15 Starting test_route_without_login...
+DEBUG    tests.test_authentication:test_authentication.py:19 Navigated to /dashboard.
+DEBUG    tests.test_authentication:test_authentication.py:23 Redirected to /login.
+DEBUG    tests.test_authentication:test_authentication.py:25 Login page verified.
+DEBUG    tests.test_authentication:test_authentication.py:32 Starting test_register_user...
+DEBUG    tests.test_authentication:test_authentication.py:36 Navigated to /register.
+DEBUG    tests.test_authentication:test_authentication.py:42 Registration form submitted.
+DEBUG    tests.test_authentication:test_authentication.py:46 Redirected to /login.
+DEBUG    tests.test_authentication:test_authentication.py:48 Login page verified after registration.
+DEBUG    tests.test_authentication:test_authentication.py:54 Starting test_register_user_with_existing_email...
+DEBUG    pymongo.topology:logger.py:100 {"topologyId": {"$oid": "67edb2d75a19ff9b4f46d274"}, "driverConnectionId": 1, "serverConnectionId": 1339, "serverHost": "autorack.proxy.rlwy.net", "serverPort": 44467, "awaited": true, "durationMS": 10000.0, "reply": "{\"isWritablePrimary\": true, \"topologyVersion\": {\"processId\": {\"$oid\": \"67e69dde62eb67eb8833ab82\"}}, \"maxBsonObjectSize\": 16777216, \"maxMessageSizeBytes\": 48000000, \"maxWriteBatchSize\": 100000, \"localTime\": {\"$date\": \"2025-04-02T21:58:05.803Z\"}, \"logicalSessionTimeoutMinutes\": 30, \"connectionId\": 1339, \"maxWireVersion\": 21, \"ok\": 1.0}", "message": "Server heartbeat succeeded"}
+DEBUG    pymongo.topology:logger.py:100 {"topologyId": {"$oid": "67edb2d75a19ff9b4f46d274"}, "driverConnectionId": 1, "serverConnectionId": 1339, "serverHost": "autorack.proxy.rlwy.net", "serverPort": 44467, "awaited": true, "message": "Server heartbeat started"}
+DEBUG    tests.test_authentication:test_authentication.py:58 Navigated to /register.
+DEBUG    tests.test_authentication:test_authentication.py:64 Registration form submitted with existing email.
+DEBUG    tests.test_authentication:test_authentication.py:69 Error message for existing email verified.
+DEBUG    tests.test_authentication:test_authentication.py:75 Starting test_login_user...
+DEBUG    tests.test_authentication:test_authentication.py:79 Navigated to /login.
+DEBUG    tests.test_authentication:test_authentication.py:85 Login form submitted.
+DEBUG    tests.test_authentication:test_authentication.py:89 Redirected to /model-trial.
+DEBUG    tests.test_authentication:test_authentication.py:91 Dashboard verified.
+DEBUG    tests.test_authentication:test_authentication.py:97 Logged out and redirected to login page.
+DEBUG    tests.test_authentication:test_authentication.py:103 Starting test_login_with_invalid_credentials...
+DEBUG    tests.test_authentication:test_authentication.py:107 Navigated to /login.
+DEBUG    tests.test_authentication:test_authentication.py:113 Login form submitted with invalid credentials.
+DEBUG    tests.test_authentication:test_authentication.py:118 Error message for invalid credentials verified.
+DEBUG    tests.test_authentication:test_authentication.py:124 Starting test_session_expiry...
+DEBUG    tests.test_authentication:test_authentication.py:131 Logged in successfully.
+DEBUG    tests.test_authentication:test_authentication.py:135 Session cookies cleared.
+DEBUG    tests.test_authentication:test_authentication.py:139 Attempted to access /model-trial after session expiry.
+DEBUG    tests.test_authentication:test_authentication.py:144 Redirected to login page after session expiry.
+DEBUG    tests.test_authentication:test_authentication.py:150 Starting test_inaccessible_route...
+DEBUG    tests.test_authentication:test_authentication.py:157 Logged in successfully.
+DEBUG    tests.test_authentication:test_authentication.py:162 Dashboard verified.
+DEBUG    tests.test_authentication:test_authentication.py:167 Redirected to /unauthorized for accessing admin route.
+DEBUG    tests.test_authentication:test_authentication.py:172 Unauthorized access verified.
+DEBUG    tests.test_interaction:test_interaction.py:12 Starting test_admin_access_dashboard...
+DEBUG    tests.test_interaction:test_interaction.py:16 Navigated to /login.
+DEBUG    tests.test_interaction:test_interaction.py:21 Admin login form submitted.
+DEBUG    pymongo.topology:logger.py:100 {"topologyId": {"$oid": "67edb2d75a19ff9b4f46d274"}, "driverConnectionId": 1, "serverConnectionId": 1339, "serverHost": "autorack.proxy.rlwy.net", "serverPort": 44467, "awaited": true, "durationMS": 10015.000000130385, "reply": "{\"isWritablePrimary\": true, \"topologyVersion\": {\"processId\": {\"$oid\": \"67e69dde62eb67eb8833ab82\"}}, \"maxBsonObjectSize\": 16777216, \"maxMessageSizeBytes\": 48000000, \"maxWriteBatchSize\": 100000, \"localTime\": {\"$date\": \"2025-04-02T21:58:15.811Z\"}, \"logicalSessionTimeoutMinutes\": 30, \"connectionId\": 1339, \"maxWireVersion\": 21, \"ok\": 1.0}", "message": "Server heartbeat succeeded"}
+DEBUG    pymongo.topology:logger.py:100 {"topologyId": {"$oid": "67edb2d75a19ff9b4f46d274"}, "driverConnectionId": 1, "serverConnectionId": 1339, "serverHost": "autorack.proxy.rlwy.net", "serverPort": 44467, "awaited": true, "message": "Server heartbeat started"}
+DEBUG    tests.test_interaction:test_interaction.py:26 Admin successfully logged in and redirected to the dashboard.
+DEBUG    tests.test_interaction:test_interaction.py:31 Page title verified: Dashboard - FL-ALL
+DEBUG    tests.test_interaction:test_interaction.py:36 Clients data fetched successfully.
+DEBUG    tests.test_interaction:test_interaction.py:41 Dashboard data fetched successfully.
+DEBUG    tests.test_interaction:test_interaction.py:47 Starting test_admin_access_clients...
+DEBUG    tests.test_interaction:test_interaction.py:51 Navigated to /login.
+DEBUG    tests.test_interaction:test_interaction.py:56 Admin login form submitted.
+DEBUG    tests.test_interaction:test_interaction.py:61 Admin successfully logged in and redirected to the dashboard.
+DEBUG    tests.test_interaction:test_interaction.py:66 Navigated to /clients.
+DEBUG    tests.test_interaction:test_interaction.py:70 Clients page verified successfully.
+DEBUG    tests.test_interaction:test_interaction.py:75 Page title verified: Clients - FL-ALL
+DEBUG    tests.test_interaction:test_interaction.py:80 Clients data fetched successfully.
+DEBUG    tests.test_interaction:test_interaction.py:86 Starting test_admin_access_model_trial...
+DEBUG    tests.test_interaction:test_interaction.py:90 Navigated to /login.
+DEBUG    tests.test_interaction:test_interaction.py:95 Admin login form submitted.
+DEBUG    tests.test_interaction:test_interaction.py:100 Admin successfully logged in and redirected to the dashboard.
+DEBUG    tests.test_interaction:test_interaction.py:105 Navigated to /model-trial.
+DEBUG    tests.test_interaction:test_interaction.py:109 Model Trial page verified successfully.
+DEBUG    tests.test_interaction:test_interaction.py:114 Page title verified: Model Trial - FL-ALL
+DEBUG    tests.test_interaction:test_interaction.py:122 Uploaded image file: C:\Users\Work\Documents\GitHub\GP_Dashboard\Back-End\tests\WBC-Benign-001_test.jpg
+DEBUG    pymongo.topology:logger.py:100 {"topologyId": {"$oid": "67edb2d75a19ff9b4f46d274"}, "driverConnectionId": 1, "serverConnectionId": 1339, "serverHost": "autorack.proxy.rlwy.net", "serverPort": 44467, "awaited": true, "durationMS": 10015.999999828637, "reply": "{\"isWritablePrimary\": true, \"topologyVersion\": {\"processId\": {\"$oid\": \"67e69dde62eb67eb8833ab82\"}}, \"maxBsonObjectSize\": 16777216, \"maxMessageSizeBytes\": 48000000, \"maxWriteBatchSize\": 100000, \"localTime\": {\"$date\": \"2025-04-02T21:58:25.821Z\"}, \"logicalSessionTimeoutMinutes\": 30, \"connectionId\": 1339, \"maxWireVersion\": 21, \"ok\": 1.0}", "message": "Server heartbeat succeeded"}
+DEBUG    pymongo.topology:logger.py:100 {"topologyId": {"$oid": "67edb2d75a19ff9b4f46d274"}, "driverConnectionId": 1, "serverConnectionId": 1339, "serverHost": "autorack.proxy.rlwy.net", "serverPort": 44467, "awaited": true, "message": "Server heartbeat started"}
+DEBUG    tests.test_interaction:test_interaction.py:128 Classification header is visible.
+DEBUG    tests.test_interaction:test_interaction.py:138 Classification result: Benign
+DEBUG    tests.test_interaction:test_interaction.py:143 Uploaded non-image file: C:\Users\Work\Documents\GitHub\GP_Dashboard\Back-End\tests\note_test.txt
+DEBUG    tests.test_interaction:test_interaction.py:154 Admin logged out and redirected to the login page.
+DEBUG    tests.test_authentication:test_authentication.py:275 Starting test_rate_limiting...
+DEBUG    tests.test_authentication:test_authentication.py:279 Navigated to /login.
+DEBUG    tests.test_authentication:test_authentication.py:286 Invalid login attempt submitted.
+DEBUG    tests.test_authentication:test_authentication.py:286 Invalid login attempt submitted.
+DEBUG    tests.test_authentication:test_authentication.py:286 Invalid login attempt submitted.
+DEBUG    tests.test_authentication:test_authentication.py:286 Invalid login attempt submitted.
+DEBUG    tests.test_authentication:test_authentication.py:286 Invalid login attempt submitted.
+DEBUG    tests.test_authentication:test_authentication.py:286 Invalid login attempt submitted.
+DEBUG    tests.test_authentication:test_authentication.py:286 Invalid login attempt submitted.
+DEBUG    tests.test_authentication:test_authentication.py:286 Invalid login attempt submitted.
+DEBUG    tests.test_authentication:test_authentication.py:286 Invalid login attempt submitted.
+DEBUG    tests.test_authentication:test_authentication.py:286 Invalid login attempt submitted.
+DEBUG    tests.test_authentication:test_authentication.py:286 Invalid login attempt submitted.
+DEBUG    tests.test_authentication:test_authentication.py:286 Invalid login attempt submitted.
+DEBUG    tests.test_authentication:test_authentication.py:286 Invalid login attempt submitted.
+DEBUG    tests.test_authentication:test_authentication.py:286 Invalid login attempt submitted.
+DEBUG    tests.test_authentication:test_authentication.py:286 Invalid login attempt submitted.
+DEBUG    tests.test_authentication:test_authentication.py:286 Invalid login attempt submitted.
+DEBUG    pymongo.topology:logger.py:100 {"topologyId": {"$oid": "67edb2d75a19ff9b4f46d274"}, "driverConnectionId": 1, "serverConnectionId": 1339, "serverHost": "autorack.proxy.rlwy.net", "serverPort": 44467, "awaited": true, "durationMS": 10000.0, "reply": "{\"isWritablePrimary\": true, \"topologyVersion\": {\"processId\": {\"$oid\": \"67e69dde62eb67eb8833ab82\"}}, \"maxBsonObjectSize\": 16777216, \"maxMessageSizeBytes\": 48000000, \"maxWriteBatchSize\": 100000, \"localTime\": {\"$date\": \"2025-04-02T21:58:35.832Z\"}, \"logicalSessionTimeoutMinutes\": 30, \"connectionId\": 1339, \"maxWireVersion\": 21, \"ok\": 1.0}", "message": "Server heartbeat succeeded"}
+DEBUG    pymongo.topology:logger.py:100 {"topologyId": {"$oid": "67edb2d75a19ff9b4f46d274"}, "driverConnectionId": 1, "serverConnectionId": 1339, "serverHost": "autorack.proxy.rlwy.net", "serverPort": 44467, "awaited": true, "message": "Server heartbeat started"}
+DEBUG    tests.test_authentication:test_authentication.py:286 Invalid login attempt submitted.
+DEBUG    tests.test_authentication:test_authentication.py:286 Invalid login attempt submitted.
+DEBUG    tests.test_authentication:test_authentication.py:286 Invalid login attempt submitted.
+DEBUG    tests.test_authentication:test_authentication.py:286 Invalid login attempt submitted.
+DEBUG    tests.test_authentication:test_authentication.py:286 Invalid login attempt submitted.
+DEBUG    tests.test_authentication:test_authentication.py:286 Invalid login attempt submitted.
+DEBUG    tests.test_authentication:test_authentication.py:286 Invalid login attempt submitted.
+DEBUG    tests.test_authentication:test_authentication.py:286 Invalid login attempt submitted.
+DEBUG    tests.test_authentication:test_authentication.py:286 Invalid login attempt submitted.
+DEBUG    tests.test_authentication:test_authentication.py:290 Rate limiting error message verified.
+INFO     tests.test_auth_endpoints:test_auth_endpoints.py:14 Closing MongoDB connection for test session.
+DEBUG    pymongo.serverSelection:logger.py:100 {"message": "Server selection started", "selector": "PrimaryPreferred(tag_sets=None, max_staleness=-1, hedge=None)", "operation": "endSessions", "topologyDescription": "<TopologyDescription id: 67edb2d75a19ff9b4f46d274, topology_type: Single, servers: [<ServerDescription ('autorack.proxy.rlwy.net', 44467) server_type: Standalone, rtt: 0.2859948799970002>]>", "clientId": {"$oid": "67edb2d75a19ff9b4f46d274"}}
+DEBUG    pymongo.serverSelection:logger.py:100 {"message": "Server selection succeeded", "selector": "PrimaryPreferred(tag_sets=None, max_staleness=-1, hedge=None)", "operation": "endSessions", "topologyDescription": "<TopologyDescription id: 67edb2d75a19ff9b4f46d274, topology_type: Single, servers: [<ServerDescription ('autorack.proxy.rlwy.net', 44467) server_type: Standalone, rtt: 0.2859948799970002>]>", "clientId": {"$oid": "67edb2d75a19ff9b4f46d274"}, "serverHost": "autorack.proxy.rlwy.net", "serverPort": 44467}
+DEBUG    pymongo.connection:logger.py:100 {"clientId": {"$oid": "67edb2d75a19ff9b4f46d274"}, "message": "Connection checkout started", "serverHost": "autorack.proxy.rlwy.net", "serverPort": 44467}
+DEBUG    pymongo.connection:logger.py:100 {"clientId": {"$oid": "67edb2d75a19ff9b4f46d274"}, "message": "Connection checked out", "serverHost": "autorack.proxy.rlwy.net", "serverPort": 44467, "driverConnectionId": 1, "durationMS": 0.0}
+DEBUG    pymongo.command:logger.py:100 {"clientId": {"$oid": "67edb2d75a19ff9b4f46d274"}, "message": "Command started", "command": "{\"endSessions\": [{\"id\": {\"$binary\": {\"base64\": \"ORN9TyaLRL6k23ZTkM6ueA==\", \"subType\": \"04\"}}}], \"$db\": \"admin\"}", "commandName": "endSessions", "databaseName": "admin", "requestId": 41, "operationId": 41, "driverConnectionId": 1, "serverConnectionId": 1340, "serverHost": "autorack.proxy.rlwy.net", "serverPort": 44467}
+DEBUG    pymongo.command:logger.py:100 {"clientId": {"$oid": "67edb2d75a19ff9b4f46d274"}, "message": "Command succeeded", "durationMS": 229.59199999999998, "reply": "{\"ok\": 1.0}", "commandName": "endSessions", "databaseName": "admin", "requestId": 41, "operationId": 41, "driverConnectionId": 1, "serverConnectionId": 1340, "serverHost": "autorack.proxy.rlwy.net", "serverPort": 44467}
+DEBUG    pymongo.connection:logger.py:100 {"clientId": {"$oid": "67edb2d75a19ff9b4f46d274"}, "message": "Connection checked in", "serverHost": "autorack.proxy.rlwy.net", "serverPort": 44467, "driverConnectionId": 1}
+DEBUG    pymongo.topology:logger.py:100 {"topologyId": {"$oid": "67edb2d75a19ff9b4f46d274"}, "serverHost": "autorack.proxy.rlwy.net", "serverPort": 44467, "message": "Stopped server monitoring"}
+DEBUG    pymongo.connection:logger.py:100 {"clientId": {"$oid": "67edb2d75a19ff9b4f46d274"}, "message": "Connection closed", "serverHost": "autorack.proxy.rlwy.net", "serverPort": 44467, "driverConnectionId": 1, "reason": "Connection pool was closed", "error": "poolClosed"}
+DEBUG    pymongo.connection:logger.py:100 {"clientId": {"$oid": "67edb2d75a19ff9b4f46d274"}, "message": "Connection pool closed", "serverHost": "autorack.proxy.rlwy.net", "serverPort": 44467}
+DEBUG    pymongo.topology:logger.py:100 {"topologyId": {"$oid": "67edb2d75a19ff9b4f46d274"}, "previousDescription": "<TopologyDescription id: 67edb2d75a19ff9b4f46d274, topology_type: Single, servers: [<ServerDescription ('autorack.proxy.rlwy.net', 44467) server_type: Standalone, rtt: 0.2859948799970002>]>", "newDescription": "<TopologyDescription id: 67edb2d75a19ff9b4f46d274, topology_type: Single, servers: [<ServerDescription ('autorack.proxy.rlwy.net', 44467) server_type: Unknown, rtt: None>]>", "message": "Topology description changed"}
+DEBUG    pymongo.topology:logger.py:100 {"topologyId": {"$oid": "67edb2d75a19ff9b4f46d274"}, "message": "Stopped topology monitoring"}
+DEBUG    asyncio:proactor_events.py:633 Using proactor: IocpProactor

@@ -112,7 +112,7 @@ async def get_current_active_user(current_user= Depends(get_current_user)):
 
 # User Registration
 @router.post("/register")
-@limiter.limit("3/minute")
+@limiter.limit("20/minute")
 async def register_user(request: Request, username: EmailStr = Form(...), password: PasswordStr = Form(...)):
     users_collection = get_users_collection()
     # Check if email already exists
@@ -129,7 +129,7 @@ async def register_user(request: Request, username: EmailStr = Form(...), passwo
 
 # Login & Create Session
 @router.post("/login")
-@limiter.limit("5/minute")
+@limiter.limit("20/minute")
 async def login(request: Request, response: Response, username: str = Form(...), password: str = Form(...)):
     users_collection = get_users_collection()
     sessions_collection = get_sessions_collection()
@@ -160,7 +160,7 @@ async def login(request: Request, response: Response, username: str = Form(...),
 
 # Logout (Remove session)
 @router.post("/logout")
-@limiter.limit("5/minute")
+@limiter.limit("20/minute")
 async def logout(response: Response, request: Request):
     sessions_collection = get_sessions_collection()
     token = request.cookies.get("session_token")
