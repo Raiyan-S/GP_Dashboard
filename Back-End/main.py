@@ -1,16 +1,18 @@
-from fastapi import FastAPI
-from fastapi.staticfiles import StaticFiles
-from fastapi.responses import FileResponse
-from fastapi.middleware.cors import CORSMiddleware # Cross-Origin Resource Sharing middleware
+from fastapi import FastAPI 
+from fastapi.staticfiles import StaticFiles # Used to serve static files
+from fastapi.responses import FileResponse  # Used to serve files (eg. index.html)
+# from fastapi.middleware.cors import CORSMiddleware # Middleware for CORS (Cross-Origin Resource Sharing)
 
+# Importing routers and database connection functions
 from routes.route import router as router
 from routes.auth import router as auth_router
 from routes.predict import router as predict_router
 from config.db import open_connection, close_connection
 
-from contextlib import asynccontextmanager
-import os
+from contextlib import asynccontextmanager # Manage application lifecycle
+import os # Used to handle file paths
 
+# Importing the slowapi rate limiter
 from rateLimiter import limiter
 from slowapi.middleware import SlowAPIMiddleware
 from slowapi.errors import RateLimitExceeded
@@ -23,24 +25,24 @@ async def lifespan(app: FastAPI):
     yield
     await close_connection()
     
-# Create a FastAPI instance 
+# Create a FastAPI instance with a lifespan context manager
+# This context manager opens and closes the database connection when the app starts and stops
 app = FastAPI(lifespan=lifespan)
 
-# Defined allowed frontend origins
-origins = [
-    "http://localhost:8000", # Local using uvicorn FastAPI
-    "http://localhost:5173", # Local using npm run dev 
-    "https://gpdashboard-production.up.railway.app" # Railway
-]
+# # Defined allowed frontend origins
+# origins = [
+#     "http://localhost:8000", # Local using uvicorn FastAPI
+#     "https://gpdashboard-production.up.railway.app" # Railway
+# ]
 
-# CORS middleware to allow cross-origin requests
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins= origins,  # allow for development purposes for now
-    allow_credentials=True,
-    allow_methods=["*"],  
-    allow_headers=["*"],  
-)
+# # CORS middleware to allow cross-origin requests
+# app.add_middleware(
+#     CORSMiddleware,
+#     allow_origins= origins,
+#     allow_credentials=True,
+#     allow_methods=["*"],  
+#     allow_headers=["*"],  
+# )
 
 # Rate limiting middleware
 app.state.limiter = limiter
@@ -53,14 +55,15 @@ async def rate_limit_exceeded_handler(request, exc):
         content={"detail": "Rate limit exceeded. Please try again later."},
     )
     
-# Include the router
+# Include the routers for different routes
+# The routers are defined in separate modules for better organization
 app.include_router(router, prefix="/api")
 app.include_router(auth_router, prefix="/api/auth")
 app.include_router(predict_router, prefix="/api/modeltrial")
 
-# Serve static files from the 'assets' and 'dist' directory built by using 'npm run build'
+# Serve static files from the 'assets' directory built by using 'npm run build'
+# Assets include CSS and JavaScript files
 app.mount("/assets", StaticFiles(directory="../dist/assets"), name="assets")
-app.mount("/static", StaticFiles(directory="../dist"), name="static")
 
 # Path to the built frontend (for deployment on Railway)
 FRONTEND_DIST = os.path.join(os.path.dirname(__file__), "../dist")
@@ -69,7 +72,7 @@ FRONTEND_DIST = os.path.join(os.path.dirname(__file__), "../dist")
 @app.get("/{full_path:path}")
 async def serve_frontend(full_path: str):
     file_path = os.path.join(FRONTEND_DIST, "index.html")  # Path to the frontend's index.html
-    return FileResponse(file_path)  # Return the index.html file
+    return FileResponse(file_path)  
 
 # Run the FastAPI app using Uvicorn when the script is executed directly
 if __name__ == "__main__":

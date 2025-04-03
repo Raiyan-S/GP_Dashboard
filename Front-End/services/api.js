@@ -41,7 +41,7 @@ export const login = async (username, password) => {
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded',
     },
-    credentials: 'include', // Ensures cookies are sent with the request
+    credentials: 'include',
     body: params.toString(),
   });
 
@@ -80,7 +80,7 @@ export const register = async (username, password) => {
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded',
     },
-    credentials: 'include',  // Ensures cookies are sent with the request if needed
+    credentials: 'include', 
     body: params.toString(),
   });
 
