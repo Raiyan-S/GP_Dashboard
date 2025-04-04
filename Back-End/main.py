@@ -1,7 +1,6 @@
 from fastapi import FastAPI 
 from fastapi.staticfiles import StaticFiles # Used to serve static files
 from fastapi.responses import FileResponse  # Used to serve files (eg. index.html)
-# from fastapi.middleware.cors import CORSMiddleware # Middleware for CORS (Cross-Origin Resource Sharing)
 
 # Importing routers and database connection functions
 from routes.route import router as router
@@ -28,21 +27,6 @@ async def lifespan(app: FastAPI):
 # Create a FastAPI instance with a lifespan context manager
 # This context manager opens and closes the database connection when the app starts and stops
 app = FastAPI(lifespan=lifespan)
-
-# # Defined allowed frontend origins
-# origins = [
-#     "http://localhost:8000", # Local using uvicorn FastAPI
-#     "https://gpdashboard-production.up.railway.app" # Railway
-# ]
-
-# # CORS middleware to allow cross-origin requests
-# app.add_middleware(
-#     CORSMiddleware,
-#     allow_origins= origins,
-#     allow_credentials=True,
-#     allow_methods=["*"],  
-#     allow_headers=["*"],  
-# )
 
 # Rate limiting middleware
 app.state.limiter = limiter

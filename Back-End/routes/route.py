@@ -1,54 +1,83 @@
-from fastapi import APIRouter, HTTPException, status # APIRouter to group routes, HTTPException to handle exceptions, status for HTTP status codes
-from models.TrainingRound import TrainingRound
-from config.db import mongodb
+from fastapi import APIRouter, HTTPException, status, Depends, Header # APIRouter to group routes, HTTPException to handle exceptions, status for HTTP status codes, Depends for dependency injection
+from models.TrainingRound import TrainingRound # Pydantic model for TrainingRound
+from config.db import mongodb # MongoDB connection
 from fastapi.encoders import jsonable_encoder # Convert Pydantic models to dictionaries (because of complex types e.g., datetime)
+from routes.auth import get_current_active_user  # Import the dependency for authentication
+import os
 
-router = APIRouter()
+router = APIRouter() # Groups all routes in this file into a single router with a prefix /api
 
-# get all rounds
+# This endpoint retrieves all training rounds from the database
+# It is mostly used for debugging
 @router.get("/get", response_model=list[TrainingRound])
-async def get_rounds():
+async def get_rounds(current_user: str = Depends(get_current_active_user)):
     try:
+        # Ensure the user has the correct role or permissions
+        if current_user["role"] != "admin":
+            raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Not enough permissions to access this resource"
+            )
+        
         rounds = await mongodb.db['Rounds'].find({}, {"_id": 0}).to_list(None)
-        return jsonable_encoder(rounds)
+        return rounds
     except Exception as e:
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
 
-# post a single round
+# This endpoint is to post a list of training rounds to the database
+# It drops the existing collection and inserts the new rounds so that the database is always up to date
 @router.post("/post", response_model=list[TrainingRound])
 async def post_round(round: list[TrainingRound]):
     try:
-        rounds_dict = jsonable_encoder(round)  
-        await mongodb.db['Rounds'].drop()
+        rounds_dict = jsonable_encoder(round)
+        await mongodb.db['Rounds'].drop() # Drop the existing collection
         
-        # Insert the rounds data into the database (insert_many for multiple records)
+        # Insert the rounds data into the database (insert_many for multiple records at once)
         result = await mongodb.db['Rounds'].insert_many(rounds_dict)
         
-        # Add the inserted IDs to each round
+        # Add the inserted IDs to each round 
+        # This is done to return the IDs of the inserted rounds
         for i, inserted_id in enumerate(result.inserted_ids):
             rounds_dict[i]["_id"] = str(inserted_id)
         return rounds_dict
     except Exception as e:
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
 
-# get all unique client IDs
+# This endpoint retrieves all unique client IDs from the database
+# It dynamically fetches the client field names from the first document in the collection
 @router.get("/client", response_model=list[str])
-async def get_unique_client_ids():
+async def get_unique_client_ids(current_user: str = Depends(get_current_active_user)):
     try:
-        # Fetch a single document to get the client field names and check for "Global"
+        # Ensure the user has the correct role or permissions
+        if current_user["role"] != "admin":
+            raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Not enough permissions to access this resource"
+            )
+            
+        # Fetch a single document from the collection
         first_doc = await mongodb.db['Rounds'].find_one()
 
-        # Get the client field names dynamically (keys of the document excluding _id and other fields)
+        # Get the client field names and Global dynamically 
         client_fields = [key for key in first_doc.keys() if key.startswith('client_') or key.startswith('Global')]
         
         return client_fields
     except Exception as e:
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
 
-# get all rounds for a specific client
+# This endpoint retrieves all rounds for a specific client ID
+# It allows sorting the results in ascending or descending order based on the round number
+# Descending order for the tables and ascending order for the charts
 @router.get("/rounds/{client_id}", response_model=list[dict])
-async def get_client_rounds(client_id: str, order: str = "desc"):
+async def get_client_rounds(client_id: str, order: str = "desc", current_user: str = Depends(get_current_active_user)):
     try:
+        # Ensure the user has the correct role or permissions
+        if current_user["role"] != "admin":
+            raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Not enough permissions to access this resource"
+            )
+            
         # Determine the sort order based on the query parameter
         sort_order = -1 if order == "desc" else 1
 
@@ -62,9 +91,9 @@ async def get_client_rounds(client_id: str, order: str = "desc"):
                 }
             },
             {
-                "$project": {
+                "$project": { 
                     "_id": 0,  # Exclude the MongoDB _id field
-                    "round": "$round",  
+                    "round": "$round",  # the round field is a string
                     "created_at": "$created_at",  
                     "metrics": f"${client_id}",
                     "round_as_number": 1  # Include the converted round_as_number field for sorting
@@ -90,9 +119,18 @@ async def get_client_rounds(client_id: str, order: str = "desc"):
     except Exception as e:
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
 
+# This endpoint retrieves the best F1 score for Global
+# It uses an aggregation pipeline to find the round with the highest F1 score for the Global
 @router.get("/best-f1-global", response_model=dict)
-async def get_best_f1_global():
+async def get_best_f1_global(current_user: str = Depends(get_current_active_user)):
     try:
+        # Ensure the user has the correct role or permissions
+        if current_user["role"] != "admin":
+            raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Not enough permissions to access this resource"
+            )
+            
         pipeline = [
             {"$match": {"Global": {"$exists": True}}},  # Ensure "Global" field exists
             {
@@ -112,5 +150,24 @@ async def get_best_f1_global():
 
         return best_f1_global[0]
     
+    except Exception as e:
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
+
+
+@router.post("/posttest", response_model=list[TrainingRound])
+async def post_round(round: list[TrainingRound], x_api_key: str = Header(...)):
+    try:
+        api_key = os.getenv("API_KEY")
+        if x_api_key != api_key:
+            raise HTTPException(status_code=401, detail="Invalid API key")
+        
+        # Insert the rounds data into the database (insert_many for multiple records at once)
+        result = await mongodb.db['posttest'].insert_many(round)
+        
+        # Add the inserted IDs to each round 
+        # This is done to return the IDs of the inserted rounds
+        for i, inserted_id in enumerate(result.inserted_ids):
+            round[i]["_id"] = str(inserted_id)
+        return round
     except Exception as e:
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
