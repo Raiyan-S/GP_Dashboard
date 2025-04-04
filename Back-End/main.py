@@ -32,6 +32,7 @@ app = FastAPI(lifespan=lifespan)
 app.state.limiter = limiter
 app.add_middleware(SlowAPIMiddleware)
 
+# This error handler is triggered when the rate limit is exceeded
 @app.exception_handler(RateLimitExceeded)
 async def rate_limit_exceeded_handler(request, exc):
     return JSONResponse(
