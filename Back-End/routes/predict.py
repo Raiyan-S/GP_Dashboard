@@ -1,15 +1,17 @@
-from fastapi import APIRouter, File, UploadFile, Request
+from fastapi import APIRouter, File, UploadFile, Request 
+# Necessary imports for model architecture and image processing
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
 import torchvision.transforms as transforms
-from PIL import Image
+
+from PIL import Image # Pillow library for image processing
 from config.db import mongodb
 import io
 from motor.motor_asyncio import AsyncIOMotorGridFSBucket  # async GridFS
-from rateLimiter import limiter
+from rateLimiter import limiter 
 
-router = APIRouter()
+router = APIRouter() # Groups all routes in this file into a single router with a prefix /api/predict
 
 # Dynamically create the GridFS bucket
 def get_gridfs_bucket():
@@ -66,7 +68,7 @@ transform = transforms.Compose([
 # Load the latest model from mongoDB GridFS
 async def load_model_from_gridfs(model_name: str):
     fs = get_gridfs_bucket()
-    model_metadata = await mongodb.db.models.find_one({"model_name": model_name}, sort=[("_id", -1)])
+    model_metadata = await mongodb.db.models.find_one({"model_name": model_name}, sort=[("_id", -1)]) # Get the latest model
     if not model_metadata:
         raise ValueError("Model not found in database.")
 
@@ -75,6 +77,7 @@ async def load_model_from_gridfs(model_name: str):
     # Retrieve the uploadDate from fs.files metadata
     upload_date = file_metadata["uploadDate"]
     
+    # Open the GridFS download stream
     grid_out = await fs.open_download_stream(file_id)
     model_bytes = await grid_out.read()
 
@@ -84,24 +87,26 @@ async def load_model_from_gridfs(model_name: str):
     model.eval()
     return model, upload_date
 
-
+# Define the prediction endpoint
+# This endpoint accepts an image file, processes it, and returns the prediction results
 @router.post("/predict")
 @limiter.limit("10/minute")
 async def predict(request: Request, file: UploadFile = File(...)):
-    image = Image.open(io.BytesIO(await file.read())).convert("RGB")
+    image = Image.open(io.BytesIO(await file.read())).convert("RGB") # Read the image 
     image_size = image.size  # Size of the image (width, height)
     image_format = file.filename.split('.')[-1].upper()  # Image format (e.g., JPEG, PNG)
-    image = transform(image).unsqueeze(0) 
+    image = transform(image).unsqueeze(0) # Transform and add batch dimension
 
-    model, upload_date = await load_model_from_gridfs("my_model")  # model name
+    model, upload_date = await load_model_from_gridfs("my_model") # Load the model from GridFS
 
     with torch.no_grad():
-        output = model(image)
+        output = model(image) # Forward pass through the model
         probabilities = F.softmax(output, dim=1)  # Convert logits to probabilities
         predicted_class = torch.argmax(probabilities, dim=1).item() # Argmax to get predicted class
         confidence_score = probabilities[0, predicted_class].item()  # Confidence score
         all_probs = probabilities.squeeze(0).tolist()  # Convert tensor to list
 
+    # Returns the prediction result in a structured format
     return {
         "prediction": f"class_{predicted_class}",
         "confidence": round(confidence_score, 4),
