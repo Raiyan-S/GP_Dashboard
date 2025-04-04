@@ -161,13 +161,14 @@ async def post_round(round: list[TrainingRound], x_api_key: str = Header(...)):
         if x_api_key != api_key:
             raise HTTPException(status_code=401, detail="Invalid API key")
         
+        rounds_dict = jsonable_encoder(round)
         # Insert the rounds data into the database (insert_many for multiple records at once)
-        result = await mongodb.db['posttest'].insert_many(round)
+        result = await mongodb.db['posttest'].insert_many(rounds_dict)
         
         # Add the inserted IDs to each round 
         # This is done to return the IDs of the inserted rounds
         for i, inserted_id in enumerate(result.inserted_ids):
-            round[i]["_id"] = str(inserted_id)
-        return round
+            rounds_dict[i]["_id"] = str(inserted_id)
+        return rounds_dict
     except Exception as e:
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
