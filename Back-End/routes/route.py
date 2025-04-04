@@ -26,9 +26,14 @@ async def get_rounds(current_user: str = Depends(get_current_active_user)):
 
 # This endpoint is to post a list of training rounds to the database
 # It drops the existing collection and inserts the new rounds so that the database is always up to date
+# It needs an API key to authenticate the request
 @router.post("/post", response_model=list[TrainingRound])
-async def post_round(round: list[TrainingRound]):
+async def post_round(round: list[TrainingRound], x_api_key: str = Header(...)):
     try:
+        api_key = os.getenv("API_KEY")
+        if x_api_key != api_key:
+            raise HTTPException(status_code=401, detail="Invalid API key")
+        
         rounds_dict = jsonable_encoder(round)
         await mongodb.db['Rounds'].drop() # Drop the existing collection
         
@@ -150,25 +155,5 @@ async def get_best_f1_global(current_user: str = Depends(get_current_active_user
 
         return best_f1_global[0]
     
-    except Exception as e:
-        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
-
-
-@router.post("/posttest", response_model=list[TrainingRound])
-async def post_round(round: list[TrainingRound], x_api_key: str = Header(...)):
-    try:
-        api_key = os.getenv("API_KEY")
-        if x_api_key != api_key:
-            raise HTTPException(status_code=401, detail="Invalid API key")
-        
-        rounds_dict = jsonable_encoder(round)
-        # Insert the rounds data into the database (insert_many for multiple records at once)
-        result = await mongodb.db['posttest'].insert_many(rounds_dict)
-        
-        # Add the inserted IDs to each round 
-        # This is done to return the IDs of the inserted rounds
-        for i, inserted_id in enumerate(result.inserted_ids):
-            rounds_dict[i]["_id"] = str(inserted_id)
-        return rounds_dict
     except Exception as e:
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
