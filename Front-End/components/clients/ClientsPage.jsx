@@ -14,9 +14,9 @@ export default function ClientsPage() {
   const [currentPage, setCurrentPage] = useState(1);
   const { data } = usePerformanceData(selectedClient, true);
 
-  // Load selected client from localStorage or set the first client as default
+  // Load selected client from sessionStorage or set the first client as default
   useEffect(() => {
-    const storedClient = localStorage.getItem("selectedClient");
+    const storedClient = sessionStorage.getItem("selectedClient");
     if (storedClient) {
       setSelectedClient(storedClient);
     } else if (clients.length > 0) {
@@ -24,10 +24,10 @@ export default function ClientsPage() {
     }
   }, [clients]);
 
-  // Save to localStorage whenever selectedClient changes
+  // Save to sessionStorage whenever selectedClient changes
   useEffect(() => {
     if (selectedClient) {
-      localStorage.setItem("selectedClient", selectedClient);
+      sessionStorage.setItem("selectedClient", selectedClient);
     }
   }, [selectedClient]);
 

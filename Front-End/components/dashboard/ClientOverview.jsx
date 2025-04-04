@@ -11,9 +11,9 @@ export default function ClientOverview({onSeeAll}) {
   const [selectedClient, setSelectedClient] = useState('');
   const { data, chartData } = usePerformanceData(selectedClient);
 
-  // Load selected client from localStorage or set the first client as default
+  // Load selected client from sessionStorage or set the first client as default
     useEffect(() => {
-      const storedClient = localStorage.getItem("selectedClient");
+      const storedClient = sessionStorage.getItem("selectedClient");
       if (storedClient) {
         setSelectedClient(storedClient);
       } else if (clients.length > 0) {
@@ -21,10 +21,10 @@ export default function ClientOverview({onSeeAll}) {
       }
     }, [clients]);
   
-    // Save to localStorage whenever selectedClient changes
+    // Save to sessionStorage whenever selectedClient changes
     useEffect(() => {
       if (selectedClient) {
-        localStorage.setItem("selectedClient", selectedClient);
+        sessionStorage.setItem("selectedClient", selectedClient);
       }
     }, [selectedClient]);
 
