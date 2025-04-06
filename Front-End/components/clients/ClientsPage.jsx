@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import ClientSelector from '../common/ClientSelector';
 import { usePerformanceData } from '../../hooks/usePerformanceData';
-import { useClients } from '../../hooks/useClients';
+import { useClients, useSelectedClient } from '../../hooks/useClients';
 import ResponsiveTable from '../common/Table';
 
 const ITEMS_PER_PAGE = 10;
@@ -10,26 +10,9 @@ const ITEMS_PER_PAGE = 10;
 // Used in App.jsx
 export default function ClientsPage() {
   const clients = useClients();
-  const [selectedClient, setSelectedClient] = useState('');
+  const [selectedClient, setSelectedClient] = useSelectedClient(clients); // Manage selected client
   const [currentPage, setCurrentPage] = useState(1);
   const { data } = usePerformanceData(selectedClient, true);
-
-  // Load selected client from sessionStorage or set the first client as default
-  useEffect(() => {
-    const storedClient = sessionStorage.getItem("selectedClient");
-    if (storedClient) {
-      setSelectedClient(storedClient);
-    } else if (clients.length > 0) {
-      setSelectedClient(clients[0].id);
-    }
-  }, [clients]);
-
-  // Save to sessionStorage whenever selectedClient changes
-  useEffect(() => {
-    if (selectedClient) {
-      sessionStorage.setItem("selectedClient", selectedClient);
-    }
-  }, [selectedClient]);
 
   // Calculate pagination
   const totalPages = Math.ceil(data.length / ITEMS_PER_PAGE); // If we have 11 items, we need 2 pages (10 items per page)

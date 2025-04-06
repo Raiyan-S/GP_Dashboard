@@ -1,5 +1,7 @@
 import React from 'react';
 
+// Used in ProtectRoute.jsx
+// This component is displayed when the user tries to access a page they are not authorized to view
 const Unauthorized = () => {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100 dark:bg-gray-900">

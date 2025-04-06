@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Target, TrendingDown, Award, Hash, CheckCheck, Crosshair, CalendarClock } from 'lucide-react'; // Icons from Lucide 
 import StatsCard from './StatsCard'; // Import StatsCard component
-import { fetchBestF1Global } from '../../services/api'; // Import fetchBestF1Global
+import { fetchBestF1Global } from '../../services/api'; // Import fetchBestF1Global function from API service
 
 // Used in App.jsx
 export default function DashboardStats() {
@@ -10,12 +10,13 @@ export default function DashboardStats() {
   // Fetch best F1 global data when the component mounts
   useEffect(() => {
     const fetchData = async () => {
-      const data = await fetchBestF1Global();
+      const data = await fetchBestF1Global(); // Fetch data from the API
       setBestF1Global(data); // Store the best F1 global data
     };
     fetchData();
   }, []);
 
+  // Render the component with the fetched data
   return (
     <div className="space-y-6">
       <h2 className="text-xl font-semibold dark:text-white">Global Model Summary</h2>

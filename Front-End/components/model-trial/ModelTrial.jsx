@@ -1,9 +1,12 @@
 import React, { useState, useEffect, useRef } from 'react';
-import PredictionDisplay from './PredictionResult';
-import PredictionHistory from './PredictionHistory';
-import { AlertCircle, Trash2, Upload, Loader2 } from 'lucide-react';
-import { predict } from '../../services/api';
+import { AlertCircle, Trash2, Upload, Loader2 } from 'lucide-react'; // Icons from Lucide
+import { predict } from '../../services/api'; // Importing the predict function from the API service
 
+// Components for displaying prediction results and history
+import PredictionDisplay from './PredictionResult';
+import PredictionHistory from './PredictionHistory'; 
+
+// Mapping class labels to human-readable names
 const CLASSES = {
   class_0: 'Benign',
   class_1: 'Early Stage Malignant',
@@ -11,10 +14,12 @@ const CLASSES = {
   class_3: 'Progressive Malignant',
 };
 
+// Constants for session storage keys
 const STORAGE_KEY = 'model-predictions';
 const COUNTER_KEY = 'prediction-counter';
 
 export default function ModelTrial() {
+  // State variables for managing predictions, counter, selected prediction, processing state, and error messages
   const [predictions, setPredictions] = useState(() => {
     const saved = sessionStorage.getItem(STORAGE_KEY);
     return saved ? JSON.parse(saved) : [];
@@ -23,11 +28,10 @@ export default function ModelTrial() {
     const saved = sessionStorage.getItem(COUNTER_KEY);
     return saved ? parseInt(saved, 10) : 0;
   });
-
   const [selectedPrediction, setSelectedPrediction] = useState(null);
   const [isProcessing, setIsProcessing] = useState(false);
   const [error, setError] = useState(null);
-  const fileInputRef = useRef(null);
+  const fileInputRef = useRef(null); // Ref for the file input element
 
   // Save to sessionStorage when predictions or counter change
   useEffect(() => {
@@ -35,6 +39,7 @@ export default function ModelTrial() {
     sessionStorage.setItem(COUNTER_KEY, counter.toString());
   }, [predictions, counter]);
 
+  // Validate the uploaded file
   const validateFile = (file) => {
     const maxSize = 5 * 1024 * 1024; // 5MB
     if (!file.type.startsWith('image/')) {
@@ -46,9 +51,11 @@ export default function ModelTrial() {
     return null;
   };
 
+  // Handle image upload and prediction
+  // This function is called when a file is selected
   const handleImageUpload = async (file) => {
-    const validationError = validateFile(file);
-    if (validationError) {
+    const validationError = validateFile(file); // Validate the file before processing
+    if (validationError) { // If validation fails, set the error state and return
       setError(validationError);
       return;
     }
@@ -57,13 +64,16 @@ export default function ModelTrial() {
     setError(null);
 
     try {
-      const prediction = await predict(file);
+      const prediction = await predict(file); // Call the predict function from the API service
 
-      console.log('Prediction result:', prediction);
+      console.log('Prediction result:', prediction); // Log the prediction result for debugging
 
-      const newId = counter + 1;
+      const newId = counter + 1; // Increment the counter for the new prediction
 
-      const fileSizeInMB = file.size / 1024 / 1024;
+      const fileSizeInMB = file.size / 1024 / 1024; // Convert file size to MB
+
+      // Store the prediction result in a structured format
+      // The result object contains the prediction class, confidence, probabilities, and image details
       const result = {
         id: newId,
         class: CLASSES[prediction.prediction],
@@ -85,6 +95,7 @@ export default function ModelTrial() {
         : fileSizeInMB.toFixed(2) + ' MB',
         },
       };
+      // Set the new prediction in the state and update the selected prediction
       setPredictions((prev) => [result, ...prev]);
       setSelectedPrediction(newId);
       setCounter(newId);
@@ -95,6 +106,8 @@ export default function ModelTrial() {
     }
   };
 
+  // Clear the prediction history
+  // This function is called when the "Clear History" button is clicked
   const clearHistory = () => {
     setPredictions([]);
     setSelectedPrediction(null);
@@ -109,17 +122,20 @@ export default function ModelTrial() {
       selectedPrediction ? p.id === selectedPrediction : p.id === predictions[0]?.id
     ) || null;
 
+  
   return (
     <div className="max-w-6xl mx-auto mt-8 space-y-8">
       <div className="bg-white dark:bg-gray-800 p-8 rounded-lg shadow-md dark:shadow-gray-900/30">
+        {/* Header for the model classification section */}
         <div className="mb-6">
           <h2 className="text-2xl font-semibold text-gray-900 dark:text-white">Cell Classification Model</h2>
           <p className="mt-2 text-gray-600 dark:text-gray-400">
             Upload microscopic cell images for automated classification
           </p>
         </div>
-
+        
         <div className="relative border-2 border-dashed rounded-lg p-8 text-center transition-colors border-gray-300 dark:border-gray-600">
+          {/* Display a loading spinner while processing the image */}     
           {isProcessing ? (
             <div className="py-4">
               <Loader2 className="mx-auto h-12 w-12 text-blue-500 animate-spin" />
@@ -127,6 +143,7 @@ export default function ModelTrial() {
             </div>
           ) : (
             <>
+            {/* Show the instructions and clickable text when not processing */}
               <Upload className="mx-auto h-12 w-12 text-gray-400 dark:text-gray-500" />
               <p className="mt-4 text-gray-600 dark:text-gray-400">
                 <button
@@ -138,12 +155,13 @@ export default function ModelTrial() {
                 to choose a file
               </p>
               <p className="text-sm text-gray-500 dark:text-gray-400 mt-2">
-                Supported formats: PNG, JPG, JPEG (max 5MB)
+                Supported formats: PNG, JPG, JPEG (max 5MB) 
               </p>
             </>
           )}
         </div>
-
+        
+        {/* Display error messages if any */}
         {error && (
           <div className="mt-4 p-4 bg-red-50 dark:bg-red-900/20 rounded-lg flex items-start space-x-3">
             <AlertCircle className="w-5 h-5 text-red-600 dark:text-red-400 mt-0.5" />
@@ -151,6 +169,7 @@ export default function ModelTrial() {
           </div>
         )}
 
+        {/* Hidden file input for selecting images */}
         <input
           ref={fileInputRef}
           type="file"
@@ -160,12 +179,15 @@ export default function ModelTrial() {
           disabled={isProcessing}
         />
 
+        {/* Display the prediction result if available */}
         {currentPrediction && <PredictionDisplay prediction={currentPrediction} />}
       </div>
 
+      {/* Prediction history section */}
       <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md dark:shadow-gray-900/30">
         <div className="flex items-center justify-between mb-4">
           <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Analysis History</h3>
+          {/* Clear history button */}
           {predictions.length > 0 && (
             <button
               onClick={clearHistory}
@@ -176,6 +198,8 @@ export default function ModelTrial() {
             </button>
           )}
         </div>
+
+        {/* Display the prediction history */}
         <PredictionHistory
           predictions={predictions}
           selectedId={selectedPrediction}

@@ -1,7 +1,8 @@
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000/api';
+const API_URL = 'http://localhost:8000/api';
 // import.meta.env.VITE_API_URL || 
 
 // Fetch Unique Client IDs from the API
+// This function is used to fetch unique client IDs from the API
 export const fetchUniqueClientIds = async () => {
   const response = await fetch(`${API_URL}/client`);
   if (!response.ok) {
@@ -11,6 +12,7 @@ export const fetchUniqueClientIds = async () => {
 };
 
 // Fetch Training Metrics for a specific round
+// This function is used to fetch the training metrics for a specific client from the API
 export const fetchTrainingMetrics = async (clientId, order) => {
   const response = await fetch(`${API_URL}/rounds/${clientId}?order=${order}`);
   if (!response.ok) {
@@ -20,6 +22,8 @@ export const fetchTrainingMetrics = async (clientId, order) => {
 };
 
 // Fetch Best F1 Global Metrics
+// This function is used to fetch the best F1 global metrics from the API
+// It sends a GET request to the API endpoint and returns the response in JSON format
 export const fetchBestF1Global = async () => {
   const response = await fetch(`${API_URL}/best-f1-global`);
   if (!response.ok) {
@@ -28,6 +32,8 @@ export const fetchBestF1Global = async () => {
   return response.json();
 };
 
+// Post login credentials to the API
+// This function is used to log in the user by sending a POST request to the API with the username and password
 export const login = async (username, password) => {
   console.log('DEBUG: Logging in with:', username, password);
   
@@ -54,6 +60,8 @@ export const login = async (username, password) => {
   return response.json();
 };
 
+// Post logout request to the API
+// This function is used to log out the user by sending a POST request to the API
 export const logout = async () => {
   const response = await fetch(`${API_URL}/auth/logout`, {
     method: 'POST',
@@ -67,6 +75,8 @@ export const logout = async () => {
   return response;
 };
 
+// Post register credentials to the API
+// This function is used to register a new user by sending a POST request to the API with the username and password
 export const register = async (username, password) => {
   console.log('DEBUG: Registering with:', username, password);
   
@@ -93,6 +103,8 @@ export const register = async (username, password) => {
   return response;
 };
 
+// Verify token request to the API
+// This function is used to verify the token by sending a GET request to the API
 export const verify_token = async () => {
   const response = await fetch(`${API_URL}/auth/verify-token`, {
     method: 'GET',
@@ -102,6 +114,9 @@ export const verify_token = async () => {
   return response;
 };
 
+// Post image file to the API for prediction
+// This function is used to send an image file to the API for prediction by sending a POST request with the file
+// It returns the prediction result in JSON format
 export const predict = async (file) => {
   const formData = new FormData();
   formData.append("file", file);
@@ -120,6 +135,8 @@ export const predict = async (file) => {
   return response.json();
 };
 
+// These 3 functions are used to check if the user is authorized to access certain routes in the application
+// They send a GET request to the API and check the response status
 export const authDashboard = async () => {
   const response = await fetch(`${API_URL}/auth/dashboard`, {
     method: 'GET',
@@ -132,7 +149,6 @@ export const authDashboard = async () => {
 
   return response.json();
 };
-
 export const authModelTrial = async () => {
   const response = await fetch(`${API_URL}/auth/modeltrial`, {
     method: 'GET',
@@ -145,7 +161,6 @@ export const authModelTrial = async () => {
 
   return response.json();
 };
-
 export const authClients = async () => {
   const response = await fetch(`${API_URL}/auth/clients`, {
     method: 'GET',
