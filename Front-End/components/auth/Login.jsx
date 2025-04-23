@@ -59,11 +59,6 @@ export default function Login({ setActiveTab }) {
         </div>
         <h2 className="text-2xl font-semibold text-gray-900 mb-6">Login</h2>
 
-        {/* NOTE in login screen */}
-        <p className="text-gray-600 mb-4">
-          admin email: admin123@gmail.com, pass: admin123, when you register it will be clinic role (only model-trial page)
-        </p>
-
         {/* Display error message if there's any */}
         {error && <p className="text-red-500 mb-4">{error}</p>}
           
