@@ -6,45 +6,44 @@ FL-ALL Dashboard is a web application for visualizing client/global model perfor
 
 The project is organized into two main directories: Back-End and Front-End.
 
-![](https://github.com/Raiyan-S/GP_Dashboard/blob/main/Structure.png)
-
 ### Back-End
+The backend is built with FastAPI and interacts with a MongoDB database. It provides API endpoints for user authentication, data management (training rounds), and model predictions, including rate limiting to prevent abuse.
 
-- **config/**: Contains configuration file for the database connection.
-  - db.py: Handles the connection to the MongoDB database by loading the environment variables.
-- **models/**: Contains data models used in the application.
-  - TrainingRound.py: Defines the schema for training rounds.
-- **routes/**: Contains route definition for the API.
-  - route.py: Defines routes related to performance data.
-- main.py: The main entry point for the FastAPI backend application.
-- requirements.txt: Lists the Python dependencies for the backend.
-- .env: MongoDB connection string private
+- **Key Files**:
+    - `main.py`: Entry point for the FastAPI application; initializes middleware (including rate limiting), routes, database connection, and serves the frontend for deployment.
+    - `rateLimiter.py`: Configures rate limiting rules.
+    -   `.env`:  Contains environment variables required for local development, such as the MongoDB connection string (`MONGO_PUBLIC_URL`) and database name (`DB_NAME`). This file is not included in the repository for security reasons.
+- **Directories**:
+    - **`config/`**:
+        - `db.py`: Handles MongoDB connection setup, opening, and closing using environment variables.
+    - **`models/`**:
+        - `TrainingRound.py`: Defines the Pydantic model for validating the structure of training round data stored in MongoDB.
+    - **`routes/`**: Defines API endpoints:
+        - `route.py`: Endpoints for fetching and posting training round data (admin-only for fetching all/specific rounds, posting requires API key). Includes endpoints for unique client IDs and best global model F1 score.
+        - `auth.py`: Endpoints for user registration, login (using secure HTTP-only session cookies), logout, and session verification. Enforces role-based access control.
+        - `predict.py`: Endpoint (`/predict`) for handling image uploads, processing them with a model loaded from GridFS, and returning classification results. Protected by rate limiting.
+    - **`tests/`**: Contains integration and end-to-end tests using Playwright and Pytest for authentication and core functionalities.
 
-### Front-End (need to update to add further details)
+### Front-End
+The frontend is built with React and serves as the user interface for the FL-ALL Dashboard. It handles user interaction, data visualization, authentication, and communication with the backend API.
 
-- **components/**: Contains React components used in the application.
-  - ClientOverview.jsx: Component for displaying client performance overview.
-  - ClientSelector.jsx: Component to select a client and display the values accordingly.
-  - DashboardStats.jsx: Component for displaying summary stats.
-  - `clients/`: Contains components related to clients page.
-- **hooks/**: Contains custom React hooks.
-  - useTheme.js: Custom hook for managing theme settings.
-  - usePerformanceData.js: Custom hook for fetching performance data for a selected client.
-  - useClients.js: Custom hook for fetching unique client IDs.
-- **services/**: Contains service module for API calls.
-<!--- **utils/**: Contains utility functions. -->
-- App.jsx: The main React component that sets up the application.
-- index.css: Compiles Tailwind CSS to build static files.
-- main.jsx: The entry point for the React application.
-  
+- **Key Files**:
+    - `main.jsx`: The application entry point, setting up routing, authentication context, and page metadata providers.
+    - `App.jsx`: The main component defining routes, layout (Sidebar, Header), and managing role-based access control.
+- **Directories**:
+    - **`components/`**: Contains UI components organized by feature:
+        - `auth/`: Manages login, registration, session validation, and protected routes. Includes `AuthContext` for global state.
+        - `dashboard/`: Components for displaying global and client performance metrics, charts, and summaries.
+        - `modeltrial/`: Components for the image upload and classification feature. Includes `PredictionResult` and `PredictionHistory`.
+        - `layout/`: Contains reusable layout components like `Sidebar` and `Header`.
+        - `common/`: Shared components like `ClientSelector` and `Table`.
+    - **`hooks/`**: Custom React hooks for reusable logic like fetching client IDs (`useClients`), fetching performance data (`usePerformanceData`), and managing themes (`useTheme`).
+    - **`services/`**: Contains the `api.js` module, which centralizes all backend API call functions (e.g., authentication, data fetching, prediction).
+
 **root**
-- index.html: The main HTML file for the application.
-- package.json: Lists the JavaScript dependencies and scripts for the frontend.
-- postcss.config.js: Configuration for PostCSS because Tailwind CSS requires PostCSS to process its styles.
-- tailwind.config.js: Configuration for Tailwind CSS.
-- vite.config.js: Configuration for Vite, the build tool.
-- Procfile: Defines the command to run the backend server.
+- Contains configuration files (`tailwind.config.js`, `vite.config.js`, etc.), `package.json` for dependencies, and the main `index.html`.
 
+You can check the PDF file "Web App Dashboard Documentation" for further details.
 
 ## Setup Instructions
 
@@ -88,4 +87,4 @@ The project is organized into two main directories: Back-End and Front-End.
 
 
 #### Railway URL:
-https://gpdashboard-production.up.railway.app/dashboard
+https://gpdashboard-production.up.railway.app/
