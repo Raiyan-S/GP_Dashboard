@@ -43,6 +43,7 @@ The frontend is built with React and serves as the user interface for the FL-ALL
 **root**
 - Contains configuration files (`tailwind.config.js`, `vite.config.js`, etc.), `package.json` for dependencies, and the main `index.html`.
 
+You can check the PDF file "Web App Dashboard Documentation" for further details.
 
 ## Setup Instructions
 
